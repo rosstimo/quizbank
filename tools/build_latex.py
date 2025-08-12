@@ -14,11 +14,14 @@ Scope:
 from __future__ import annotations
 import argparse
 import random
-import re
 from pathlib import Path
 from typing import Any, Dict, List
 
 import yaml
+try:
+    from tools.common import pandoc_convert
+except ModuleNotFoundError:
+    from common import pandoc_convert
 
 
 # ---------------- YAML helpers ----------------
@@ -66,74 +69,11 @@ def sample_items(items: List[Dict[str, Any]], pick: int | None, seed: int) -> Li
     return rng.sample(items, k=pick)
 
 
-# ------------- Minimal Markdown -> LaTeX -------------
-
-RE_BOLD_STAR = re.compile(r"\*\*(.+?)\*\*")
-RE_BOLD_USC  = re.compile(r"__(.+?)__")
-RE_LINK      = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
-RE_CODE      = re.compile(r"`([^`]+)`")
-
-LATEX_SPECIALS = {
-    "\\": r"\textbackslash{}",
-    "{": r"\{",
-    "}": r"\}",
-    "#": r"\#",
-    "%": r"\%",
-    "&": r"\&",
-    "_": r"\_",
-    "~": r"\textasciitilde{}",
-    "^": r"\textasciicircum{}",
-    # don't escape "$" so inline math like $x^2$ still works
-}
-
-def escape_tex(text: str) -> str:
-    out = []
-    for ch in text:
-        out.append(LATEX_SPECIALS.get(ch, ch))
-    return "".join(out)
-
-def pick_verb_delim(s: str) -> str:
-    # Choose a \verb delimiter not present in s
-    for cand in "|!@;:~^*+=":
-        if cand not in s:
-            return cand
-    return "|"  # fallback
-
-def md_to_tex(text: str) -> str:
-    """
-    Convert a very small subset of Markdown to LaTeX, with safe escaping.
-    Preserves math ($...$) by simply not touching '$'.
-    Avoids escaping inside inline code by converting it to \verb|...|.
-    """
-    if not text:
-        return ""
-
-    # 1) Protect inline code: replace `code` with placeholders
-    code_map: Dict[str, str] = {}
-    def repl_code(m: re.Match) -> str:
-        code = m.group(1)
-        delim = pick_verb_delim(code)
-        token = f"@@CODE{len(code_map)}@@"
-        code_map[token] = rf"\verb{delim}{code}{delim}"
-        return token
-    text = RE_CODE.sub(repl_code, text)
-
-    # 2) Escape LaTeX specials in the remaining text
-    text = escape_tex(text)
-
-    # 3) Bold and links on the escaped text
-    text = RE_BOLD_STAR.sub(r"\\textbf{\1}", text)
-    text = RE_BOLD_USC.sub(r"\\textbf{\1}", text)
-    text = RE_LINK.sub(r"\\href{\2}{\1}", text)
-
-    # 4) Restore code tokens
-    for token, verbed in code_map.items():
-        text = text.replace(token, verbed)
-
-    return text
+def qmp_to_tex(s: str) -> str:
+    return pandoc_convert(s or "", to_fmt="latex")
 
 def t(s: Any) -> str:
-    return md_to_tex(str(s or "")).rstrip()
+    return qmp_to_tex(str(s or "")).rstrip()
 
 def choice_letter(i: int) -> str:
     return chr(ord("A") + i)

@@ -32,6 +32,11 @@ from typing import Any, Dict, List
 import xml.etree.ElementTree as ET
 
 import yaml
+try:
+    from tools.common import pandoc_convert
+except ModuleNotFoundError:
+    # Fallback when running as a script from the tools/ directory
+    from common import pandoc_convert
 
 
 # -------------------- YAML helpers --------------------
@@ -150,7 +155,8 @@ def build_item_mcq_one(item: Dict[str, Any]) -> QtiItem:
 
     # Presentation
     presentation = ET.SubElement(item_el, "presentation")
-    mattext(presentation, stem, "text/plain")
+    html = pandoc_convert(stem, to_fmt="html")
+    mattext(presentation, html, "text/html")
     response_lid = ET.SubElement(presentation, "response_lid", {"ident": "response1", "rcardinality": "Single"})
     render_choice = ET.SubElement(response_lid, "render_choice", {"shuffle": shuffle})
 
@@ -201,7 +207,8 @@ def build_item_true_false(item: Dict[str, Any]) -> QtiItem:
     add_feedback_sections(item_el, fb_correct, fb_incorrect, fb_general)
 
     presentation = ET.SubElement(item_el, "presentation")
-    mattext(presentation, stem, "text/plain")
+    html = pandoc_convert(stem, to_fmt="html")
+    mattext(presentation, html, "text/html")
     response_lid = ET.SubElement(presentation, "response_lid", {"ident": "response1", "rcardinality": "Single"})
     render_choice = ET.SubElement(response_lid, "render_choice", {"shuffle": "No"})
     for ident, text in [("A", "True"), ("B", "False")]:

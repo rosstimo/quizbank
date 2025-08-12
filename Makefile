@@ -44,6 +44,10 @@ endef
 
 .DEFAULT_GOAL := help
 
+.PHONY: check-pandoc
+check-pandoc:
+	@command -v pandoc >/dev/null || { echo "pandoc not found in PATH"; exit 2; }
+
 .PHONY: help
 help:
 	@echo "Targets:"
@@ -71,7 +75,7 @@ validate:
 	$(Q)$(PYTHON) $(VALIDATOR) qbank/**/*.yaml
 
 .PHONY: md
-md: $(OUT_MD)
+md: check-pandoc $(OUT_MD)
 $(OUT_MD): $(BUILD_MD) $(QUIZ)
 	$(call say,Building Markdown -> $@)
 	$(Q)mkdir -p $(dir $@)
@@ -92,7 +96,7 @@ $(OUT_PDF): $(OUT_TYPST)
 	$(Q)typst compile $(OUT_TYPST) $(OUT_PDF)
 
 .PHONY: latex
-latex: $(OUT_TEX)
+latex: check-pandoc $(OUT_TEX)
 $(OUT_TEX): $(BUILD_TEX) $(QUIZ)
 	$(call say,Building LaTeX -> $@)
 	$(Q)mkdir -p $(dir $@)
@@ -106,7 +110,7 @@ $(OUT_TEX_PDF): $(OUT_TEX)
 	$(Q)pdflatex -interaction=nonstopmode -halt-on-error -output-directory $(dir $@) $(OUT_TEX) $(TEX_SILENCE)
 
 .PHONY: qti
-qti: $(OUT_QTI)
+qti: check-pandoc $(OUT_QTI)
 $(OUT_QTI): $(BUILD_QTI) $(QUIZ)
 	$(call say,Building QTI -> $@)
 	$(Q)mkdir -p $(dir $@)
