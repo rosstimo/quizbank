@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/quiz-item.schema.json",
+  "title": "Quiz Item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "type", "points", "stem"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable item identifier. Never reuse for different content.",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,}$",
+      "minLength": 3,
+      "maxLength": 128
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Increment when content changes in a grading-relevant way."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["mcq_one", "mcq_multi", "true_false", "numeric", "short_answer"],
+      "description": "Question type."
+    },
+    "points": {
+      "type": "number",
+      "minimum": 0
+    },
+    "topic": {
+      "type": "string"
+    },
+    "outcomes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["easy", "medium", "hard"]
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "maxItems": 20
+    },
+    "attachments": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "description": "Relative file paths to media required by the item."
+    },
+    "shuffle_choices": {
+      "type": "boolean",
+      "description": "Whether to shuffle choices for MCQ types."
+    },
+    "stem": {
+      "type": "string",
+      "minLength": 1,
+      "contentMediaType": "text/markdown",
+      "description": "Problem statement in Markdown. Math allowed."
+    },
+    "feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "correct": { "type": "string" },
+        "incorrect": { "type": "string" }
+      }
+    },
+    "solution": {
+      "type": "string",
+      "description": "Fully worked solution or grading notes.",
+      "contentMediaType": "text/markdown"
+    },
+    "author": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    }
+  },
+
+  "allOf": [
+    {
+      "oneOf": [
+        { "$ref": "#/$defs/mcq_one" },
+        { "$ref": "#/$defs/mcq_multi" },
+        { "$ref": "#/$defs/true_false" },
+        { "$ref": "#/$defs/numeric" },
+        { "$ref": "#/$defs/short_answer" }
+      ]
+    }
+  ],
+
+  "$defs": {
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "contentMediaType": "text/markdown"
+        },
+        "correct": {
+          "type": "boolean",
+          "default": false
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this choice is right or wrong."
+        }
+      }
+    },
+
+    "mcq_one": {
+      "title": "Multiple Choice (single correct)",
+      "type": "object",
+      "properties": {
+        "type": { "const": "mcq_one" },
+        "choices": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 10,
+          "items": { "$ref": "#/$defs/choice" },
+          "contains": {
+            "type": "object",
+            "properties": { "correct": { "const": true } },
+            "required": ["correct"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      },
+      "required": ["choices"]
+    },
+
+    "mcq_multi": {
+      "title": "Multiple Select",
+      "type": "object",
+      "properties": {
+        "type": { "const": "mcq_multi" },
+        "choices": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/choice" },
+          "contains": {
+            "type": "object",
+            "properties": { "correct": { "const": true } },
+            "required": ["correct"]
+          },
+          "minContains": 1
+        }
+      },
+      "required": ["choices"]
+    },
+
+    "true_false": {
+      "title": "True or False",
+      "type": "object",
+      "properties": {
+        "type": { "const": "true_false" },
+        "answer": { "type": "boolean" }
+      },
+      "required": ["answer"]
+    },
+
+    "numeric": {
+      "title": "Numeric response",
+      "type": "object",
+      "properties": {
+        "type": { "const": "numeric" },
+        "answer": { "type": "number" },
+        "tolerance": { "type": "number", "minimum": 0 },
+        "unit": { "type": "string" }
+      },
+      "required": ["answer"]
+    },
+
+    "short_answer": {
+      "title": "Short answer",
+      "type": "object",
+      "properties": {
+        "type": { "const": "short_answer" },
+        "answers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["text"],
+            "properties": {
+              "text": { "type": "string", "minLength": 1 },
+              "regex": { "type": "boolean", "default": false },
+              "case_sensitive": { "type": "boolean", "default": false },
+              "score": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        }
+      },
+      "required": ["answers"]
+    }
+  }
+}
