@@ -1,0 +1,25 @@
+id: example.topic.005
+version: 1
+type: short_answer
+points: 2
+topic: Example > Basics
+difficulty: easy
+tags: [data-structures, lifo]
+stem: |
+  Name the data structure that uses the **LIFO** discipline (last in, first out).
+answers:
+  - text: "(?i)stack"
+    regex: true
+    case_sensitive: false
+    score: 1
+  - text: "stack"
+    regex: false
+    case_sensitive: false
+    score: 1
+feedback:
+  correct: Exactly. LIFO is the defining behavior of a stack.
+  incorrect: The term you’re looking for is **stack**.
+solution: |
+  A **stack** is LIFO: the most recently pushed item is popped first.
+author: Tim Rossiter
+license: CC-BY-4.0

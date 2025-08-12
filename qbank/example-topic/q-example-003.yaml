@@ -1,0 +1,17 @@
+id: example.topic.003
+version: 1
+type: true_false
+points: 1
+topic: Example > Basics
+difficulty: easy
+tags: [bst, traversal]
+stem: |
+  In a binary search tree, an **in-order traversal** visits the keys in nondecreasing (sorted) order.
+answer: true
+feedback:
+  correct: Yep. That’s the whole party trick of BSTs.
+  incorrect: It’s true. In-order traversal yields a sorted sequence for a valid BST.
+solution: |
+  By definition of BST ordering, in-order traversal visits left subtree, node, right subtree, producing sorted keys.
+author: Tim Rossiter
+license: CC-BY-4.0

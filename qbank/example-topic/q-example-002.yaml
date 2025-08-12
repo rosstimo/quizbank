@@ -1,0 +1,28 @@
+id: example.topic.002
+version: 1
+type: mcq_multi
+points: 2
+topic: Example > Basics
+difficulty: easy
+tags: [sorting, algorithms]
+shuffle_choices: true
+stem: |
+  Which of the following are **comparison-based** sorting algorithms? Select all that apply.
+choices:
+  - text: Merge sort
+    correct: true
+    rationale: Classic divide-and-conquer, compares keys.
+  - text: Quick sort
+    correct: true
+    rationale: Partitioning around pivots, compares keys.
+  - text: Counting sort
+    rationale: Uses counts of keys; not comparison-based.
+  - text: Radix sort
+    rationale: Distributes by digit/bucket; not comparison-based.
+feedback:
+  correct: "Nice. Merge and Quick are the comparison-based ones here."
+  incorrect: "Remember: counting and radix sort avoid direct key comparisons."
+solution: |
+  **Merge sort** and **Quick sort** are comparison sorts; **Counting** and **Radix** are not.
+author: Tim Rossiter
+license: CC-BY-4.0
