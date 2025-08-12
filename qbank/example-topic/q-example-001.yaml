@@ -1,0 +1,28 @@
+id: example.topic.001
+version: 1
+type: mcq_one
+points: 2
+topic: Example > Basics
+difficulty: easy
+tags: [intro, syntax]
+shuffle_choices: true
+stem: |
+  In most programming languages, what is the common term for a value like `true` or `false`?
+
+choices:
+  - text: Integer
+  - text: Boolean
+    correct: true
+    rationale: The data type with two truth values is typically called a Boolean.
+  - text: String
+  - text: Array
+
+feedback:
+  correct: Yep. Boolean is the two-valued logical type.
+  incorrect: Not quite. The two-valued logical type is called a Boolean.
+
+solution: |
+  The correct answer is **Boolean**. It represents a truth value, usually `true` or `false`.
+
+author: Tim Rossiter
+license: CC-BY-4.0
