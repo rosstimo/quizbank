@@ -3,7 +3,7 @@
   "$id": "https://example.org/schemas/quiz-item.schema.json",
   "title": "Quiz Item",
   "type": "object",
-  "additionalProperties": false,
+
   "required": ["id", "version", "type", "points", "stem"],
   "properties": {
     "id": {
@@ -23,22 +23,14 @@
       "enum": ["mcq_one", "mcq_multi", "true_false", "numeric", "short_answer"],
       "description": "Question type."
     },
-    "points": {
-      "type": "number",
-      "minimum": 0
-    },
-    "topic": {
-      "type": "string"
-    },
+    "points": { "type": "number", "minimum": 0 },
+    "topic": { "type": "string" },
     "outcomes": {
       "type": "array",
       "items": { "type": "string" },
       "uniqueItems": true
     },
-    "difficulty": {
-      "type": "string",
-      "enum": ["easy", "medium", "hard"]
-    },
+    "difficulty": { "type": "string", "enum": ["easy", "medium", "hard"] },
     "tags": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 },
@@ -51,10 +43,7 @@
       "uniqueItems": true,
       "description": "Relative file paths to media required by the item."
     },
-    "shuffle_choices": {
-      "type": "boolean",
-      "description": "Whether to shuffle choices for MCQ types."
-    },
+    "shuffle_choices": { "type": "boolean", "description": "Shuffle choices for MCQ types." },
     "stem": {
       "type": "string",
       "minLength": 1,
@@ -74,12 +63,8 @@
       "description": "Fully worked solution or grading notes.",
       "contentMediaType": "text/markdown"
     },
-    "author": {
-      "type": "string"
-    },
-    "license": {
-      "type": "string"
-    }
+    "author": { "type": "string" },
+    "license": { "type": "string" }
   },
 
   "allOf": [
@@ -94,25 +79,17 @@
     }
   ],
 
+  "unevaluatedProperties": false,
+
   "$defs": {
     "choice": {
       "type": "object",
       "additionalProperties": false,
       "required": ["text"],
       "properties": {
-        "text": {
-          "type": "string",
-          "minLength": 1,
-          "contentMediaType": "text/markdown"
-        },
-        "correct": {
-          "type": "boolean",
-          "default": false
-        },
-        "rationale": {
-          "type": "string",
-          "description": "Why this choice is right or wrong."
-        }
+        "text": { "type": "string", "minLength": 1, "contentMediaType": "text/markdown" },
+        "correct": { "type": "boolean", "default": false },
+        "rationale": { "type": "string", "description": "Why this choice is right or wrong." }
       }
     },
 
