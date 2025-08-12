@@ -1,10 +1,31 @@
 #!/usr/bin/env python3
-# tools/build_typst.py
+r"""
+Build a Typst source (.typ) by piping one consolidated Markdown doc through Pandoc.
+
+Author in QMP (Pandoc-flavored Markdown: gfm+tex_math_dollars).
+We assemble a Markdown quiz doc (title, items, optional answer key), then:
+  Markdown --(pandoc -t typst)--> Typst
+
+Usage:
+  python tools/build_typst.py quizzes/quiz-example.yaml --out build/typst/quiz-example.typ
+Options:
+  --bank DIR            Root of the question bank (default: qbank)
+  --seed N              RNG seed when quiz.pick is set (default: 42)
+  --no-key              Omit the answer key section
+  --inline-solutions    Print solutions under each question
+"""
+
 from __future__ import annotations
-import argparse, random, re
+import argparse
+import random
+import subprocess
 from pathlib import Path
 from typing import Any, Dict, List
+
 import yaml
+
+
+# ---------------- YAML helpers ----------------
 
 def load_yaml(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as f:
@@ -48,58 +69,11 @@ def sample_items(items: List[Dict[str, Any]], pick: int | None, seed: int) -> Li
     rng = random.Random(seed)
     return rng.sample(items, k=pick)
 
-# --- Minimal Markdown -> Typst normalization ---
-MD_BOLD_STAR = re.compile(r"\*\*(.+?)\*\*")
-MD_BOLD_USCORE = re.compile(r"__(.+?)__")
 
-def md_to_typst(s: str | None) -> str:
-    if not s:
-        return ""
-    # Convert Markdown strong to Typst strong (single *)
-    s = MD_BOLD_STAR.sub(r"*\1*", s)
-    s = MD_BOLD_USCORE.sub(r"*\1*", s)
-    # Leave _emphasis_ and `code` alone (both valid in Typst)
-    return s
-
-def t_escape(s: str) -> str:
-    # Escape braces so Typst doesn't treat them as code delimiters
-    return s.replace("{", "\\{").replace("}", "\\}")
-
-def norm(s: str | None) -> str:
-    return t_escape(md_to_typst(s or "")).rstrip()
+# ---------------- Quiz -> Markdown assembly ----------------
 
 def choice_letter(i: int) -> str:
     return chr(ord("A") + i)
-
-def render_item_typst(n: int, it: Dict[str, Any]) -> str:
-    t = it.get("type")
-    stem = norm(it.get("stem"))
-    pts = it.get("points", 0)
-    out = []
-    out.append(f"=== {n}. ({pts} pt{'s' if pts != 1 else ''})")
-    out.append(stem)
-    out.append("")
-    if t in {"mcq_one", "mcq_multi"}:
-        for i, c in enumerate(it.get("choices", [])):
-            text = norm(str(c.get("text", "")))
-            out.append(f"- {choice_letter(i)}. {text}")
-        out.append("")
-    elif t == "true_false":
-        out.append("- A. True")
-        out.append("- B. False")
-        out.append("")
-    elif t == "numeric":
-        unit = it.get("unit")
-        hint = f" (unit: {unit})" if unit else ""
-        out.append(f"_Answer: numeric{hint}_")
-        out.append("")
-    elif t == "short_answer":
-        out.append("_Answer: short text_")
-        out.append("")
-    else:
-        out.append("_Unsupported type in renderer_")
-        out.append("")
-    return "\n".join(out)
 
 def answer_for(it: Dict[str, Any]) -> str:
     t = it.get("type")
@@ -127,39 +101,101 @@ def answer_for(it: Dict[str, Any]) -> str:
         answers = it.get("answers") or []
         if not answers:
             return "?"
-        show = []
-        for a in answers[:3]:
-            txt = str(a.get("text", ""))
-            show.append(f"/{txt}/" if a.get("regex") else txt)
-        more = " ..." if len(answers) > 3 else ""
-        return "; ".join(show) + more
+        plain = next((a for a in answers if not a.get("regex")), None)
+        if plain:
+            return str(plain.get("text", "")).strip()
+        rx = str(answers[0].get("text", "")).strip().strip("/")
+        rx = rx.removeprefix("(?i)")
+        return rx or "?"
     return "?"
 
-def build_typst(quiz: Dict[str, Any], items: List[Dict[str, Any]]) -> str:
-    title = norm(quiz.get("title") or quiz.get("id") or "Quiz")
-    instr = norm((quiz.get("instructions") or ""))
+def md_from_item(n: int, it: Dict[str, Any], inline_solutions: bool) -> str:
+    t = it.get("type")
+    stem = it.get("stem", "")
+    pts = it.get("points", 0)
     lines: List[str] = []
-    lines.append("#set page(margin: 1in)")
+    lines.append(f"### {n}. ({pts} pt{'s' if pts != 1 else ''})")
     lines.append("")
-    lines.append(f"= {title}")
+    lines.append(stem.rstrip())
     lines.append("")
-    if instr:
-        lines.append(instr)
+    if t in {"mcq_one", "mcq_multi"}:
+        for i, c in enumerate(it.get("choices", [])):
+            text = str(c.get("text", "")).rstrip()
+            # keep it simple: labeled bullet; Pandoc will format nicely
+            lines.append(f"- {choice_letter(i)}. {text}")
         lines.append("")
-    for n, it in enumerate(items, start=1):
-        lines.append(render_item_typst(n, it))
-    lines.append("---")
-    lines.append("")
-    lines.append("== Answer Key")
-    lines.append("")
-    for n, it in enumerate(items, start=1):
-        ans = norm(answer_for(it))
-        sol = norm((it.get("solution") or "").strip())
-        lines.append(f"{n}. *{ans}*")
+    elif t == "true_false":
+        lines.append("- A. True")
+        lines.append("- B. False")
+        lines.append("")
+    elif t == "numeric":
+        unit = it.get("unit")
+        hint = f" (unit: {unit})" if unit else ""
+        lines.append(f"_Answer: numeric{hint}_")
+        lines.append("")
+    elif t == "short_answer":
+        lines.append("_Answer: short text_")
+        lines.append("")
+    else:
+        lines.append("_Unsupported type in renderer_")
+        lines.append("")
+
+    if inline_solutions:
+        sol = (it.get("solution") or "").strip()
         if sol:
-            lines.append(f"    - {sol}")
-    lines.append("")
+            lines.append(f"> **Solution:** {sol}")
+            lines.append("")
+
     return "\n".join(lines)
+
+def build_markdown_doc(quiz: Dict[str, Any], items: List[Dict[str, Any]], no_key: bool, inline_solutions: bool) -> str:
+    title = quiz.get("title") or quiz.get("id") or "Quiz"
+    instr = (quiz.get("instructions") or "").rstrip()
+
+    out: List[str] = []
+    out.append(f"# {title}")
+    out.append("")
+    if instr:
+        out.append(instr)
+        out.append("")
+
+    for n, it in enumerate(items, start=1):
+        out.append(md_from_item(n, it, inline_solutions))
+
+    if not no_key:
+        out.append("## Answer Key")
+        out.append("")
+        for n, it in enumerate(items, start=1):
+            ans = answer_for(it)
+            sol = (it.get("solution") or "").strip()
+            out.append(f"{n}. `{ans}`")
+            if sol and not inline_solutions:
+                out.append(f"    - {sol}")
+        out.append("")
+
+    return "\n".join(out)
+
+
+# ---------------- Pandoc: Markdown -> Typst ----------------
+
+def md_to_typst(md_text: str) -> str:
+    """Call pandoc to convert Markdown -> Typst. Requires pandoc on PATH."""
+    try:
+        proc = subprocess.run(
+            ["pandoc", "-f", "gfm+tex_math_dollars", "-t", "typst"],
+            input=md_text.encode("utf-8"),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+        )
+    except FileNotFoundError:
+        raise RuntimeError("pandoc not found in PATH")
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError("pandoc failed:\n" + e.stderr.decode("utf-8", "ignore"))
+    return proc.stdout.decode("utf-8")
+
+
+# ---------------- Main ----------------
 
 def main(argv: List[str]) -> int:
     ap = argparse.ArgumentParser(argument_default=None)
@@ -167,6 +203,8 @@ def main(argv: List[str]) -> int:
     ap.add_argument("--bank", default="qbank", help="Root of the question bank")
     ap.add_argument("--seed", type=int, default=42, help="Random seed for sampling when 'pick' is set")
     ap.add_argument("--out", required=True, help="Output .typ file")
+    ap.add_argument("--no-key", action="store_true", help="Omit the answer key section")
+    ap.add_argument("--inline-solutions", action="store_true", help="Print solutions under each question")
     args = ap.parse_args(argv)
 
     quiz = load_yaml(Path(args.quiz_file))
@@ -174,12 +212,19 @@ def main(argv: List[str]) -> int:
     items = load_items_by_ids(quiz.get("items", []), id2path)
     items = sample_items(items, quiz.get("pick"), args.seed)
 
-    out = build_typst(quiz, items)
+    md_doc = build_markdown_doc(quiz, items, args.no_key, args.inline_solutions)
+    typst_body = md_to_typst(md_doc)
+
+    # Prepend a tiny preamble. Keep it minimal so Pandoc’s doc structure stays intact.
+    preamble = "#set page(margin: 1in)\n#let horizontalrule = line(length: 100%)\n\n"
+    out_text = preamble + typst_body
+
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(out, encoding="utf-8")
+    out_path.write_text(out_text, encoding="utf-8")
     print(f"Wrote {out_path}")
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main(None))
