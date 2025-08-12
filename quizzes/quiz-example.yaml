@@ -1,0 +1,19 @@
+# Minimal quiz assembly file
+id: quiz-example-001
+title: Sample Quiz — Basics
+version: 1
+
+# Quiz options
+shuffle_questions: true
+time_limit_min: 10
+attempts: 1
+pick: 1  # if items > pick, randomly sample without replacement
+
+# Items by ID; you can also allow globs later like alg.slope.param.*
+items:
+  - id: example.topic.001
+    points: 2   # overrides per-item points if you want to tweak weighting here
+
+# Optional text you might render on paper exports
+instructions: |
+  Answer all questions. No external tools besides your brain.
