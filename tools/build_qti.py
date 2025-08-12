@@ -2,11 +2,14 @@
 """
 Build a QTI 1.2 package (zip) for Canvas from a quiz assembly YAML and your YAML item bank.
 
-Supported item types (for now):
+Supported item types:
   - mcq_one     (single correct)
   - true_false
 
-Unsupported types will be skipped with a warning.
+Maps YAML to Canvas fields:
+  feedback.correct   -> Correct answer comments
+  feedback.incorrect -> Wrong answer comments
+  solution           -> General answer comments
 
 Usage:
   python tools/build_qti.py quizzes/quiz-example.yaml --out build/qti/quiz-example-qti12.zip
@@ -81,17 +84,15 @@ def sample_items(items: List[Dict[str, Any]], pick: int | None, seed: int) -> Li
     return rng.sample(items, k=pick)
 
 
-# -------------------- QTI 1.2 building --------------------
+# -------------------- QTI 1.2 helpers --------------------
 
 def mattext(parent: ET.Element, text: str, texttype: str = "text/plain") -> ET.Element:
     material = ET.SubElement(parent, "material")
     m = ET.SubElement(material, "mattext", {"texttype": texttype})
-    # QTI 1.2 expects entities handled; ElementTree escapes by default.
     m.text = text if text is not None else ""
     return m
 
 def choice_ident(idx: int) -> str:
-    # A, B, C...
     return chr(ord("A") + idx)
 
 @dataclass
@@ -99,6 +100,28 @@ class QtiItem:
     ident: str
     title: str
     element: ET.Element
+
+def add_feedback_sections(item_el: ET.Element, fb_correct: str | None, fb_incorrect: str | None, fb_general: str | None):
+    """Create itemfeedback blocks Canvas maps to correct/wrong/general comments."""
+    if fb_correct:
+        fb = ET.SubElement(item_el, "itemfeedback", {"ident": "correct_fb", "view": "All"})
+        mattext(fb, fb_correct, "text/plain")
+    if fb_incorrect:
+        fb = ET.SubElement(item_el, "itemfeedback", {"ident": "incorrect_fb", "view": "All"})
+        mattext(fb, fb_incorrect, "text/plain")
+    if fb_general:
+        fb = ET.SubElement(item_el, "itemfeedback", {"ident": "general_fb", "view": "All"})
+        mattext(fb, fb_general, "text/plain")
+
+def add_display_feedback(respcondition: ET.Element, linkrefid: str):
+    ET.SubElement(respcondition, "displayfeedback", {"feedbacktype": "Response", "linkrefid": linkrefid})
+
+def add_display_general(respcondition: ET.Element, present: bool):
+    if present:
+        ET.SubElement(respcondition, "displayfeedback", {"feedbacktype": "Solution", "linkrefid": "general_fb"})
+
+
+# -------------------- Item builders --------------------
 
 def build_item_mcq_one(item: Dict[str, Any]) -> QtiItem:
     qid = item["id"]
@@ -108,7 +131,6 @@ def build_item_mcq_one(item: Dict[str, Any]) -> QtiItem:
     shuffle = "Yes" if item.get("shuffle_choices", True) else "No"
     choices = item.get("choices", [])
 
-    # Find correct index
     correct_idx = None
     for i, c in enumerate(choices):
         if c.get("correct") is True:
@@ -117,9 +139,16 @@ def build_item_mcq_one(item: Dict[str, Any]) -> QtiItem:
     if correct_idx is None:
         raise ValueError(f"mcq_one item has no correct choice: {qid}")
 
-    # <questestinterop><assessment><section><item>...
+    fb_correct = (item.get("feedback") or {}).get("correct")
+    fb_incorrect = (item.get("feedback") or {}).get("incorrect")
+    fb_general = item.get("solution")
+
     item_el = ET.Element("item", {"ident": qid, "title": title})
 
+    # Feedback sections
+    add_feedback_sections(item_el, fb_correct, fb_incorrect, fb_general)
+
+    # Presentation
     presentation = ET.SubElement(item_el, "presentation")
     mattext(presentation, stem, "text/plain")
     response_lid = ET.SubElement(presentation, "response_lid", {"ident": "response1", "rcardinality": "Single"})
@@ -130,15 +159,28 @@ def build_item_mcq_one(item: Dict[str, Any]) -> QtiItem:
         rl = ET.SubElement(render_choice, "response_label", {"ident": ident})
         mattext(rl, c.get("text", ""), "text/plain")
 
-    # Scoring
+    # Scoring and feedback routing
     resprocessing = ET.SubElement(item_el, "resprocessing")
     outcomes = ET.SubElement(resprocessing, "outcomes")
     ET.SubElement(outcomes, "decvar", {"varname": "SCORE", "vartype": "Decimal", "minvalue": "0", "maxvalue": str(points)})
-    # correct branch
-    respcondition = ET.SubElement(resprocessing, "respcondition", {"continue": "No"})
-    conditionvar = ET.SubElement(respcondition, "conditionvar")
-    ET.SubElement(conditionvar, "varequal", {"respident": "response1"}).text = choice_ident(correct_idx)
-    ET.SubElement(respcondition, "setvar", {"varname": "SCORE", "action": "Set"}).text = str(points)
+
+    # Correct branch
+    rc_ok = ET.SubElement(resprocessing, "respcondition", {"continue": "No"})
+    cv_ok = ET.SubElement(rc_ok, "conditionvar")
+    ET.SubElement(cv_ok, "varequal", {"respident": "response1"}).text = choice_ident(correct_idx)
+    ET.SubElement(rc_ok, "setvar", {"varname": "SCORE", "action": "Set"}).text = str(points)
+    if fb_correct:
+        add_display_feedback(rc_ok, "correct_fb")
+    add_display_general(rc_ok, bool(fb_general))
+
+    # Incorrect branch (everything else)
+    rc_bad = ET.SubElement(resprocessing, "respcondition", {"continue": "No"})
+    ET.SubElement(rc_bad, "conditionvar")  # empty conditionvar + <other/> is optional
+    ET.SubElement(rc_bad.find("conditionvar"), "other")
+    ET.SubElement(rc_bad, "setvar", {"varname": "SCORE", "action": "Set"}).text = "0"
+    if fb_incorrect:
+        add_display_feedback(rc_bad, "incorrect_fb")
+    add_display_general(rc_bad, bool(fb_general))
 
     return QtiItem(ident=qid, title=title, element=item_el)
 
@@ -148,15 +190,20 @@ def build_item_true_false(item: Dict[str, Any]) -> QtiItem:
     points = float(item.get("points", 1))
     stem = item.get("stem", "")
     answer_true = bool(item.get("answer", False))
-    shuffle = "No"  # keep order True/False
+
+    fb_correct = (item.get("feedback") or {}).get("correct")
+    fb_incorrect = (item.get("feedback") or {}).get("incorrect")
+    fb_general = item.get("solution")
 
     item_el = ET.Element("item", {"ident": qid, "title": title})
+
+    # Feedback sections
+    add_feedback_sections(item_el, fb_correct, fb_incorrect, fb_general)
 
     presentation = ET.SubElement(item_el, "presentation")
     mattext(presentation, stem, "text/plain")
     response_lid = ET.SubElement(presentation, "response_lid", {"ident": "response1", "rcardinality": "Single"})
-    render_choice = ET.SubElement(response_lid, "render_choice", {"shuffle": shuffle})
-
+    render_choice = ET.SubElement(response_lid, "render_choice", {"shuffle": "No"})
     for ident, text in [("A", "True"), ("B", "False")]:
         rl = ET.SubElement(render_choice, "response_label", {"ident": ident})
         mattext(rl, text, "text/plain")
@@ -167,36 +214,47 @@ def build_item_true_false(item: Dict[str, Any]) -> QtiItem:
     outcomes = ET.SubElement(resprocessing, "outcomes")
     ET.SubElement(outcomes, "decvar", {"varname": "SCORE", "vartype": "Decimal", "minvalue": "0", "maxvalue": str(points)})
 
-    respcondition = ET.SubElement(resprocessing, "respcondition", {"continue": "No"})
-    conditionvar = ET.SubElement(respcondition, "conditionvar")
-    ET.SubElement(conditionvar, "varequal", {"respident": "response1"}).text = correct_ident
-    ET.SubElement(respcondition, "setvar", {"varname": "SCORE", "action": "Set"}).text = str(points)
+    rc_ok = ET.SubElement(resprocessing, "respcondition", {"continue": "No"})
+    cv_ok = ET.SubElement(rc_ok, "conditionvar")
+    ET.SubElement(cv_ok, "varequal", {"respident": "response1"}).text = correct_ident
+    ET.SubElement(rc_ok, "setvar", {"varname": "SCORE", "action": "Set"}).text = str(points)
+    if fb_correct:
+        add_display_feedback(rc_ok, "correct_fb")
+    add_display_general(rc_ok, bool(fb_general))
+
+    rc_bad = ET.SubElement(resprocessing, "respcondition", {"continue": "No"})
+    ET.SubElement(rc_bad, "conditionvar")
+    ET.SubElement(rc_bad.find("conditionvar"), "other")
+    ET.SubElement(rc_bad, "setvar", {"varname": "SCORE", "action": "Set"}).text = "0"
+    if fb_incorrect:
+        add_display_feedback(rc_bad, "incorrect_fb")
+    add_display_general(rc_bad, bool(fb_general))
 
     return QtiItem(ident=qid, title=title, element=item_el)
 
+
+# -------------------- Assessment and manifest --------------------
+
 def build_assessment_xml(quiz_title: str, qti_items: List[QtiItem]) -> bytes:
-    # QTI 1.2 single assessment with one section containing all items
     questestinterop = ET.Element("questestinterop")
     assessment = ET.SubElement(questestinterop, "assessment", {"ident": "ASSESSMENT", "title": quiz_title})
     section = ET.SubElement(assessment, "section", {"ident": "root_section"})
     for q in qti_items:
         section.append(q.element)
-
-    # Serialize with XML declaration
-    xml_bytes = ET.tostring(questestinterop, encoding="utf-8", xml_declaration=True)
-    return xml_bytes
+    return ET.tostring(questestinterop, encoding="utf-8", xml_declaration=True)
 
 def build_manifest_xml() -> bytes:
-    # Minimal IMS Content Packaging manifest. Canvas tolerates minimal manifests for QTI imports.
-    manifest = ET.Element("manifest", {"identifier": "MANIFEST", "version": "1.1.4",
-                                       "xmlns": "http://www.imsproject.org/xsd/imscp_rootv1p1p2",
-                                       "xmlns:imsmd": "http://www.imsglobal.org/xsd/imsmd_rootv1p2p1",
-                                       "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-                                       "xsi:schemaLocation": "http://www.imsproject.org/xsd/imscp_rootv1p1p2 "
-                                                             "imscp_rootv1p1p2.xsd "
-                                                             "http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 "
-                                                             "imsmd_rootv1p2p1.xsd"})
-    # Minimal organizations/resources pointing to assessment.xml
+    manifest = ET.Element(
+        "manifest",
+        {
+            "identifier": "MANIFEST",
+            "version": "1.1.4",
+            "xmlns": "http://www.imsproject.org/xsd/imscp_rootv1p1p2",
+            "xmlns:imsmd": "http://www.imsglobal.org/xsd/imsmd_rootv1p2p1",
+            "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            "xsi:schemaLocation": "http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd",
+        },
+    )
     ET.SubElement(manifest, "organizations")
     resources = ET.SubElement(manifest, "resources")
     res = ET.SubElement(resources, "resource", {"identifier": "RES-ASSMT", "type": "imsqti_xmlv1p2", "href": "assessment.xml"})
