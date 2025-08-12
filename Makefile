@@ -2,6 +2,9 @@
 
 PYTHON := python3
 
+# Prefer Unicode-capable engines by default
+LATEX ?= $(shell { command -v lualatex >/dev/null && echo lualatex; } || { command -v xelatex >/dev/null && echo xelatex; } || echo pdflatex)
+
 # Tools
 VALIDATOR := tools/validate_items.py
 BUILD_MD  := tools/build_md.py
@@ -104,10 +107,11 @@ $(OUT_TEX): $(BUILD_TEX) $(QUIZ)
 
 .PHONY: latex-pdf
 latex-pdf: $(OUT_TEX_PDF)
+
 $(OUT_TEX_PDF): $(OUT_TEX)
-	$(call say,Compiling LaTeX PDF -> $@)
-	$(Q)command -v pdflatex >/dev/null || { echo "pdflatex not found in PATH"; exit 2; }
-	$(Q)pdflatex -interaction=nonstopmode -halt-on-error -output-directory $(dir $@) $(OUT_TEX) $(TEX_SILENCE)
+	$(call say,Compiling LaTeX PDF with $(LATEX) -> $@)
+	$(Q)command -v $(LATEX) >/dev/null || { echo "$(LATEX) not found in PATH"; exit 2; }
+	$(Q)$(LATEX) -interaction=nonstopmode -halt-on-error -output-directory $(dir $@) $(OUT_TEX) $(TEX_SILENCE)
 
 .PHONY: qti
 qti: check-pandoc $(OUT_QTI)
