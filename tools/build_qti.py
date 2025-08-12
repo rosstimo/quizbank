@@ -2,14 +2,12 @@
 """
 Build a QTI 1.2 package (zip) for Canvas from a quiz assembly YAML and your YAML item bank.
 
+Now renders all text fields via Pandoc from the Quiz Markdown Profile (QMP) -> HTML:
+  - stem, choices[].text, feedback.correct/incorrect, solution
+
 Supported item types:
   - mcq_one     (single correct)
   - true_false
-
-Maps YAML to Canvas fields:
-  feedback.correct   -> Correct answer comments
-  feedback.incorrect -> Wrong answer comments
-  solution           -> General answer comments
 
 Usage:
   python tools/build_qti.py quizzes/quiz-example.yaml --out build/qti/quiz-example-qti12.zip
@@ -33,10 +31,10 @@ import xml.etree.ElementTree as ET
 
 import yaml
 try:
-    from tools.common import pandoc_convert
+    from tools.common import qmp_to_html, PandocError
 except ModuleNotFoundError:
-    # Fallback when running as a script from the tools/ directory
-    from common import pandoc_convert
+    # Fallback when executed directly (python tools/build_qti.py)
+    from common import qmp_to_html, PandocError
 
 
 # -------------------- YAML helpers --------------------
@@ -89,15 +87,17 @@ def sample_items(items: List[Dict[str, Any]], pick: int | None, seed: int) -> Li
     return rng.sample(items, k=pick)
 
 
-# -------------------- QTI 1.2 helpers --------------------
+# -------------------- QTI 1.2 building --------------------
 
-def mattext(parent: ET.Element, text: str, texttype: str = "text/plain") -> ET.Element:
+def mattext(parent: ET.Element, html: str, texttype: str = "text/html") -> ET.Element:
+    # QTI 1.2 mattext with texttype="text/html" (Canvas understands HTML here).
     material = ET.SubElement(parent, "material")
     m = ET.SubElement(material, "mattext", {"texttype": texttype})
-    m.text = text if text is not None else ""
+    m.text = html if html is not None else ""
     return m
 
 def choice_ident(idx: int) -> str:
+    # A, B, C...
     return chr(ord("A") + idx)
 
 @dataclass
@@ -106,17 +106,17 @@ class QtiItem:
     title: str
     element: ET.Element
 
-def add_feedback_sections(item_el: ET.Element, fb_correct: str | None, fb_incorrect: str | None, fb_general: str | None):
+def add_feedback_sections(item_el: ET.Element, fb_correct_html: str | None, fb_incorrect_html: str | None, fb_general_html: str | None):
     """Create itemfeedback blocks Canvas maps to correct/wrong/general comments."""
-    if fb_correct:
+    if fb_correct_html:
         fb = ET.SubElement(item_el, "itemfeedback", {"ident": "correct_fb", "view": "All"})
-        mattext(fb, fb_correct, "text/plain")
-    if fb_incorrect:
+        mattext(fb, fb_correct_html, "text/html")
+    if fb_incorrect_html:
         fb = ET.SubElement(item_el, "itemfeedback", {"ident": "incorrect_fb", "view": "All"})
-        mattext(fb, fb_incorrect, "text/plain")
-    if fb_general:
+        mattext(fb, fb_incorrect_html, "text/html")
+    if fb_general_html:
         fb = ET.SubElement(item_el, "itemfeedback", {"ident": "general_fb", "view": "All"})
-        mattext(fb, fb_general, "text/plain")
+        mattext(fb, fb_general_html, "text/html")
 
 def add_display_feedback(respcondition: ET.Element, linkrefid: str):
     ET.SubElement(respcondition, "displayfeedback", {"feedbacktype": "Response", "linkrefid": linkrefid})
@@ -132,7 +132,7 @@ def build_item_mcq_one(item: Dict[str, Any]) -> QtiItem:
     qid = item["id"]
     title = item.get("topic") or qid
     points = float(item.get("points", 1))
-    stem = item.get("stem", "")
+    stem_md = item.get("stem", "")
     shuffle = "Yes" if item.get("shuffle_choices", True) else "No"
     choices = item.get("choices", [])
 
@@ -144,26 +144,31 @@ def build_item_mcq_one(item: Dict[str, Any]) -> QtiItem:
     if correct_idx is None:
         raise ValueError(f"mcq_one item has no correct choice: {qid}")
 
-    fb_correct = (item.get("feedback") or {}).get("correct")
-    fb_incorrect = (item.get("feedback") or {}).get("incorrect")
-    fb_general = item.get("solution")
+    try:
+        stem_html = qmp_to_html(stem_md)
+        fb = item.get("feedback") or {}
+        fb_correct_html = qmp_to_html(fb.get("correct", "")) if fb.get("correct") else None
+        fb_incorrect_html = qmp_to_html(fb.get("incorrect", "")) if fb.get("incorrect") else None
+        fb_general_html = qmp_to_html(item.get("solution", "")) if item.get("solution") else None
+        choice_html = [qmp_to_html(c.get("text", "")) for c in choices]
+    except PandocError as e:
+        raise RuntimeError(f"Pandoc conversion failed for item {qid}: {e}") from e
 
     item_el = ET.Element("item", {"ident": qid, "title": title})
 
     # Feedback sections
-    add_feedback_sections(item_el, fb_correct, fb_incorrect, fb_general)
+    add_feedback_sections(item_el, fb_correct_html, fb_incorrect_html, fb_general_html)
 
     # Presentation
     presentation = ET.SubElement(item_el, "presentation")
-    html = pandoc_convert(stem, to_fmt="html")
-    mattext(presentation, html, "text/html")
+    mattext(presentation, stem_html, "text/html")
     response_lid = ET.SubElement(presentation, "response_lid", {"ident": "response1", "rcardinality": "Single"})
     render_choice = ET.SubElement(response_lid, "render_choice", {"shuffle": shuffle})
 
-    for i, c in enumerate(choices):
+    for i, html in enumerate(choice_html):
         ident = choice_ident(i)
         rl = ET.SubElement(render_choice, "response_label", {"ident": ident})
-        mattext(rl, c.get("text", ""), "text/plain")
+        mattext(rl, html, "text/html")
 
     # Scoring and feedback routing
     resprocessing = ET.SubElement(item_el, "resprocessing")
@@ -175,18 +180,18 @@ def build_item_mcq_one(item: Dict[str, Any]) -> QtiItem:
     cv_ok = ET.SubElement(rc_ok, "conditionvar")
     ET.SubElement(cv_ok, "varequal", {"respident": "response1"}).text = choice_ident(correct_idx)
     ET.SubElement(rc_ok, "setvar", {"varname": "SCORE", "action": "Set"}).text = str(points)
-    if fb_correct:
+    if fb_correct_html:
         add_display_feedback(rc_ok, "correct_fb")
-    add_display_general(rc_ok, bool(fb_general))
+    add_display_general(rc_ok, bool(fb_general_html))
 
     # Incorrect branch (everything else)
     rc_bad = ET.SubElement(resprocessing, "respcondition", {"continue": "No"})
-    ET.SubElement(rc_bad, "conditionvar")  # empty conditionvar + <other/> is optional
+    ET.SubElement(rc_bad, "conditionvar")
     ET.SubElement(rc_bad.find("conditionvar"), "other")
     ET.SubElement(rc_bad, "setvar", {"varname": "SCORE", "action": "Set"}).text = "0"
-    if fb_incorrect:
+    if fb_incorrect_html:
         add_display_feedback(rc_bad, "incorrect_fb")
-    add_display_general(rc_bad, bool(fb_general))
+    add_display_general(rc_bad, bool(fb_general_html))
 
     return QtiItem(ident=qid, title=title, element=item_el)
 
@@ -194,26 +199,31 @@ def build_item_true_false(item: Dict[str, Any]) -> QtiItem:
     qid = item["id"]
     title = item.get("topic") or qid
     points = float(item.get("points", 1))
-    stem = item.get("stem", "")
+    stem_md = item.get("stem", "")
     answer_true = bool(item.get("answer", False))
 
-    fb_correct = (item.get("feedback") or {}).get("correct")
-    fb_incorrect = (item.get("feedback") or {}).get("incorrect")
-    fb_general = item.get("solution")
+    try:
+        stem_html = qmp_to_html(stem_md)
+        fb = item.get("feedback") or {}
+        fb_correct_html = qmp_to_html(fb.get("correct", "")) if fb.get("correct") else None
+        fb_incorrect_html = qmp_to_html(fb.get("incorrect", "")) if fb.get("incorrect") else None
+        fb_general_html = qmp_to_html(item.get("solution", "")) if item.get("solution") else None
+    except PandocError as e:
+        raise RuntimeError(f"Pandoc conversion failed for item {qid}: {e}") from e
 
     item_el = ET.Element("item", {"ident": qid, "title": title})
 
     # Feedback sections
-    add_feedback_sections(item_el, fb_correct, fb_incorrect, fb_general)
+    add_feedback_sections(item_el, fb_correct_html, fb_incorrect_html, fb_general_html)
 
+    # Presentation
     presentation = ET.SubElement(item_el, "presentation")
-    html = pandoc_convert(stem, to_fmt="html")
-    mattext(presentation, html, "text/html")
+    mattext(presentation, stem_html, "text/html")
     response_lid = ET.SubElement(presentation, "response_lid", {"ident": "response1", "rcardinality": "Single"})
     render_choice = ET.SubElement(response_lid, "render_choice", {"shuffle": "No"})
-    for ident, text in [("A", "True"), ("B", "False")]:
+    for ident, label_md in [("A", "True"), ("B", "False")]:
         rl = ET.SubElement(render_choice, "response_label", {"ident": ident})
-        mattext(rl, text, "text/plain")
+        mattext(rl, qmp_to_html(label_md), "text/html")
 
     correct_ident = "A" if answer_true else "B"
 
@@ -225,17 +235,17 @@ def build_item_true_false(item: Dict[str, Any]) -> QtiItem:
     cv_ok = ET.SubElement(rc_ok, "conditionvar")
     ET.SubElement(cv_ok, "varequal", {"respident": "response1"}).text = correct_ident
     ET.SubElement(rc_ok, "setvar", {"varname": "SCORE", "action": "Set"}).text = str(points)
-    if fb_correct:
+    if fb_correct_html:
         add_display_feedback(rc_ok, "correct_fb")
-    add_display_general(rc_ok, bool(fb_general))
+    add_display_general(rc_ok, bool(fb_general_html))
 
     rc_bad = ET.SubElement(resprocessing, "respcondition", {"continue": "No"})
     ET.SubElement(rc_bad, "conditionvar")
     ET.SubElement(rc_bad.find("conditionvar"), "other")
     ET.SubElement(rc_bad, "setvar", {"varname": "SCORE", "action": "Set"}).text = "0"
-    if fb_incorrect:
+    if fb_incorrect_html:
         add_display_feedback(rc_bad, "incorrect_fb")
-    add_display_general(rc_bad, bool(fb_general))
+    add_display_general(rc_bad, bool(fb_general_html))
 
     return QtiItem(ident=qid, title=title, element=item_el)
 
@@ -299,8 +309,7 @@ def main(argv: List[str]) -> int:
         return 2
 
     items = load_items_by_ids(raw_items, id_index)
-    pick = quiz.get("pick")
-    items = sample_items(items, pick, args.seed)
+    items = sample_items(items, quiz.get("pick"), args.seed)
 
     title = args.title or quiz.get("title") or quiz.get("id") or "Assessment"
 
