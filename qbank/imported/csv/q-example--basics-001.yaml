@@ -1,0 +1,23 @@
+id: course.types.001
+version: 1
+type: mcq_one
+points: 2
+topic: Example > Basics
+difficulty: easy
+tags:
+- types
+- booleans
+stem: Which type represents truth values in most languages?
+author: Samples
+license: CC-BY-4.0
+choices:
+- text: Integer
+- text: Float
+- text: Boolean
+  correct: true
+- text: Character
+feedback:
+  correct: Exactly. Boolean is the truth type.
+  incorrect: It's Boolean, not the others.
+solution: 'The Boolean type has two values: `true` and `false`.'
+shuffle_choices: true

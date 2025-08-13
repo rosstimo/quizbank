@@ -107,7 +107,6 @@ $(OUT_TEX): $(BUILD_TEX) $(QUIZ)
 
 .PHONY: latex-pdf
 latex-pdf: $(OUT_TEX_PDF)
-
 $(OUT_TEX_PDF): $(OUT_TEX)
 	$(call say,Compiling LaTeX PDF with $(LATEX) -> $@)
 	$(Q)command -v $(LATEX) >/dev/null || { echo "$(LATEX) not found in PATH"; exit 2; }

@@ -1,0 +1,19 @@
+id: course.circuits.004
+version: 1
+type: numeric
+points: 2
+topic: Example > Circuits
+difficulty: easy
+tags:
+- ohms-law
+stem: A circuit has a current of 3 A through a resistor of 2 Ω. What is the voltage
+  across the resistor?
+author: Samples
+license: CC-BY-4.0
+answer: 0.0
+tolerance: 6.0
+unit: '0.01'
+feedback:
+  correct: V
+  incorrect: Correct. V = I × R = 3 × 2 = 6 V.
+solution: Use V = I × R.

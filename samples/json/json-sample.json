@@ -1,0 +1,107 @@
+[
+  {
+    "id": "course.types.001",
+    "version": 1,
+    "type": "mcq_one",
+    "points": 2,
+    "topic": "Example > Basics",
+    "difficulty": "easy",
+    "tags": ["types", "booleans"],
+    "stem": "Which type represents truth values in most languages?",
+    "choices": [
+      {"text": "Integer"},
+      {"text": "Float"},
+      {"text": "Boolean", "correct": true, "rationale": "It encodes true/false."},
+      {"text": "Character"}
+    ],
+    "feedback": {
+      "correct": "Exactly. Boolean is the truth type.",
+      "incorrect": "It's **Boolean**, not the others."
+    },
+    "solution": "The Boolean type has two values: `true` and `false`.",
+    "author": "Sample Author",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "course.algos.002",
+    "version": 1,
+    "type": "mcq_multi",
+    "points": 2,
+    "topic": "Example > Algorithms",
+    "difficulty": "medium",
+    "tags": ["sorting"],
+    "stem": "Which are comparison-based sorting algorithms? Select all that apply.",
+    "choices": [
+      {"text": "Merge sort", "correct": true},
+      {"text": "Counting sort"},
+      {"text": "Radix sort"},
+      {"text": "Quick sort", "correct": true}
+    ],
+    "feedback": {
+      "correct": "Merge and Quick are comparison sorts.",
+      "incorrect": "Counting/Radix aren't comparison sorts."
+    },
+    "solution": "**Merge** and **Quick** compare elements; **Counting**/**Radix** don't.",
+    "author": "Sample Author",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "course.trees.003",
+    "version": 1,
+    "type": "true_false",
+    "points": 1,
+    "topic": "Example > Trees",
+    "difficulty": "easy",
+    "tags": ["bst", "traversal"],
+    "stem": "In a binary search tree, an in-order traversal yields sorted keys.",
+    "answer": true,
+    "feedback": {
+      "correct": "Yep. That's the BST party trick.",
+      "incorrect": "It's true for valid BSTs."
+    },
+    "solution": "In-order visits left, node, right, producing nondecreasing order.",
+    "author": "Sample Author",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "course.circuits.004",
+    "version": 1,
+    "type": "numeric",
+    "points": 2,
+    "topic": "Example > Circuits",
+    "difficulty": "easy",
+    "tags": ["ohms-law"],
+    "stem": "A circuit has a current of 3 A through a resistor of 2 Ω. What is the voltage across the resistor?",
+    "answer": 6,
+    "tolerance": 0.01,
+    "unit": "V",
+    "feedback": {
+      "correct": "Correct. $V = I \\cdot R = 3 \\times 2 = 6\\ \\text{V}$.",
+      "incorrect": "Use $V = I \\cdot R$."
+    },
+    "solution": "$V = I \\cdot R = 3\\,\\text{A} \\times 2\\,\\Omega = 6\\,\\text{V}$.",
+    "author": "Sample Author",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "id": "course.ds.005",
+    "version": 1,
+    "type": "short_answer",
+    "points": 2,
+    "topic": "Example > Data Structures",
+    "difficulty": "easy",
+    "tags": ["lifo", "stack"],
+    "stem": "Name the data structure that uses the **LIFO** discipline.",
+    "answers": [
+      {"text": "stack", "case_sensitive": false, "score": 1},
+      {"text": "(?i)stack", "regex": true, "case_sensitive": false, "score": 1}
+    ],
+    "feedback": {
+      "correct": "Exactly. LIFO = stack.",
+      "incorrect": "The term you want is **stack**."
+    },
+    "solution": "A **stack** removes the most recently pushed item first.",
+    "author": "Sample Author",
+    "license": "CC-BY-4.0"
+  }
+]

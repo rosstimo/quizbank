@@ -1,0 +1,19 @@
+Which type represents truth values in most languages? {
+=Boolean
+~Integer
+~Float
+~Character
+}
+
+Which are comparison-based sorting algorithms? Select all that apply. {
+=Merge sort
+=Quick sort
+~Counting sort
+~Radix sort
+}
+
+In a binary search tree, an in-order traversal yields sorted keys. {T}
+
+A circuit has a current of 3 A through a resistor of 2 Ω. What is the voltage across the resistor? {#6:0.01}
+
+Name the data structure that uses the LIFO discipline. {=stack =Stack}

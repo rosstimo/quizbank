@@ -1,0 +1,15 @@
+id: course.ds.005
+version: 1
+type: short_answer
+points: 2
+topic: Example > Data Structures
+difficulty: easy
+tags:
+- lifo
+- stack
+stem: Name the data structure that uses the LIFO discipline.
+author: Samples
+license: CC-BY-4.0
+feedback:
+  incorrect: Exactly. LIFO = stack.
+solution: You're thinking of a **stack**.

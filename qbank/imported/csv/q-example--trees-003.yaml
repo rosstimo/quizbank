@@ -1,0 +1,17 @@
+id: course.trees.003
+version: 1
+type: true_false
+points: 1
+topic: Example > Trees
+difficulty: easy
+tags:
+- bst
+- traversal
+stem: In a binary search tree, an in-order traversal yields sorted keys.
+author: Samples
+license: CC-BY-4.0
+answer: true
+feedback:
+  correct: Yep. That's the BST party trick.
+  incorrect: For valid BSTs, in-order is sorted.
+solution: In-order visits left, node, right; keys are nondecreasing.

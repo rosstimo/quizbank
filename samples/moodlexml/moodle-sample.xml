@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="multichoice">
+    <name><text>Boolean type</text></name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which type represents truth values in most languages?</p>]]></text>
+    </questiontext>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="0"><text>Integer</text></answer>
+    <answer fraction="0"><text>Float</text></answer>
+    <answer fraction="100"><text>Boolean</text></answer>
+    <answer fraction="0"><text>Character</text></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>Comparison sorts</text></name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which are comparison-based sorting algorithms? Select all that apply.</p>]]></text>
+    </questiontext>
+    <single>false</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text>Merge sort</text></answer>
+    <answer fraction="0"><text>Counting sort</text></answer>
+    <answer fraction="0"><text>Radix sort</text></answer>
+    <answer fraction="100"><text>Quick sort</text></answer>
+  </question>
+
+  <question type="truefalse">
+    <name><text>BST in-order</text></name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In a binary search tree, an in-order traversal yields sorted keys.</p>]]></text>
+    </questiontext>
+    <answer fraction="100"><text>true</text></answer>
+    <answer fraction="0"><text>false</text></answer>
+  </question>
+
+  <question type="numerical">
+    <name><text>Ohm's law</text></name>
+    <questiontext format="html">
+      <text><![CDATA[<p>A circuit has a current of 3 A through a resistor of 2 Ω. What is the voltage across the resistor?</p>]]></text>
+    </questiontext>
+    <answer fraction="100">
+      <text>6</text>
+      <tolerance>0.01</tolerance>
+    </answer>
+    <units></units>
+  </question>
+
+  <question type="shortanswer">
+    <name><text>LIFO name</text></name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Name the data structure that uses the <strong>LIFO</strong> discipline.</p>]]></text>
+    </questiontext>
+    <answers>
+      <answer fraction="100"><text>stack</text><feedback><text/></feedback></answer>
+      <answer fraction="100"><text>Stack</text><feedback><text/></feedback></answer>
+    </answers>
+    <usecase>0</usecase>
+  </question>
+</quiz>

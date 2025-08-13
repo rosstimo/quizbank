@@ -1,0 +1,34 @@
+Which type represents truth values in most languages?
+A. Integer
+B. Float
+C. Boolean
+D. Character
+ANSWER: C
+
+Which are high-level, portable languages?
+A. Assembly
+B. C
+C. Python
+D. Rust
+ANSWER: C
+
+Which traversal visits nodes in sorted order for a BST?
+A. Pre-order
+B. Post-order
+C. In-order
+D. Level-order
+ANSWER: C
+
+Which sorting algorithm is comparison-based?
+A. Counting sort
+B. Radix sort
+C. Merge sort
+D. Bucket sort
+ANSWER: C
+
+What data structure uses a LIFO discipline?
+A. Queue
+B. Stack
+C. Deque
+D. Heap
+ANSWER: B
