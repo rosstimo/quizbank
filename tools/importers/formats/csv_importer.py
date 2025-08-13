@@ -43,14 +43,14 @@ def import_items(path: Path, opts) -> List[Dict]:
             if t in {"mcq_one", "mcq_multi"}:
                 letters = ["A","B","C","D","E"]
                 choices = []
-                for L in letters:
+                correct_answers = set(parse_letters(col(row, "correct")))
+                for idx, L in enumerate(letters):
                     txt = col(row, f"choice{L}")
                     if txt and txt.strip():
-                        choices.append({"text": txt.strip()})
-                correct = set(parse_letters(col(row, "correct")))
-                for idx, ch in enumerate(choices):
-                    if choice_letter(idx) in correct:
-                        ch["correct"] = True
+                        choice = {"text": txt.strip()}
+                        if choice_letter(idx) in correct_answers:
+                            choice["correct"] = True
+                        choices.append(choice)
                 if not choices:
                     continue
                 item["choices"] = choices
@@ -68,9 +68,15 @@ def import_items(path: Path, opts) -> List[Dict]:
                 if unit:
                     item["unit"] = unit
             elif t == "short_answer":
-                ans = (col(row, "answer") or "").strip()
-                if ans:
-                    item["answers"] = [{"text": ans, "case_sensitive": False}]
+                answers = col(row, "answers").strip()
+                if answers:
+                    import json
+                    print(f"DEBUG: Raw answers field: {answers}")  # Debugging output
+                    try:
+                        # Ensure proper parsing of JSON strings
+                        item["answers"] = json.loads(answers)
+                    except json.JSONDecodeError as e:
+                        raise ValueError(f"Invalid JSON format for answers: {answers}. Error: {e}")
             fc = (col(row, "feedback_correct") or "").strip()
             fi = (col(row, "feedback_incorrect") or "").strip()
             sol = (col(row, "solution") or "").strip()

@@ -64,7 +64,16 @@
       "contentMediaType": "text/markdown"
     },
     "author": { "type": "string" },
-    "license": { "type": "string" }
+    "license": { "type": "string" },
+    "shuffle_answers": {
+      "type": "boolean",
+      "description": "Indicates if answers should be shuffled for this quiz item."
+    },
+    "allowed_attempts": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of attempts allowed for this quiz item."
+    }
   },
 
   "allOf": [
@@ -122,7 +131,8 @@
         "type": { "const": "mcq_multi" },
         "choices": {
           "type": "array",
-          "minItems": 3,
+          "minItems": 2,
+          "maxItems": 10,
           "items": { "$ref": "#/$defs/choice" },
           "contains": {
             "type": "object",
@@ -150,11 +160,11 @@
       "type": "object",
       "properties": {
         "type": { "const": "numeric" },
-        "answer": { "type": "number" },
-        "tolerance": { "type": "number", "minimum": 0 },
-        "unit": { "type": "string" }
+        "answer": { "type": "number", "description": "Correct numeric answer", "not": { "type": "string" } },
+        "tolerance": { "type": "number", "minimum": 0, "default": 0, "description": "Acceptable range of error" },
+        "unit": { "type": ["string", "null"], "description": "Optional unit for the answer" }
       },
-      "required": ["answer"]
+      "required": ["answer", "tolerance"]
     },
 
     "short_answer": {

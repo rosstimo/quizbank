@@ -77,6 +77,10 @@ validate:
 	$(call say,Validating items with $(VALIDATOR))
 	$(Q)$(PYTHON) $(VALIDATOR) qbank/**/*.yaml
 
+.PHONY: test
+test:
+	pytest -q
+
 .PHONY: md
 md: check-pandoc $(OUT_MD)
 $(OUT_MD): $(BUILD_MD) $(QUIZ)

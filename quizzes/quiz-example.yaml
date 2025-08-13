@@ -5,7 +5,7 @@ version: 2
 shuffle_questions: true
 time_limit_min: 10
 attempts: 1
-pick: 5
+pick: null
 
 items:
   - id: example.topic.001   # mcq_one
@@ -18,6 +18,8 @@ items:
     points: 2
   - id: example.topic.005   # short_answer
     points: 2
+  - id: example.topic.simple.numeric   # numeric
+    points: 1
 
 instructions: |
   Answer all questions. No external tools besides your brain.

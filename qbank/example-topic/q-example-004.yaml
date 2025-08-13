@@ -6,17 +6,17 @@ topic: Example > Basics
 difficulty: easy
 tags: [ohms-law]
 stem: |
-  A circuit has a current of `3 A` through a resistor of `2 Ω`.  
+  A circuit has a current of 3 through a resistor of 2.  
   What is the voltage across the resistor?
 answer: 6
-tolerance: 0.01
-unit: V
+tolerance: 0.0
+unit: ""
 feedback:
   correct: |
-    Correct. Ohm’s law: $V = I \cdot R = 3 \times 2 = 6\ \mathrm{V}$.
+    Correct. Ohm’s law: I * R = V, 3 * 2 = 6
   incorrect: |
-    Use $V = I \cdot R$. With 3 A and 2 Ω the result is 6 V.
+    Use Ohm's Law. I * R = V
 solution: |
-  $V = I \cdot R = 3\ \mathrm{A} \times 2\ \Omega = 6\ \mathrm{V}$.
-author: Tim Rossiter
+  Use Ohm's Law. I * R = V
+  author: Tim Rossiter
 license: CC-BY-4.0

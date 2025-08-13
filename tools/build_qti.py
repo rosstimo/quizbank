@@ -332,8 +332,8 @@ def build_item_numeric(item: Dict[str, Any]) -> QtiItem:
 
     presentation = ET.SubElement(item_el, "presentation")
     mattext(presentation, stem_html, "text/html")
-    response_num = ET.SubElement(presentation, "response_num", {"ident": "response1", "rcardinality": "Single"})
-    ET.SubElement(response_num, "render_fib", {"fibtype": "Decimal"})
+    response_num = ET.SubElement(presentation, "response_str", {"ident": "response1", "rcardinality": "Single"})
+    ET.SubElement(response_num, "render_fib", {"fibtype": "String"})
 
     resprocessing = ET.SubElement(item_el, "resprocessing")
     outcomes = ET.SubElement(resprocessing, "outcomes")
@@ -360,6 +360,8 @@ def build_item_numeric(item: Dict[str, Any]) -> QtiItem:
     if fb_incorrect_html:
         add_display_feedback(rc_bad, "incorrect_fb")
     add_display_general(rc_bad, bool(fb_general_html))
+
+    print(f"DEBUG: Processing numeric item {qid} with answer {ans} and tolerance {tol}")
 
     return QtiItem(ident=qid, title=title, element=item_el)
 
@@ -509,6 +511,8 @@ def main(argv: List[str]) -> int:
     skipped = 0
     for it in items:
         t = it.get("type")
+        qid = it["id"]
+        print(f"DEBUG: Processing item {it['id']} of type {it['type']}")
         try:
             if t == "mcq_one":
                 qti_items.append(build_item_mcq_one(it))

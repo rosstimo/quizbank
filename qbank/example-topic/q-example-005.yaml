@@ -8,7 +8,7 @@ tags: [data-structures, lifo]
 stem: |
   Name the data structure that uses the **LIFO** discipline (last in, first out).
 answers:
-  - text: "(?i)stack"
+  - text: "stack"
     regex: true
     case_sensitive: false
     score: 1

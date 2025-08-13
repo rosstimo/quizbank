@@ -1,0 +1,18 @@
+id: example.topic.simple.numeric
+version: 1
+type: numeric
+points: 1
+topic: Example > Basics
+difficulty: easy
+stem: |
+  What is 2 + 2?
+answer: 4
+tolerance: 0.0
+unit: ""
+feedback:
+  correct: Correct! 2 + 2 equals 4.
+  incorrect: Incorrect. The correct answer is 4.
+solution: |
+  The solution is simple arithmetic: 2 + 2 = 4.
+author: Tim Rossiter
+license: CC-BY-4.0
