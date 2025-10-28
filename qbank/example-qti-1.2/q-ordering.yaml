@@ -1,0 +1,20 @@
+id: example.qti.ordering
+version: 1
+type: ordering
+points: 2
+stem: "Arrange the planets in our solar system in order from closest to farthest from the Sun."
+items:
+  - "Mercury"
+  - "Venus"
+  - "Earth"
+  - "Mars"
+  - "Jupiter"
+  - "Saturn"
+  - "Uranus"
+  - "Neptune"
+shuffle_items: true
+feedback:
+  correct: "Correct! You arranged the planets in the correct order."
+  incorrect: "Incorrect. Review the order of planets from the Sun."
+difficulty: medium
+tags: ["science", "astronomy"]

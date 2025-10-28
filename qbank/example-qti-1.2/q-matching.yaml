@@ -1,0 +1,18 @@
+id: example.qti.matching
+version: 1
+type: matching
+points: 3
+stem: "Match the countries to their capitals."
+pairs:
+  - source: "France"
+    target: "Paris"
+  - source: "Germany"
+    target: "Berlin"
+  - source: "Italy"
+    target: "Rome"
+shuffle_pairs: true
+feedback:
+  correct: "Correct! You matched all countries to their capitals."
+  incorrect: "Incorrect. Review the countries and their capitals."
+difficulty: medium
+tags: ["geography", "capitals"]

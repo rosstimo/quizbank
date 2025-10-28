@@ -1,0 +1,15 @@
+id: example.qti.short_answer
+version: 1
+type: short_answer
+points: 3
+stem: "Name the largest planet in our solar system."
+answers:
+  - text: "Jupiter"
+    regex: false
+    case_sensitive: false
+    score: 1.0
+feedback:
+  correct: "Correct! Jupiter is the largest planet."
+  incorrect: "Incorrect. The correct answer is Jupiter."
+difficulty: easy
+tags: ["science", "astronomy"]

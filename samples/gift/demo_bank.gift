@@ -1,0 +1,61 @@
+// category path is optional but nice for later sorting
+$CATEGORY: Canvas Demo Bank/All Items
+
+// 1. TRUE / FALSE
+::TF_Gravity::Gravity causes objects to fall toward Earth.{T ####General feedback\: Correct — 9.8 m/s^2 near sea level.}
+
+// 2. MULTIPLE-CHOICE (single correct)
+::MC_Spectrum::Which colour lies between green and orange in the visible spectrum?
+{
+=yellow #Yes, roughly 565–590 nm.
+~blue   #Too short a wavelength.
+~red    #Too long a wavelength.
+~violet #Way off.
+}
+
+// 3. MULTIPLE-ANSWER (partial credit)
+::MC_PrimesU10::Select all prime numbers below 10.
+{
+~%25% 2   #Prime
+~%25% 3   #Prime
+~%25% 5   #Prime
+~%25% 7   #Prime
+~%-25% 4  #Composite
+~%-25% 6  #Composite
+~%-25% 8  #Composite
+~%-25% 9  #Composite
+}
+
+// 4. SHORT ANSWER (fill-in-blank)
+::SA_Water::What is the chemical formula for water?{ =H2O =h2o ~H20 #Careful\: that’s twenty not two! }
+
+// 5. NUMERICAL (tolerance)
+::NUM_Pi::Give π rounded to two decimals (±0.01).
+{ #3.14:0.01 
+####π ≈ 3.14159.}
+
+// 6. NUMERICAL (range)
+::NUM_Range50to60::Enter any whole number 50–60 inclusive.
+{ #50..60 }
+
+// 7. MATCHING
+::MATCH_Capitals::Match each country to its capital.
+{
+=France -> Paris
+=Italy  -> Rome
+=Spain  -> Madrid
+=Germany-> Berlin
+}
+
+
+// 8. ESSAY
+::ESSAY_FavLang::In 150–300 words, explain why your favorite programming language is good for beginners. {}
+
+// 9. DESCRIPTION / STIMULUS
+::DESC_Instructions::[html]
+<p><strong>Instructions\:</strong> Answer every question and click <em>Submit</em> when done.</p>
+{}
+// 10. DESCRIPTION / STIMULUS
+
+<p><strong>Instructions\:</strong> Answer every question and click <em>Submit</em> when done.</p>
+

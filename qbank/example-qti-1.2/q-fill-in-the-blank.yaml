@@ -1,0 +1,13 @@
+id: example.qti.fill_in_the_blank
+version: 1
+type: fill_in_the_blank
+points: 2
+stem: "The chemical symbol for water is ____."
+blanks:
+  - correct: "H2O"
+    alternatives: ["h2o", "H₂O"]
+feedback:
+  correct: "Correct! The chemical symbol for water is H2O."
+  incorrect: "Incorrect. The correct answer is H2O."
+difficulty: easy
+tags: ["science", "chemistry"]

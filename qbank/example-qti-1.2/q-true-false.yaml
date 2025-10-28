@@ -1,0 +1,11 @@
+id: example.qti.true_false
+version: 1
+type: true_false
+points: 1
+stem: "The Earth is flat."
+answer: false
+feedback:
+  correct: "Correct! The Earth is round."
+  incorrect: "Incorrect. The Earth is not flat."
+difficulty: easy
+tags: ["science", "geography"]

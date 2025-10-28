@@ -1,0 +1,13 @@
+id: example.qti.numeric
+version: 1
+type: numeric
+points: 2
+stem: "What is the value of pi (up to 2 decimal places)?"
+answer: 3.14
+tolerance: 0.01
+unit: ""
+feedback:
+  correct: "Correct! Pi is approximately 3.14."
+  incorrect: "Incorrect. Remember, pi is approximately 3.14."
+difficulty: medium
+tags: ["math", "constants"]

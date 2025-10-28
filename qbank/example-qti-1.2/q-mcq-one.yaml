@@ -1,0 +1,18 @@
+id: example.qti.mcq_one
+version: 1
+type: mcq_one
+points: 2
+stem: "What is the capital of France?"
+choices:
+  - text: "Paris"
+    correct: true
+    rationale: "Paris is the capital of France."
+  - text: "London"
+    correct: false
+    rationale: "London is the capital of the UK."
+  - text: "Berlin"
+    correct: false
+    rationale: "Berlin is the capital of Germany."
+shuffle_choices: true
+difficulty: easy
+tags: ["geography", "capital cities"]

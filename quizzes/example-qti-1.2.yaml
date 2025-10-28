@@ -1,0 +1,27 @@
+id: example-qti-1.2
+version: 1
+title: Example QTI 1.2 Quiz
+shuffle_questions: true
+time_limit_min: 30
+attempts: 1
+items:
+  - id: example.qti.mcq_one
+    points: 2
+  - id: example.qti.mcq_multi
+    points: 3
+  - id: example.qti.true_false
+    points: 1
+  - id: example.qti.numeric
+    points: 2
+  - id: example.qti.short_answer
+    points: 3
+  - id: example.qti.matching
+    points: 3
+  - id: example.qti.ordering
+    points: 2
+  - id: example.qti.fill_in_the_blank
+    points: 2
+  - id: example.qti.essay
+    points: 5
+instructions: |
+  This is a sample quiz containing all supported QTI 1.2 question types. Answer all questions to the best of your ability.

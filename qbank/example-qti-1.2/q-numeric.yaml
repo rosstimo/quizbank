@@ -1,0 +1,13 @@
+id: example.qti.numeric
+version: 1
+type: numeric
+points: 2
+stem: "What is 2 + 2?"
+answer: 4
+tolerance: 0.0
+unit: ""
+feedback:
+  correct: "Correct! 2 + 2 is 4."
+  incorrect: "Incorrect. Remember, 2 + 2 is 4."
+difficulty: easy
+tags: ["math", "constants"]

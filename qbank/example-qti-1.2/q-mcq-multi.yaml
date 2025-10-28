@@ -1,0 +1,21 @@
+id: example.qti.mcq_multi
+version: 1
+type: mcq_multi
+points: 3
+stem: "Which of the following are programming languages?"
+choices:
+  - text: "Python"
+    correct: true
+    rationale: "Python is a popular programming language."
+  - text: "HTML"
+    correct: true
+    rationale: "HTML is a markup language, but often considered in programming contexts."
+  - text: "CSS"
+    correct: false
+    rationale: "CSS is a styling language, not a programming language."
+  - text: "Java"
+    correct: true
+    rationale: "Java is a widely-used programming language."
+shuffle_choices: true
+difficulty: medium
+tags: ["programming", "languages"]

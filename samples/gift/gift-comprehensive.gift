@@ -1,0 +1,166 @@
+// ================================================================
+// GIFT Format Cheat-Sheet + Full Example Bank for your advanced digital systems quizzes
+//
+// Encoding: The file must be saved in **UTF-8** encoding (not UTF-16 or “Unicode” in some editors).  
+// Blank lines: At least one blank line must be left between each question (questions cannot have internal blank lines).  
+// Comments: Lines starting with // are ignored by the import filter.  
+// Question Title (optional): Use ::Title:: before the question text. If omitted, the question text becomes the title.  
+// Question Text: Plain text follows the title (if any).  
+// Format tag: Optional [html], [markdown], [plain], [moodle] can precede question text to set formatting mode (default is [moodle]).  
+// Answer block: Begins with { and ends with }. Inside are the answers or definitions, depending on type.  
+// Control symbols inside the answer block:
+//   =  : marks a correct answer for MC or short answer.
+//   ~  : marks a wrong answer for MC, or separates multiple answers/options.
+//   %n% : used before an answer to specify weighting (e.g., %50% means 50% credit) for partial credit on MC/multi‐answer or numeric questions.
+//   #  : used after an individual answer option to provide feedback for that option.
+//   For numeric questions: #answer:tolerance (accept ± tolerance) or #low..high (accept any number in the range).
+//   Matching: format =left -> right for each pair inside the braces.
+//   True/False: use {T} or {F} (or {TRUE}/{FALSE}).
+// Escaping special characters: If you need to include a literal {, }, =, ~, # in your question text or answer text (i.e., not as syntax), prefix with backslash: \{ \} \= \~ \#
+// New-line inside question text: Use “\n” if you must represent an internal line break (avoid blank actual lines, since blank lines separate questions).
+// Category directive (optional): Use $CATEGORY: path/name to declare category for following questions; should be on its own line, and preceded and followed by a blank line.
+// ================================================================
+
+// Example Bank Starts Here
+
+$CATEGORY: Advanced Digital Systems / Programming
+
+This is a Descriptions / Stimulus question type used to provide instructions or context for a set of questions.
+
+
+$CATEGORY: MC
+
+// ----------------------------------------------------------------
+// Multiple Choice – Single Correct (Simple)
+::MC_single_simple::What is the binary representation of decimal 5? {
+=101 #Correct!
+~100 #No — 100 is 4 in binary.
+~110 #No — 110 is 6 in binary.
+~111 #No — 111 is 7 in binary.
+}
+
+// ----------------------------------------------------------------
+// Multiple Choice – Single Correct with Feedback
+::MC_single_feedback::In Verilog, the keyword ‘always’ is used to describe which kind of block? {
+=sequential block #Yes — ‘always’ is usually used for sequential logic.
+~combinational block #No — combinational logic typically uses always @(*) or assign.
+~initial block #No — initial blocks execute at simulation start only.
+~continuous assignment #No — continuous assignments use “assign”, not “always”.
+}
+
+// ----------------------------------------------------------------
+// Multiple Choice – Multiple Correct (Select All That Apply) (Simple)
+::MC_multi_simple::Which of the following are logic gates? (Select all that apply) {
+~%-100%adder #Adder is a device composed of gates, not a basic logic gate.
+~%50%AND #Correct — AND is a logic gate.
+~%50%OR #Correct — OR is a logic gate.
+~%-100%multiplexer #Multiplexer is a circuit, not a basic logic gate.
+}
+
+// ----------------------------------------------------------------
+// Multiple Choice – Multiple Correct with Partial Credit & Feedback
+::MC_multi_partial::In a CPU pipeline, hazards may include\: (Multiple correct) {
+~%33%structural hazard #Yes — structural hazard is a pipeline hazard.
+~%33%data hazard #Yes — data hazard is a pipeline hazard.
+~%33%control hazard #Yes — control hazard is a pipeline hazard.
+~%-100%thermal hazard #No — this is not typically a pipeline hazard in that context.
+####Feedback\: Structural, data, and control hazards are correct pipeline hazards; thermal is unrelated.
+}
+
+$CATEGORY: TrueFalse
+
+// ----------------------------------------------------------------
+// True/False (Simple)
+::TrueFalse_simple::In digital logic, a NAND gate gives output 0 only when all inputs are 1. {T}
+
+// ----------------------------------------------------------------
+// True/False with Feedback
+::TrueFalse_feedback::A D flip-flop changes output immediately when the input changes. {F#No — the D flip-flop changes only on the clock edge (assuming edge-triggered).}
+
+$CATEGORY: ShortAnswer
+
+// ----------------------------------------------------------------
+// Short Answer (Simple)
+::ShortAnswer_simple::Name the ‘father of computing’ often attributed to inventing the Analytical Engine. {=Charles Babbage =Babbage}
+
+// ----------------------------------------------------------------
+// Short Answer (Multiple Acceptable Answers)
+::ShortAnswer_multiple::In Linux, the default command line editor for many distributions is {=vim =Vi IMproved}
+
+$CATEGORY: MissingWord
+
+// ----------------------------------------------------------------
+// Missing Word (Fill in the Blank) – Simple
+::MissingWord_simple::The OSI model has {~seven =seven} layers.
+
+// ----------------------------------------------------------------
+// Missing Word (Fill in the Blank) – Variant
+::MissingWord_variant::In Verilog, the non-blocking assignment operator is {~\= =<\=}.
+
+$CATEGORY: Matching
+
+// ----------------------------------------------------------------
+// Matching – Simple
+::Matching_simple::Match the programming language to its typical paradigm. {
+=Python -> object-oriented
+=Haskell -> functional
+=C -> procedural
+=Prolog -> logic
+}
+
+$CATEGORY: Numerical
+
+// ----------------------------------------------------------------
+// Numerical – Tolerance
+::Numerical_tolerance::What is the value of π (pi) to three decimal places? {#3.142:0.001 ####Acceptable range ±0.001}
+
+// ----------------------------------------------------------------
+// Numerical – Range
+::Numerical_range::What is the allowed voltage range for TTL logic high (Voh) in standard TTL? {#2.4..5.0 ####Accept any number between 2.4 and 5.0}
+
+// ----------------------------------------------------------------
+// Numerical – Partial Credit Using Weights
+::Numerical_partial::In a pipelined processor, the ideal CPI (cycles per instruction) is 1. If you observe a CPI of 1.25, what percentage performance overhead is that? {#
+=25:0 #Correct — 25 percent overhead.
+=%50%20:5 #Close — 20 percent gives half credit if within ±5.
+}
+
+$CATEGORY: Essay
+
+// ----------------------------------------------------------------
+// Essay (Manual grading)
+::Essay_simple::Discuss the trade-offs between synchronous and asynchronous digital circuits. {}
+
+// ================================================================
+// End of Bank
+
+
+// ================================================================
+// Extra Notes (included here for your students / your workflow)
+//
+// 1. Saving & Encoding: Always save the file as plain text with UTF-8 encoding. If you only use ASCII characters, ANSI might work, but use UTF-8 to be safe with special characters.
+// 2. No blank lines inside a question: A blank line signals the start of a new question. If you need a line‐break inside a question text, use “\n” instead of a blank actual line.
+// 3. If you include special control characters in your question or answer text (such as {, }, ~, =, #) and you intend them literally (not as part of GIFT syntax), you must escape them with a backslash: \{ \} \= \~ \#
+// 4. Feedback: The #feedback after an answer option applies to that answer. For example, in MC questions you can provide immediate feedback tied to each choice. Short answer answer‐lines can also include #feedback. True/False may allow one feedback for wrong, one for right (depending on LMS support).
+// 5. Weights / Partial Credit: In multiple-answer MC (select all that apply) you can prefix answer options with %n% to indicate the percentage of credit if chosen. Negative weights (e.g., %-100%) penalize choosing incorrect options. For numeric questions you can also use weights for alternative answers with =%50% etc.
+// 6. Numeric Questions: syntax options:
+//      • #answer:tolerance — accepts correct answer ± tolerance.
+//      • #low..high — accepts any number between low and high inclusive.
+//      • =%n%answer:tolerance — multiple numeric answers with different weights, where %n% indicates percentage credit for selecting that numeric answer (within tolerance).
+// 7. Matching Questions: Provide pairs of the form =left -> right inside the braces. At least 3 pairs recommended by many LMSs.
+// 8. Missing Word: You embed the {answer set} at the location in the sentence where the blank should appear. The system will display a blank line in the student view. You may still supply multiple potential answers inside the braces (prefixed by = or ~) just like short answer style.
+// 9. Category Directive ($CATEGORY): If you include $CATEGORY: path/name before a set of questions, the import will place those questions into that category (or create it). Use blank lines before and after the directive to avoid parsing issues.
+// 10. Use of formatting tags: If you need to control how the question text is interpreted (html/markdown/plain/moodle), you can prefix question text with [markdown], [html], etc. This helps if you have code blocks or want markdown formatting inside the question.
+// 11. Media support (images/audio): Basic GIFT format doesn’t embed media directly. If your LMS supports it (e.g., via plugin), you may include references like <img src="@@PLUGINFILE@@/…" /> or similar. (See “GIFT with medias” plugin as example).
+// 12. File sanity: Use a text editor (e.g., vim, neovim) to author this format. Avoid Word or other rich‐text editors that introduce non‐plain text formatting / smart quotes. Test import with a small set of questions first.
+// ================================================================
+
+// ================================================================
+// Reference URLs:
+// 1. https://docs.moodle.org/en/GIFT_format
+// 2. https://microformats.org/wiki/gift
+// 3. https://docs.moodle.org/en/Import_questions
+// 4. https://vcc.teamdynamix.com/TDClient/50/Portal/KB/ArticleDet?ID=119
+// 5. https://docs.moodle.org/en/Gift_with_medias_format
+// ================================================================
+

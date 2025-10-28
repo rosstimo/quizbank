@@ -1,0 +1,9 @@
+id: example.qti.essay
+version: 1
+type: essay
+points: 5
+stem: "Discuss the impact of climate change on global ecosystems."
+feedback:
+  correct: "Your response will be reviewed by the instructor."
+difficulty: hard
+tags: ["science", "environment"]
