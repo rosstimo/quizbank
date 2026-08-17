@@ -1,0 +1,46 @@
+[project]
+name = "quizbank"
+version = "0.1.0"
+description = "QuizBank tooling — locked, reproducible, and not haunted by mystery system packages."
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["education", "quiz", "qti", "yaml", "typst"]
+license = { text = "MIT" }
+authors = [
+  { name = "Timothy John Rossiter Sr." }
+]
+# List ONLY true runtime deps here. Add with: `uv add PACKAGE`.
+dependencies = [
+  # "pyyaml>=6.0.0",
+  # "jinja2>=3.1.0",
+  # "typer>=0.12.0",
+  # "rich>=13.7.0",
+  # "pandas>=2.2.0",
+]
+
+[project.scripts]
+quizbank = "quizbank.cli:app"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.uv]
+# uv will create and manage .venv by default. It also writes uv.lock for exact resolution.
+no-build-isolation = true
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+select = ["E","F","I","B","UP","YTT"]
+ignore = ["E501"]
+fix = true
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_ignores = true
+ignore_missing_imports = true
+strict_optional = true

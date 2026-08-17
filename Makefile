@@ -1,6 +1,7 @@
 # Makefile for Quizbank with sane verbosity
-
+SHELL := /usr/bin/env bash
 PYTHON := python3
+
 
 # Prefer Unicode-capable engines by default
 LATEX ?= $(shell { command -v lualatex >/dev/null && echo lualatex; } || { command -v xelatex >/dev/null && echo xelatex; } || echo pdflatex)

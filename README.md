@@ -86,3 +86,18 @@ items:
 * Keep distractor rationales for MCQs. It helps feedback and later review.
 * Short files. Prefer many small YAML files over a few giant ones.
 
+## Dependencies
+
+### System Requirements
+
+- Python 3.8 or later
+- pip, uv or some way to manage Python packages
+- make
+- pandoc (for some export formats)
+- zip (for packaging QTI files)
+- typst (for Typst exports, optional)
+- LaTeX distribution (for LaTeX exports, optional)
+
+### Python Packages
+- pyyaml
+- jsonschema
