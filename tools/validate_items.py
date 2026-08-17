@@ -145,6 +145,14 @@ def iter_qmp_fields(item: Dict[str, Any]) -> Iterable[Tuple[str, str]]:
     # solution
     if isinstance(item.get("solution"), str):
         yield ("solution", item["solution"])
+    # manually graded / code-review fields
+    for field in ("rubric", "sample_answer"):
+        if isinstance(item.get(field), str):
+            yield (field, item[field])
+    for field in ("prompts", "answers"):
+        for i, value in enumerate(item.get(field, []) or []):
+            if isinstance(value, str):
+                yield (f"{field}[{i}]", value)
 
 def lint_item(item: Dict[str, Any]) -> List[Tuple[str, str]]:
     """Return list of (path, message) lint violations."""

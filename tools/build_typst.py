@@ -97,7 +97,7 @@ def answer_for(it: Dict[str, Any]) -> str:
         if unit:
             parts.append(unit)
         return " ".join(parts)
-    if t == "short_answer":
+    if t in {"short_answer", "fill_blank"}:
         answers = it.get("answers") or []
         if not answers:
             return "?"
@@ -107,13 +107,29 @@ def answer_for(it: Dict[str, Any]) -> str:
         rx = str(answers[0].get("text", "")).strip().strip("/")
         rx = rx.removeprefix("(?i)")
         return rx or "?"
+    if t == "essay":
+        return str(it.get("sample_answer") or it.get("rubric") or "Manual grading")
+    if t == "code_review":
+        answers = it.get("answers") or []
+        return "; ".join(str(answer) for answer in answers) or "Manual grading"
+    if t == "matching":
+        return "; ".join(
+            f"{pair.get('source', '')} → {pair.get('target', '')}"
+            for pair in it.get("pairs", [])
+        )
+    if t == "ordering":
+        return " → ".join(str(value) for value in it.get("items", []))
     return "?"
 
-def md_from_item(n: int, it: Dict[str, Any], inline_solutions: bool) -> str:
+def md_from_item(
+    n: int, it: Dict[str, Any], inline_solutions: bool, typst_mode: bool = False
+) -> str:
     t = it.get("type")
     stem = it.get("stem", "")
     pts = it.get("points", 0)
     lines: List[str] = []
+    if typst_mode and t == "code_review":
+        lines.extend(["QUIZBANKPAGEBREAK", ""])
     lines.append(f"### {n}. ({pts} pt{'s' if pts != 1 else ''})")
     lines.append("")
     lines.append(stem.rstrip())
@@ -136,6 +152,38 @@ def md_from_item(n: int, it: Dict[str, Any], inline_solutions: bool) -> str:
     elif t == "short_answer":
         lines.append("_Answer: short text_")
         lines.append("")
+    elif t == "fill_blank":
+        lines[-2] = lines[-2].replace("{{blank}}", "__________")
+        lines.append("_Fill in the blank._")
+        lines.append("")
+    elif t == "essay":
+        response_lines = int(it.get("response_lines", 8))
+        for _ in range(response_lines):
+            lines.extend(["---", ""])
+    elif t == "code_review":
+        language = str(it.get("language", "text"))
+        lines.extend([f"```{language}", str(it.get("code", "")), "```", ""])
+        response_lines = int(it.get("response_lines", 3))
+        for prompt in it.get("prompts", []) or []:
+            lines.append(str(prompt))
+            lines.append("")
+            for _ in range(response_lines):
+                lines.extend(["---", ""])
+    elif t == "matching":
+        pairs = it.get("pairs", []) or []
+        targets = sorted(str(pair.get("target", "")) for pair in pairs)
+        lines.append("**Choices:** " + ", ".join(targets))
+        lines.append("")
+        for pair in pairs:
+            lines.append(f"- {pair.get('source', '')}: ____________________")
+        lines.append("")
+    elif t == "ordering":
+        values = sorted(str(value) for value in (it.get("items", []) or []))
+        lines.append("**Put these in order:** " + ", ".join(values))
+        lines.append("")
+        for number in range(1, len(values) + 1):
+            lines.append(f"{number}. ______________________________")
+        lines.append("")
     else:
         lines.append("_Unsupported type in renderer_")
         lines.append("")
@@ -148,7 +196,13 @@ def md_from_item(n: int, it: Dict[str, Any], inline_solutions: bool) -> str:
 
     return "\n".join(lines)
 
-def build_markdown_doc(quiz: Dict[str, Any], items: List[Dict[str, Any]], no_key: bool, inline_solutions: bool) -> str:
+def build_markdown_doc(
+    quiz: Dict[str, Any],
+    items: List[Dict[str, Any]],
+    no_key: bool,
+    inline_solutions: bool,
+    typst_mode: bool = False,
+) -> str:
     title = quiz.get("title") or quiz.get("id") or "Quiz"
     instr = (quiz.get("instructions") or "").rstrip()
 
@@ -158,11 +212,15 @@ def build_markdown_doc(quiz: Dict[str, Any], items: List[Dict[str, Any]], no_key
     if instr:
         out.append(instr)
         out.append("")
+    out.append("**Name:** ______________________________    **Date:** _______________")
+    out.append("")
 
     for n, it in enumerate(items, start=1):
-        out.append(md_from_item(n, it, inline_solutions))
+        out.append(md_from_item(n, it, inline_solutions, typst_mode=typst_mode))
 
     if not no_key:
+        if typst_mode:
+            out.extend(["QUIZBANKPAGEBREAK", ""])
         out.append("## Answer Key")
         out.append("")
         for n, it in enumerate(items, start=1):
@@ -192,7 +250,7 @@ def md_to_typst(md_text: str) -> str:
         raise RuntimeError("pandoc not found in PATH")
     except subprocess.CalledProcessError as e:
         raise RuntimeError("pandoc failed:\n" + e.stderr.decode("utf-8", "ignore"))
-    return proc.stdout.decode("utf-8")
+    return proc.stdout.decode("utf-8").replace("QUIZBANKPAGEBREAK", "#pagebreak()")
 
 
 # ---------------- Main ----------------
@@ -212,7 +270,9 @@ def main(argv: List[str]) -> int:
     items = load_items_by_ids(quiz.get("items", []), id2path)
     items = sample_items(items, quiz.get("pick"), args.seed)
 
-    md_doc = build_markdown_doc(quiz, items, args.no_key, args.inline_solutions)
+    md_doc = build_markdown_doc(
+        quiz, items, args.no_key, args.inline_solutions, typst_mode=True
+    )
     typst_body = md_to_typst(md_doc)
 
     # Prepend a tiny preamble. Keep it minimal so Pandoc’s doc structure stays intact.

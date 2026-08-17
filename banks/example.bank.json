@@ -1,0 +1,297 @@
+{
+  "$schema": "../schemas/bank.schema.json",
+  "format_version": 1,
+  "bank": {
+    "id": "example.bank",
+    "title": "Quizbank Example",
+    "description": "A small bank that exercises paper, source, and Canvas exports.",
+    "language": "en-US",
+    "authors": [
+      "Tim Rossiter"
+    ],
+    "license": "CC-BY-4.0",
+    "default_points": 1
+  },
+  "categories": [
+    {
+      "id": "example",
+      "title": "Example"
+    },
+    {
+      "id": "example.basics",
+      "title": "Basics",
+      "parent": "example",
+      "description": "Small questions used to demonstrate Quizbank."
+    },
+    {
+      "id": "example.programming",
+      "title": "Programming",
+      "parent": "example"
+    }
+  ],
+  "questions": [
+    {
+      "id": "example.topic.001",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 2,
+      "category_ids": [
+        "example.basics"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "intro",
+        "syntax"
+      ],
+      "shuffle_choices": true,
+      "stem": "In most programming languages, what is the common term for a value like `true` or `false`?",
+      "choices": [
+        {
+          "text": "Integer"
+        },
+        {
+          "text": "Boolean",
+          "correct": true,
+          "rationale": "The data type with two truth values is typically called a Boolean."
+        },
+        {
+          "text": "String"
+        },
+        {
+          "text": "Array"
+        }
+      ],
+      "feedback": {
+        "correct": "Yep. Boolean is the two-valued logical type.",
+        "incorrect": "The two-valued logical type is called a Boolean."
+      },
+      "solution": "The correct answer is **Boolean**. It represents a truth value, usually `true` or `false`.",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "example.topic.002",
+      "version": 1,
+      "type": "mcq_multi",
+      "points": 2,
+      "category_ids": [
+        "example.basics"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "sorting",
+        "algorithms"
+      ],
+      "shuffle_choices": true,
+      "stem": "Which of the following are **comparison-based** sorting algorithms? Select all that apply.",
+      "choices": [
+        {
+          "text": "Merge sort",
+          "correct": true,
+          "rationale": "Classic divide-and-conquer, compares keys."
+        },
+        {
+          "text": "Quick sort",
+          "correct": true,
+          "rationale": "Partitioning around pivots, compares keys."
+        },
+        {
+          "text": "Counting sort",
+          "rationale": "Uses counts of keys; not comparison-based."
+        },
+        {
+          "text": "Radix sort",
+          "rationale": "Distributes by digit or bucket; not comparison-based."
+        }
+      ],
+      "feedback": {
+        "correct": "Merge and Quick are the comparison-based ones here.",
+        "incorrect": "Counting and radix sort avoid direct key comparisons."
+      },
+      "solution": "**Merge sort** and **Quick sort** are comparison sorts; **Counting** and **Radix** are not.",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "example.topic.003",
+      "version": 1,
+      "type": "true_false",
+      "points": 1,
+      "category_ids": [
+        "example.basics"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "bst",
+        "traversal"
+      ],
+      "stem": "In a binary search tree, an **in-order traversal** visits the keys in nondecreasing order.",
+      "answer": true,
+      "feedback": {
+        "correct": "Correct. That is the useful property of in-order traversal on a BST.",
+        "incorrect": "In-order traversal yields a sorted sequence for a valid BST."
+      },
+      "solution": "BST ordering plus left-node-right traversal produces sorted keys.",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "example.topic.004",
+      "version": 1,
+      "type": "numeric",
+      "points": 2,
+      "category_ids": [
+        "example.basics"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "ohms-law"
+      ],
+      "stem": "A circuit has a current of 3 A through a 2 Ω resistor. What is the voltage across the resistor?",
+      "answer": 6,
+      "tolerance": 0,
+      "unit": "V",
+      "feedback": {
+        "correct": "Correct. Ohm's law gives $V = IR = 3 \\times 2 = 6$ V.",
+        "incorrect": "Use Ohm's law: $V = IR$."
+      },
+      "solution": "Use Ohm's law: $V = IR = 3 \\times 2 = 6$ V.",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "example.topic.005",
+      "version": 1,
+      "type": "short_answer",
+      "points": 2,
+      "category_ids": [
+        "example.basics"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "data-structures",
+        "lifo"
+      ],
+      "stem": "Name the data structure that uses the **LIFO** discipline.",
+      "answers": [
+        {
+          "text": "stack",
+          "case_sensitive": false,
+          "score": 1
+        }
+      ],
+      "feedback": {
+        "correct": "LIFO is the defining behavior of a stack.",
+        "incorrect": "The term is **stack**."
+      },
+      "solution": "A **stack** is LIFO: the most recently pushed item is popped first.",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "example.topic.006",
+      "version": 1,
+      "type": "fill_blank",
+      "points": 1,
+      "category_ids": [
+        "example.programming"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "loops"
+      ],
+      "stem": "A loop that never reaches its termination condition is commonly called an {{blank}} loop.",
+      "answers": [
+        {
+          "text": "infinite",
+          "case_sensitive": false,
+          "score": 1
+        }
+      ],
+      "solution": "The missing word is **infinite**.",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "example.topic.007",
+      "version": 1,
+      "type": "code_review",
+      "points": 3,
+      "category_ids": [
+        "example.programming"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "c",
+        "arrays"
+      ],
+      "stem": "Review this C loop.",
+      "code": "int values[4] = {1, 2, 3, 4};\nfor (int i = 0; i <= 4; ++i) {\n    printf(\"%d\\n\", values[i]);\n}",
+      "language": "c",
+      "prompts": [
+        "Identify the defect.",
+        "Write the corrected loop condition."
+      ],
+      "answers": [
+        "The loop accesses `values[4]`, which is outside the array.",
+        "Use `i < 4`."
+      ],
+      "response_lines": 2,
+      "metadata": {
+        "manual_grading": true
+      },
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0"
+    }
+  ],
+  "assessments": [
+    {
+      "id": "quiz-example-001",
+      "title": "Sample Quiz: Basics",
+      "version": 1,
+      "instructions": "Answer every question. Show your work for numeric responses.",
+      "shuffle_questions": false,
+      "time_limit_min": 20,
+      "attempts": 1,
+      "items": [
+        "example.topic.001",
+        "example.topic.002",
+        "example.topic.003",
+        "example.topic.004",
+        "example.topic.005",
+        "example.topic.006",
+        "example.topic.007"
+      ]
+    },
+    {
+      "id": "quiz-example-random",
+      "title": "Random Basics Form",
+      "version": 1,
+      "instructions": "This form is selected reproducibly from the bank.",
+      "pools": [
+        {
+          "id": "objective",
+          "pick": 3,
+          "where": {
+            "category_ids": [
+              "example.basics"
+            ]
+          }
+        },
+        {
+          "id": "programming",
+          "pick": 1,
+          "where": {
+            "category_ids": [
+              "example.programming"
+            ]
+          }
+        }
+      ],
+      "shuffle_questions": true
+    }
+  ],
+  "metadata": {
+    "default_assessment": "quiz-example-001"
+  }
+}

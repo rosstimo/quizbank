@@ -1,0 +1,12 @@
+services:
+  quizbank:
+    build:
+      context: .
+    image: quizbank-local:0.2.0
+    user: "${QUIZBANK_UID:-0}:${QUIZBANK_GID:-0}"
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    environment:
+      HOME: /tmp/quizbank-home
+

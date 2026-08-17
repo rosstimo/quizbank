@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quizbank.dev/schemas/bank.schema.json",
+  "title": "Quizbank Bank",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format_version", "bank", "categories", "questions", "assessments"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "format_version": { "const": 1 },
+    "bank": { "$ref": "#/$defs/bank_info" },
+    "categories": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/category" }
+    },
+    "questions": {
+      "type": "array",
+      "items": { "$ref": "quiz-item.schema.json" }
+    },
+    "assessments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assessment" }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,}$",
+      "maxLength": 128
+    },
+    "bank_info": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "language": { "type": "string", "default": "en-US" },
+        "authors": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "license": { "type": "string" },
+        "default_points": { "type": "number", "minimum": 0 },
+        "metadata": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "parent": { "$ref": "#/$defs/id" },
+        "outcomes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "metadata": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "assessment_item": {
+      "oneOf": [
+        { "$ref": "#/$defs/id" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "points": { "type": "number", "minimum": 0 }
+          }
+        }
+      ]
+    },
+    "filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "types": {
+          "type": "array",
+          "items": {
+            "enum": ["mcq_one", "mcq_multi", "true_false", "numeric", "short_answer", "fill_blank", "essay", "code_review", "matching", "ordering"]
+          },
+          "uniqueItems": true
+        },
+        "category_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "difficulty": {
+          "type": "array",
+          "items": { "enum": ["easy", "medium", "hard"] },
+          "uniqueItems": true
+        },
+        "outcomes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "pool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pick", "where"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "pick": { "type": "integer", "minimum": 1 },
+        "points": { "type": "number", "minimum": 0 },
+        "where": { "$ref": "#/$defs/filter" }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "instructions": { "type": "string", "contentMediaType": "text/markdown" },
+        "version": { "type": "integer", "minimum": 1 },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/assessment_item" }
+        },
+        "pools": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/pool" }
+        },
+        "shuffle_questions": { "type": "boolean" },
+        "time_limit_min": { "type": ["integer", "null"], "minimum": 1 },
+        "attempts": { "type": ["integer", "null"], "minimum": 1 },
+        "metadata": { "type": "object", "additionalProperties": true }
+      },
+      "anyOf": [
+        { "required": ["items"] },
+        { "required": ["pools"] }
+      ]
+    }
+  }
+}

@@ -1,88 +1,197 @@
 # Quizbank
 
-Plain text quiz question bank in **YAML**. This is the single source of truth for everything:
+Keep questions, categories, metadata, and assessment recipes in one JSON bank. Build a printable PDF, editable source, Markdown, or a Canvas QTI package from that bank.
 
-* Canvas LMS imports (QTI 1.2/2.1 for Classic and New Quizzes)
-* Printable paper quizzes (Typst, LaTeX, Markdown)
-* Other exports via small build scripts
+Quizbank runs its Python packages, Pandoc, Typst, and LaTeX inside a container. The host only needs Docker Desktop, Docker Engine with Compose, or Podman Compose.
 
-## Repo layout
+## Start here
 
-```
-quizbank/
-├── README.md                      # You are here
-├── .gitignore
-├── schemas/                       # JSON Schemas for validation
-├── tools/                         # Scripts for validation and export
-├── qbank/                         # Authored questions (YAML, one per file)
-├── quizzes/                       # Quiz assembly files (YAML)
-├── templates/                     # Export templates (Typst, LaTeX, QTI Jinja)
-└── build/                         # Generated output (ignored in git)
+Linux and macOS:
+
+```bash
+./quizbank
+./quizbank validate
+./quizbank build
 ```
 
-## Authoring rules
+Windows PowerShell:
 
-* **One item per file.** Keep files short and focused.
-* **IDs:** lowercase letters, digits, dots, underscores, hyphens. Example: `cs.arrays.007`.
-* **Version:** bump `version` on any content change that affects grading.
-* **Media:** store under `qbank/media/` and reference by relative path.
-* **Markdown in text:** `stem`, `choices[].text`, `solution`, and `feedback.*` accept Markdown with inline math.
-* **No YAML anchors or tags.** Keep it simple for tooling and AI generation.
-
-## YAML item shape (summary)
-
-Each file must validate against `schemas/quiz-item.schema.json`.
-
-Required top-level keys:
-
-* `id` string
-* `version` integer
-* `type` one of: `mcq_one`, `mcq_multi`, `true_false`, `numeric`, `short_answer`
-* `points` number
-* `stem` markdown string
-
-Type-specific keys:
-
-* `mcq_one` / `mcq_multi`: `choices[]` with `text` and optional `correct: true`. Exactly one correct for `mcq_one`, at least one for `mcq_multi`.
-* `true_false`: `answer` boolean
-* `numeric`: `answer` number, optional `tolerance` and `unit`
-* `short_answer`: `answers[]` entries with `text`, optional `regex`, `case_sensitive`, `score`
-
-Optional common keys: `topic`, `outcomes[]`, `difficulty`, `tags[]`, `attachments[]`, `shuffle_choices`, `feedback.correct`, `feedback.incorrect`, `solution`, `author`, `license`.
-
-## Quiz assembly files
-
-A quiz file in `quizzes/` lists item IDs and options.
-
-Example:
-
-```yaml
-id: quiz-algebra-01
-title: Linear Functions Check
-shuffle_questions: true
-pick: 12
-items:
-  - alg.slope.001
-  - alg.slope.param.001.*
-  - alg.lines.truefalse.003
+```powershell
+.\quizbank.ps1
+.\quizbank.ps1 validate
+.\quizbank.ps1 build
 ```
 
-## Workflow
+The first command builds the local container image. Later commands reuse it. With the included example bank, `build` produces:
 
-1. **Write** items under `qbank/<topic>/`.
-2. **Validate** everything:
+```text
+build/quiz-example-001/
+├── quiz-example-001.md
+├── quiz-example-001.typ
+├── quiz-example-001.tex
+├── quiz-example-001.pdf
+└── quiz-example-001-qti12.zip
+```
 
-   ```bash
-   make validate
-   ```
-3. **Export** when ready:
+Use a narrower export when that is all you need:
 
-   * Canvas: build QTI 1.2/2.1 zip in `build/qti/` and import via Canvas > Settings > Import Course Content.
-   * Paper: render Typst/LaTeX/Markdown from templates.
+```bash
+./quizbank build --format pdf
+./quizbank build --format qti
+./quizbank build --format markdown,latex
+./quizbank build quiz-example-random --seed 3375 --format pdf
+./quizbank build --format pdf --no-key
+```
 
-## Conventions that save time
+Run `./quizbank doctor` to see the exact tools available inside the container. `make help` provides short aliases for the same commands.
 
-* Enforce unique `id`. Never reuse IDs across different content.
-* Keep distractor rationales for MCQs. It helps feedback and later review.
-* Short files. Prefer many small YAML files over a few giant ones.
+## One JSON bank
 
+Files under `banks/` are the authored source of truth. A bank contains five parts:
+
+```json
+{
+  "$schema": "../schemas/bank.schema.json",
+  "format_version": 1,
+  "bank": {
+    "id": "rcet3375",
+    "title": "Advanced Digital Systems",
+    "authors": ["Tim Rossiter"]
+  },
+  "categories": [
+    {"id": "timers", "title": "Timers"},
+    {"id": "timers.timer2", "title": "Timer2", "parent": "timers"}
+  ],
+  "questions": [
+    {
+      "id": "timers.timer2.001",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "category_ids": ["timers.timer2"],
+      "tags": ["prescaler"],
+      "difficulty": "easy",
+      "stem": "Which register selects the Timer2 prescaler?",
+      "choices": [
+        {"text": "T2CON", "correct": true},
+        {"text": "OPTION_REG"}
+      ],
+      "solution": "The prescaler bits are in `T2CON`.",
+      "metadata": {
+        "source_page": 89,
+        "reviewed": true
+      }
+    }
+  ],
+  "assessments": [
+    {
+      "id": "timer2-check",
+      "title": "Timer2 Check",
+      "items": ["timers.timer2.001"]
+    }
+  ],
+  "metadata": {
+    "default_assessment": "timer2-check"
+  }
+}
+```
+
+The `metadata` objects deliberately accept extra fields. Quizbank retains information an exporter does not understand so a richer exporter or future web UI can use it later.
+
+The current question types are `mcq_one`, `mcq_multi`, `true_false`, `numeric`, `short_answer`, `fill_blank`, `essay`, `code_review`, `matching`, and `ordering`. Markdown is used for question text, feedback, solutions, rubrics, and prompts. Use `$...$` or `$$...$$` for math.
+
+JSON Schema files under `schemas/` provide editor completion and validation. Point VS Code, Neovim, or another schema-aware editor at the `$schema` field in a bank.
+
+## Fixed questions and generated forms
+
+An assessment may list exact question IDs:
+
+```json
+{
+  "id": "timer2-check",
+  "title": "Timer2 Check",
+  "items": [
+    "timers.timer2.001",
+    {"id": "timers.timer2.007", "points": 3}
+  ]
+}
+```
+
+It may also select seeded pools by category, type, difficulty, tags, or outcomes:
+
+```json
+{
+  "id": "timer2-form",
+  "title": "Timer2 Form",
+  "pools": [
+    {
+      "id": "true-false",
+      "pick": 5,
+      "where": {
+        "category_ids": ["timers.timer2"],
+        "types": ["true_false"]
+      }
+    },
+    {
+      "id": "multiple-choice",
+      "pick": 10,
+      "where": {
+        "category_ids": ["timers.timer2"],
+        "types": ["mcq_one"],
+        "tags": ["exam-ready"]
+      }
+    }
+  ],
+  "shuffle_questions": true
+}
+```
+
+The seed makes a generated form repeatable. The same bank, assessment, and seed select the same questions.
+
+## Move the old YAML bank into JSON
+
+The legacy YAML files remain in the repository for comparison. Combine them into a JSON bank with:
+
+```bash
+./quizbank migrate \
+  --items qbank \
+  --quizzes quizzes \
+  --id legacy.quizbank \
+  --title "Legacy Quizbank" \
+  --output banks/legacy.bank.json
+
+./quizbank validate --bank banks/legacy.bank.json
+```
+
+Migration preserves question content and creates category records from `topic` strings such as `Example > Basics`. It does not overwrite an existing JSON bank unless `--force` is supplied.
+
+Create a clean bank instead:
+
+```bash
+./quizbank new banks/rcet3375.bank.json \
+  --id rcet3375 \
+  --title "Advanced Digital Systems"
+```
+
+## Export behavior
+
+| Format | Output | Notes |
+|---|---|---|
+| `pdf` | `.pdf` | Compiled with Typst inside the container |
+| `typst` | `.typ` | Editable source |
+| `latex` | `.tex` | Editable source |
+| `markdown` | `.md` | Portable source and answer key |
+| `qti` | `-qti12.zip` | Import into Canvas as QTI 1.2 |
+| `all` | all of the above | Default |
+
+Paper formats support every question type. QTI currently exports multiple choice, multiple select, true/false, numeric, short answer, and fill in the blank. It reports manually graded types that it leaves out instead of discarding them silently.
+
+## Development without touching the host Python
+
+```bash
+make test
+```
+
+Tests run in the same containerized environment as normal commands. Generated files go under `build/` and are ignored by Git.
+
+The original one-question-per-YAML tools are still present under `tools/`, `qbank/`, and `quizzes/` as migration inputs. New work should go into a JSON file under `banks/`.

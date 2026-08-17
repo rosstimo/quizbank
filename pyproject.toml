@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quizbank"
+version = "0.2.0"
+description = "JSON question banks with paper and Canvas assessment exporters"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "jsonschema==4.25.1",
+  "PyYAML==6.0.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.4.1"]
+
+[project.scripts]
+quizbank = "qbank.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["qbank*", "tools*"]
+
+[tool.setuptools.data-files]
+"share/quizbank/schemas" = [
+  "schemas/bank.schema.json",
+  "schemas/quiz-item.schema.json",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

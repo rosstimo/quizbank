@@ -7,6 +7,7 @@ from tools.importers.common import coerce_list_tags, choice_letter
 FORMAT_NAME = "gift"
 
 GIFT_Q = re.compile(r"(?P<stem>.*?)\{(?P<body>.*)\}\s*$", re.DOTALL)
+NUMBER = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)"
 
 def split_gift_questions(text: str) -> List[str]:
     out, buf, depth = [], [], 0
@@ -27,8 +28,9 @@ def parse_gift(block: str, opts) -> Dict | None:
     stem = m.group("stem").strip()
     body = m.group("body").strip()
 
-    if re.fullmatch(r"[tT](rue)?|[fF](alse)?", body):
-        ans = body.lower().startswith("t")
+    tf_body = body.split("#", 1)[0].strip()
+    if re.fullmatch(r"[tT](rue)?|[fF](alse)?", tf_body):
+        ans = tf_body.lower().startswith("t")
         return {
             "id": "", "version": 1, "type": "true_false",
             "points": int(opts.default_points or 1),
@@ -38,17 +40,30 @@ def parse_gift(block: str, opts) -> Dict | None:
         }
 
     if body.startswith("#"):
-        parts = body[1:].split(":")
-        ans = float(parts[0].strip())
+        numeric = body[1:].split("####", 1)[0].strip()
+        range_match = re.match(rf"^({NUMBER})\s*\.\.\s*({NUMBER})", numeric)
+        value_match = re.match(rf"^({NUMBER})(?:\s*:\s*({NUMBER}))?", numeric)
+        if range_match:
+            low, high = (float(value) for value in range_match.groups())
+            ans = (low + high) / 2
+            tolerance = abs(high - low) / 2
+        elif value_match:
+            ans = float(value_match.group(1))
+            tolerance = float(value_match.group(2) or 0)
+        else:
+            weighted = re.search(rf"=\s*(?:%\d+%)?\s*({NUMBER})(?:\s*:\s*({NUMBER}))?", numeric)
+            if not weighted:
+                return None
+            ans = float(weighted.group(1))
+            tolerance = float(weighted.group(2) or 0)
         item = {
             "id": "", "version": 1, "type": "numeric",
             "points": int(opts.default_points or 1),
             "topic": opts.topic or "Imported", "difficulty": opts.difficulty,
             "tags": coerce_list_tags(opts.tags), "stem": stem,
-            "answer": ans, "author": opts.author, "license": opts.license,
+            "answer": ans, "tolerance": tolerance,
+            "author": opts.author, "license": opts.license,
         }
-        if len(parts) > 1 and parts[1].strip():
-            item["tolerance"] = float(parts[1].strip())
         return item
 
     if body.startswith("=") or body.startswith("%"):
@@ -76,14 +91,19 @@ def parse_gift(block: str, opts) -> Dict | None:
         if not tok: continue
         score_m = re.match(r"^%(-?\d+(?:\.\d+)?)%\s*", tok)
         if tok.startswith("="):
-            txt = tok[1:].strip()
+            txt = tok[1:].split("#", 1)[0].strip()
             choices.append({"text": txt, "correct": True})
             correct_count += 1
         elif score_m:
-            txt = tok[score_m.end():].strip()
-            choices.append({"text": txt})
+            score = float(score_m.group(1))
+            txt = tok[score_m.end():].split("#", 1)[0].strip()
+            choice = {"text": txt}
+            if score > 0:
+                choice["correct"] = True
+                correct_count += 1
+            choices.append(choice)
         else:
-            choices.append({"text": tok})
+            choices.append({"text": tok.split("#", 1)[0].strip()})
     if choices:
         return {
             "id": "", "version": 1,

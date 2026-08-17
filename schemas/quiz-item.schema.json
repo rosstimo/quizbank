@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.org/schemas/quiz-item.schema.json",
+  "$id": "https://quizbank.dev/schemas/quiz-item.schema.json",
   "title": "Quiz Item",
   "type": "object",
 
@@ -20,11 +20,17 @@
     },
     "type": {
       "type": "string",
-      "enum": ["mcq_one", "mcq_multi", "true_false", "numeric", "short_answer"],
+      "enum": ["mcq_one", "mcq_multi", "true_false", "numeric", "short_answer", "fill_blank", "essay", "code_review", "matching", "ordering"],
       "description": "Question type."
     },
     "points": { "type": "number", "minimum": 0 },
     "topic": { "type": "string" },
+    "title": { "type": "string", "minLength": 1 },
+    "category_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,}$" },
+      "uniqueItems": true
+    },
     "outcomes": {
       "type": "array",
       "items": { "type": "string" },
@@ -65,6 +71,16 @@
     },
     "author": { "type": "string" },
     "license": { "type": "string" },
+    "source": {
+      "type": "object",
+      "description": "Optional provenance for the question.",
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Extra data retained for exporters that understand it.",
+      "additionalProperties": true
+    },
     "shuffle_answers": {
       "type": "boolean",
       "description": "Indicates if answers should be shuffled for this quiz item."
@@ -83,7 +99,12 @@
         { "$ref": "#/$defs/mcq_multi" },
         { "$ref": "#/$defs/true_false" },
         { "$ref": "#/$defs/numeric" },
-        { "$ref": "#/$defs/short_answer" }
+        { "$ref": "#/$defs/short_answer" },
+        { "$ref": "#/$defs/fill_blank" },
+        { "$ref": "#/$defs/essay" },
+        { "$ref": "#/$defs/code_review" },
+        { "$ref": "#/$defs/matching" },
+        { "$ref": "#/$defs/ordering" }
       ]
     }
   ],
@@ -99,6 +120,18 @@
         "text": { "type": "string", "minLength": 1, "contentMediaType": "text/markdown" },
         "correct": { "type": "boolean", "default": false },
         "rationale": { "type": "string", "description": "Why this choice is right or wrong." }
+      }
+    },
+
+    "accepted_answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "regex": { "type": "boolean", "default": false },
+        "case_sensitive": { "type": "boolean", "default": false },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 }
       }
     },
 
@@ -175,20 +208,95 @@
         "answers": {
           "type": "array",
           "minItems": 1,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["text"],
-            "properties": {
-              "text": { "type": "string", "minLength": 1 },
-              "regex": { "type": "boolean", "default": false },
-              "case_sensitive": { "type": "boolean", "default": false },
-              "score": { "type": "number", "minimum": 0, "maximum": 1 }
-            }
-          }
+          "items": { "$ref": "#/$defs/accepted_answer" }
         }
       },
       "required": ["answers"]
+    },
+
+    "fill_blank": {
+      "title": "Fill in the blank",
+      "type": "object",
+      "properties": {
+        "type": { "const": "fill_blank" },
+        "answers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/accepted_answer" }
+        }
+      },
+      "required": ["answers"]
+    },
+
+    "essay": {
+      "title": "Essay or manually graded response",
+      "type": "object",
+      "properties": {
+        "type": { "const": "essay" },
+        "response_lines": { "type": "integer", "minimum": 1, "default": 8 },
+        "rubric": { "type": "string", "contentMediaType": "text/markdown" },
+        "sample_answer": { "type": "string", "contentMediaType": "text/markdown" }
+      }
+    },
+
+    "code_review": {
+      "title": "Code review with follow-up prompts",
+      "type": "object",
+      "properties": {
+        "type": { "const": "code_review" },
+        "code": { "type": "string", "minLength": 1 },
+        "language": { "type": "string", "default": "text" },
+        "prompts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1, "contentMediaType": "text/markdown" }
+        },
+        "answers": {
+          "type": "array",
+          "items": { "type": "string", "contentMediaType": "text/markdown" }
+        },
+        "response_lines": { "type": "integer", "minimum": 1, "default": 3 }
+      },
+      "required": ["code", "prompts"]
+    },
+
+    "matching": {
+      "title": "Matching",
+      "type": "object",
+      "properties": {
+        "type": { "const": "matching" },
+        "pairs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "target"],
+            "properties": {
+              "source": { "type": "string", "minLength": 1 },
+              "target": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "shuffle_pairs": { "type": "boolean" }
+      },
+      "required": ["pairs"]
+    },
+
+    "ordering": {
+      "title": "Ordering",
+      "type": "object",
+      "properties": {
+        "type": { "const": "ordering" },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "shuffle_items": { "type": "boolean" }
+      },
+      "required": ["items"]
     }
   }
 }
