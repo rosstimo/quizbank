@@ -1,0 +1,229 @@
+{
+  "$schema": "../schemas/bank.schema.json",
+  "format_version": 1,
+  "bank": {
+    "id": "rcet3371",
+    "title": "RCET 3371 Advanced Programming Techniques and GUI Development",
+    "description": "Fall 2026 working question pool. Starter items are intentionally marked unreviewed until instructor review.",
+    "language": "en-US",
+    "authors": ["Tim Rossiter"],
+    "default_points": 1,
+    "metadata": {"semester": "Fall 2026", "status": "working"}
+  },
+  "categories": [
+    {"id": "csharp", "title": "C#"},
+    {"id": "csharp.debugging", "title": "Debugging and Code Reading", "parent": "csharp"},
+    {"id": "csharp.refactoring", "title": "Refactoring and Program Organization", "parent": "csharp"},
+    {"id": "csharp.binary-data", "title": "Binary Data", "parent": "csharp"},
+    {"id": "csharp.bitwise", "title": "Bitwise Operations", "parent": "csharp"},
+    {"id": "csharp.packed-data", "title": "Packed and Multi-Byte Data", "parent": "csharp"},
+    {"id": "git", "title": "Git"},
+    {"id": "git.workflow", "title": "Workflow", "parent": "git"},
+    {"id": "git.hygiene", "title": "Project Hygiene and Recovery", "parent": "git"},
+    {"id": "oop", "title": "Object-Oriented Design"},
+    {"id": "oop.objects", "title": "Objects, State, and Encapsulation", "parent": "oop"},
+    {"id": "oop.composition", "title": "Composition and Collections", "parent": "oop"},
+    {"id": "oop.separation", "title": "Separation of Concerns", "parent": "oop"}
+  ],
+  "questions": [
+    {
+      "id": "csharp.debugging.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["csharp.debugging"], "difficulty": "easy", "tags": ["f26-w1", "logic-error"],
+      "stem": "A C# program builds and runs without an exception, but produces the wrong numeric result. Which error category best describes the problem?",
+      "choices": [{"text": "Compile-time error"}, {"text": "Run-time exception"}, {"text": "Logic error", "correct": true, "rationale": "The program executes but its behavior is incorrect."}, {"text": "Linker error"}],
+      "solution": "This is a logic error because execution succeeds but the result is wrong.",
+      "source": {"title": "C# documentation", "url": "https://learn.microsoft.com/en-us/dotnet/csharp/"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "01-CSharp-Baseline-Debugging", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.debugging.002", "version": 1, "type": "code_review", "points": 3,
+      "category_ids": ["csharp.debugging"], "difficulty": "medium", "tags": ["f26-w1", "loop-boundary"],
+      "stem": "Review this loop and explain the defect before changing it.",
+      "code": "int[] values = { 10, 20, 30, 40 };\nfor (int i = 0; i < values.Length - 1; i++)\n{\n    Console.WriteLine(values[i]);\n}",
+      "language": "csharp",
+      "prompts": ["Which array element is never printed?", "Write the corrected loop condition."],
+      "answers": ["The final element, values[3], is never printed.", "Use i < values.Length."],
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "01-CSharp-Baseline-Debugging", "reviewed": false, "origin": "starter-bank", "manual_grading": true}
+    },
+    {
+      "id": "csharp.debugging.003", "version": 1, "type": "ordering", "points": 2,
+      "category_ids": ["csharp.debugging"], "difficulty": "easy", "tags": ["f26-w1", "workflow"],
+      "stem": "Place the debugging actions in the preferred reasoning order.",
+      "items": ["Read the relevant code and state the expected behavior", "Predict the program state before the suspicious transition", "Run or step the program and observe actual state", "Compare actual state with the prediction", "Change the source after the incorrect transition is understood"],
+      "shuffle_items": true,
+      "solution": "The course workflow is read -> predict -> observe -> compare -> explain/fix.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "01-CSharp-Baseline-Debugging", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.refactoring.001", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["csharp.refactoring"], "difficulty": "easy", "tags": ["f26-w1", "behavior"],
+      "stem": "A refactor should intentionally change the externally required behavior of the program.",
+      "answer": false,
+      "solution": "Refactoring changes structure/design while preserving required behavior. A behavior change is a separate functional change.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "02-Refactoring-Program-Organization", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.refactoring.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["csharp.refactoring"], "difficulty": "medium", "tags": ["f26-w1", "method-extraction"],
+      "stem": "A repeated block validates two inputs and computes a resistance value. What is the strongest reason to extract the resistance calculation into a named method?",
+      "choices": [{"text": "It guarantees the program runs faster"}, {"text": "It creates a named unit of responsibility that can be reasoned about and tested separately", "correct": true}, {"text": "C# requires calculations to be in separate methods"}, {"text": "It eliminates the need for input validation"}],
+      "solution": "Method extraction is useful because it creates a coherent, testable reasoning boundary, not because it automatically changes performance.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "02-Refactoring-Program-Organization", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "git.workflow.001", "version": 1, "type": "matching", "points": 4,
+      "category_ids": ["git.workflow"], "difficulty": "easy", "tags": ["f26-w1", "mental-model"],
+      "stem": "Match each Git concept with its role.",
+      "pairs": [{"source": "Working tree", "target": "Files currently being edited"}, {"source": "Staging area/index", "target": "Changes selected for the next commit"}, {"source": "Commit", "target": "Recorded project snapshot/history point"}, {"source": "Remote", "target": "Repository hosted elsewhere for sharing/synchronization"}],
+      "shuffle_pairs": true,
+      "source": {"title": "git-status", "url": "https://git-scm.com/docs/git-status"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "03-Git-Workflow", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "git.workflow.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["git.workflow"], "difficulty": "easy", "tags": ["f26-w1", "status"],
+      "stem": "You are unsure what files are modified, staged, or untracked. Which command should normally be your first diagnostic step?",
+      "choices": [{"text": "git status", "correct": true}, {"text": "git push --force"}, {"text": "git clean -fd"}, {"text": "git add ."}],
+      "solution": "`git status` reports the current working-tree/index state without making a destructive change.",
+      "source": {"title": "git-status", "url": "https://git-scm.com/docs/git-status"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "03-Git-Workflow", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "git.hygiene.001", "version": 1, "type": "mcq_multi", "points": 2,
+      "category_ids": ["git.hygiene"], "difficulty": "easy", "tags": ["f26-w1", "generated-files"],
+      "stem": "Which items would normally be candidates for exclusion from a .NET source repository? Select all that apply.",
+      "choices": [{"text": "bin/ build output", "correct": true}, {"text": "obj/ build output", "correct": true}, {"text": "Program.cs source"}, {"text": "A local file containing a real API token", "correct": true}, {"text": "README.md project documentation"}],
+      "solution": "Generated build output and secrets/local credentials should normally not be tracked. Authored source and useful project documentation normally should be tracked.",
+      "source": {"title": "gitignore documentation", "url": "https://git-scm.com/docs/gitignore"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "04-Project-Hygiene-Recovery", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "git.hygiene.002", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["git.hygiene"], "difficulty": "medium", "tags": ["f26-w1", "gitignore"],
+      "stem": "Adding a tracked file to .gitignore automatically removes that file from existing Git history and tracking.",
+      "answer": false,
+      "solution": ".gitignore affects normal handling of matching untracked files; it is not an automatic untrack/delete/history-rewrite operation.",
+      "source": {"title": "gitignore documentation", "url": "https://git-scm.com/docs/gitignore"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "04-Project-Hygiene-Recovery", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "oop.objects.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["oop.objects"], "difficulty": "easy", "tags": ["f26-w2", "class-object"],
+      "stem": "Which statement best distinguishes a class from an object in C#?",
+      "choices": [{"text": "A class is a type definition; an object is an instance with its own state", "correct": true}, {"text": "A class is always static; an object is always dynamic"}, {"text": "A class is a source file; an object is a method"}, {"text": "There is no distinction"}],
+      "solution": "A class defines a reference type and its members; objects are instances of that type.",
+      "source": {"title": "C# classes", "url": "https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/classes"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "01-Objects-State-Responsibility", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "oop.objects.002", "version": 1, "type": "short_answer", "points": 2,
+      "category_ids": ["oop.objects"], "difficulty": "medium", "tags": ["f26-w2", "constructor"],
+      "stem": "What design role can a constructor play beyond merely assigning fields?",
+      "answers": [{"text": "establish valid initial state", "case_sensitive": false, "score": 1}],
+      "solution": "A constructor can enforce invariants/validation so newly created objects begin in a valid, intentional state.",
+      "source": {"title": "C# constructors", "url": "https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/constructors"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "01-Objects-State-Responsibility", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "oop.composition.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["oop.composition"], "difficulty": "medium", "tags": ["f26-w2", "ownership"],
+      "stem": "A SampleSession owns a private List<SensorSample>. Which design choice best preserves that ownership boundary?",
+      "choices": [{"text": "Expose the mutable List publicly so every form can edit it directly"}, {"text": "Provide meaningful operations such as Add, Count, and Latest while keeping the mutable list private", "correct": true}, {"text": "Duplicate the list in every class that needs it"}, {"text": "Store every sample in static global fields"}],
+      "solution": "Keeping the mutable collection private and exposing coherent operations reduces uncontrolled coupling to internal state.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "02-Composition-Collections", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "oop.composition.002", "version": 1, "type": "essay", "points": 3,
+      "category_ids": ["oop.composition"], "difficulty": "medium", "tags": ["f26-w2", "responsibility"],
+      "stem": "A program stores many sensor samples and needs to report the latest sample and average raw count. Explain which object should own the collection and why.",
+      "response_lines": 5,
+      "rubric": "Full credit identifies a session/log/collection owner, explains that aggregation operations belong with the owned collection, and avoids placing domain state directly in the GUI merely because the GUI displays it.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "02-Composition-Collections", "reviewed": false, "origin": "starter-bank", "manual_grading": true}
+    },
+    {
+      "id": "oop.separation.001", "version": 1, "type": "mcq_multi", "points": 2,
+      "category_ids": ["oop.separation"], "difficulty": "medium", "tags": ["f26-w2", "ui"],
+      "stem": "Which responsibilities are good candidates to move out of a large WinForms button-click handler? Select all that apply.",
+      "choices": [{"text": "Pure engineering calculation", "correct": true}, {"text": "File persistence", "correct": true}, {"text": "Protocol parsing", "correct": true}, {"text": "Reading the current TextBox value"}, {"text": "Updating a Label with a user-facing result"}],
+      "solution": "Calculations, persistence, and protocol parsing can usually be isolated from the UI. Reading controls and updating controls are inherently UI interaction responsibilities.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "03-Separation-of-Concerns", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.binary-data.001", "version": 1, "type": "numeric", "points": 1,
+      "category_ids": ["csharp.binary-data"], "difficulty": "easy", "tags": ["f26-w3", "hex"],
+      "stem": "What unsigned decimal value is represented by the byte `0xB6`?",
+      "answer": 182, "tolerance": 0, "unit": null,
+      "solution": "0xB6 = 11*16 + 6 = 182.",
+      "source": {"title": "C# integral numeric types", "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "01-Binary-Representation", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.binary-data.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["csharp.binary-data"], "difficulty": "medium", "tags": ["f26-w3", "interpretation"],
+      "stem": "Why can the bit pattern `11111111` represent both unsigned 255 and signed -1 in different contexts?",
+      "choices": [{"text": "The CPU changes the stored bits automatically"}, {"text": "The bit pattern is the same; the selected type/interpretation gives it signed or unsigned meaning", "correct": true}, {"text": "Hexadecimal numbers are always signed"}, {"text": "Only strings can have multiple interpretations"}],
+      "solution": "Bits do not carry inherent signedness; the representation/type determines how the pattern is interpreted.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "01-Binary-Representation", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.bitwise.001", "version": 1, "type": "numeric", "points": 2,
+      "category_ids": ["csharp.bitwise"], "difficulty": "medium", "tags": ["f26-w3", "mask"],
+      "stem": "Given `value = 0xB6`, what decimal value results from `(value >> 4) & 0x07`?",
+      "answer": 3, "tolerance": 0, "unit": null,
+      "solution": "0xB6 = 10110110. Shifting right four gives 00001011; masking with 00000111 leaves 00000011 = 3.",
+      "source": {"title": "C# bitwise and shift operators", "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/bitwise-and-shift-operators"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "02-Bitwise-Operations", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.bitwise.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["csharp.bitwise"], "difficulty": "easy", "tags": ["f26-w3", "clear-bit"],
+      "stem": "Which expression clears the bits selected by `mask` while preserving unrelated bits?",
+      "choices": [{"text": "value | mask"}, {"text": "value ^ mask"}, {"text": "value & ~mask", "correct": true}, {"text": "value = mask"}],
+      "solution": "The complemented mask contains zeroes at selected positions and ones elsewhere; AND clears selected bits and preserves the others.",
+      "source": {"title": "C# bitwise and shift operators", "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/bitwise-and-shift-operators"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "02-Bitwise-Operations", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.packed-data.001", "version": 1, "type": "numeric", "points": 2,
+      "category_ids": ["csharp.packed-data"], "difficulty": "medium", "tags": ["f26-w3", "pack"],
+      "stem": "A protocol packs a 3-bit ID into bits 7:5 and a 5-bit VALUE into bits 4:0. What unsigned decimal byte results from ID=5 and VALUE=19?",
+      "answer": 179, "tolerance": 0, "unit": null,
+      "solution": "ID 5 is 101; VALUE 19 is 10011. Packed byte = 10110011 = 0xB3 = 179.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "03-Packed-Fields", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "csharp.packed-data.002", "version": 1, "type": "code_review", "points": 3,
+      "category_ids": ["csharp.packed-data"], "difficulty": "medium", "tags": ["f26-w3", "multibyte"],
+      "stem": "Review the reconstruction of a 16-bit value from two bytes.",
+      "code": "byte high = 0x02;\nbyte low = 0xAB;\nushort value = (ushort)(high | low);",
+      "language": "csharp",
+      "prompts": ["What is missing from the reconstruction?", "Write a corrected expression."],
+      "answers": ["The high byte must be shifted left by 8 bit positions before combining.", "ushort value = (ushort)((high << 8) | low);"],
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "04-Multi-Byte-Data-C-Comparison", "reviewed": false, "origin": "starter-bank", "manual_grading": true}
+    }
+  ],
+  "assessments": [
+    {
+      "id": "rcet3371-w1-starter", "title": "RCET3371 Week 1 Starter Form", "version": 1,
+      "instructions": "Working draft. Review selected questions before student use.",
+      "pools": [{"id": "week1", "pick": 6, "where": {"tags": ["f26-w1"]}}],
+      "shuffle_questions": true,
+      "metadata": {"reviewed": false}
+    },
+    {
+      "id": "rcet3371-w2-starter", "title": "RCET3371 Week 2 Starter Form", "version": 1,
+      "instructions": "Working draft. Review selected questions before student use.",
+      "pools": [{"id": "week2", "pick": 4, "where": {"tags": ["f26-w2"]}}],
+      "shuffle_questions": true,
+      "metadata": {"reviewed": false}
+    },
+    {
+      "id": "rcet3371-w3-starter", "title": "RCET3371 Week 3 Starter Form", "version": 1,
+      "instructions": "Working draft. Review selected questions before student use.",
+      "pools": [{"id": "week3", "pick": 5, "where": {"tags": ["f26-w3"]}}],
+      "shuffle_questions": true,
+      "metadata": {"reviewed": false}
+    }
+  ],
+  "metadata": {"default_assessment": "rcet3371-w1-starter", "all_starter_questions_reviewed": false}
+}
