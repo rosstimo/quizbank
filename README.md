@@ -41,7 +41,10 @@ Use a narrower export when that is all you need:
 ./quizbank build --format markdown,latex
 ./quizbank build quiz-example-random --seed 3375 --format pdf
 ./quizbank build --format pdf --no-key
+./quizbank build --format pdf --no-points
 ```
+
+Paper outputs show point values in question-type section headers by default, such as `Multiple Choice Questions (1 pt each)`. Use `--no-points` to hide those labels. The JSON point values and QTI/Canvas scoring are unchanged.
 
 Run `./quizbank doctor` to see the exact tools available inside the container. `make help` provides short aliases for the same commands.
 
