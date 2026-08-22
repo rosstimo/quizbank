@@ -93,6 +93,7 @@ def build_outputs(
     output_root: Path,
     formats: set[str],
     include_key: bool,
+    show_points: bool = True,
 ) -> list[BuildResult]:
     assessment_id = assessment["id"]
     output_dir = output_root / assessment_id
@@ -112,6 +113,7 @@ def build_outputs(
             assessment,
             items,
             include_key=include_key,
+            show_points=show_points,
         )
         result = _write(typst_path, typst_text)
         if "typst" in formats:
