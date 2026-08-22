@@ -60,24 +60,49 @@ def _group_items(items: list[dict[str, Any]]) -> OrderedDict[str, list[dict[str,
     return OrderedDict((kind, values) for kind, values in grouped.items() if values)
 
 
+def _format_points(value: Any) -> str:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return str(value)
+    if number.is_integer():
+        return str(int(number))
+    return f"{number:g}"
+
+
+def _section_title(kind: str, group: list[dict[str, Any]], show_points: bool) -> str:
+    title = SECTION_TITLES.get(kind, kind.replace("_", " ").title())
+    if not show_points or not group:
+        return title
+
+    values = sorted({float(item.get("points", 0)) for item in group})
+    if len(values) == 1:
+        value = values[0]
+        unit = "pt" if value == 1 else "pts"
+        return f"{title} ({_format_points(value)} {unit} each)"
+
+    low = _format_points(values[0])
+    high = _format_points(values[-1])
+    return f"{title} ({low}-{high} pts each)"
+
+
 def _question_markdown(number: int, item: dict[str, Any]) -> str:
     item_type = str(item.get("type", ""))
-    points = item.get("points", 0)
     stem = str(item.get("stem", "")).rstrip()
-    lines: list[str] = [
-        f"### {number}. ({points} pt{'s' if points != 1 else ''})",
-        "",
-        stem,
-        "",
-    ]
+
+    if item_type == "fill_blank":
+        stem = stem.replace("{{blank}}", "____________________")
+
+    if item_type == "true_false":
+        return f"**{number}.) T / F** {stem}\n"
+
+    lines: list[str] = [f"**{number}.)** {stem}", ""]
 
     if item_type in {"mcq_one", "mcq_multi"}:
         for index, choice in enumerate(item.get("choices", []) or []):
             text = str(choice.get("text", "")).rstrip()
             lines.append(f"- {build_typst.choice_letter(index)}. {text}")
         lines.append("")
-    elif item_type == "true_false":
-        lines.extend(["**T / F**", ""])
     elif item_type == "numeric":
         unit = item.get("unit")
         suffix = f" {unit}" if unit else ""
@@ -86,8 +111,6 @@ def _question_markdown(number: int, item: dict[str, Any]) -> str:
         response_lines = int(item.get("response_lines", 3))
         for _ in range(response_lines):
             lines.extend(["---", ""])
-    elif item_type == "fill_blank":
-        lines[2] = lines[2].replace("{{blank}}", "____________________")
     elif item_type == "essay":
         response_lines = int(item.get("response_lines", 8))
         for _ in range(response_lines):
@@ -133,6 +156,7 @@ def build_paper_typst(
     assessment: dict[str, Any],
     items: list[dict[str, Any]],
     include_key: bool,
+    show_points: bool = True,
 ) -> str:
     """Build question-aware Typst source while preserving QMP text via Pandoc fragments."""
     grouped = _group_items(items)
@@ -175,7 +199,7 @@ def build_paper_typst(
             out.extend(["#pagebreak()", ""])
         first_section = False
 
-        title_text = SECTION_TITLES.get(kind, kind.replace("_", " ").title())
+        title_text = _section_title(kind, group, show_points)
         out.extend([f"== *{title_text}*", "#v(0.45em)", ""])
         renderer = RENDERERS.get(kind, "render_sa")
         for item in group:
