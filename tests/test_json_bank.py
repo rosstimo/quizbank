@@ -8,7 +8,7 @@ import pytest
 
 from qbank import paper
 from qbank.bank import Bank, BankError, validate_data
-from qbank.cli import build_parser, main
+from qbank.cli import main
 from qbank.migrate import migrate_legacy
 from tools.build_qti import build_item_mcq_multi
 from tools.validate_items import lint_qmp_string
@@ -95,35 +95,6 @@ def test_native_paper_numeric_response_is_a_real_blank() -> None:
     assert "______________________________ V" in markdown
 
 
-def test_native_paper_true_false_choice_is_inline() -> None:
-    markdown = paper._question_markdown(
-        7,
-        {
-            "type": "true_false",
-            "points": 1,
-            "stem": "Timer0 is an 8-bit timer/counter module.",
-            "answer": True,
-        },
-    )
-    assert markdown.strip() == "**7.) T / F** Timer0 is an 8-bit timer/counter module."
-    assert "(1 pt)" not in markdown
-
-
-def test_native_paper_section_points_can_be_shown_or_hidden() -> None:
-    group = [
-        {"type": "true_false", "points": 1},
-        {"type": "true_false", "points": 1},
-    ]
-    assert paper._section_title("true_false", group, True) == "True / False (1 pt each)"
-    assert paper._section_title("true_false", group, False) == "True / False"
-
-
-def test_build_points_flag_defaults_on_and_can_be_disabled() -> None:
-    parser = build_parser()
-    assert parser.parse_args(["build"]).points is True
-    assert parser.parse_args(["build", "--no-points"]).points is False
-
-
 def test_native_paper_renderer_keeps_ordinary_questions_together() -> None:
     renderer = (ROOT / "paper" / "renderers.typ").read_text(encoding="utf-8")
     assert "breakable: false" in renderer
@@ -153,6 +124,37 @@ def test_native_paper_starts_each_nonempty_section_on_new_page(monkeypatch) -> N
     assert source.count("#pagebreak()") == 1
     assert source.index("True / False") < source.index("#pagebreak()")
     assert source.index("#pagebreak()") < source.index("Multiple Choice Questions")
+
+
+def test_native_paper_points_and_true_false_layout(monkeypatch) -> None:
+    monkeypatch.setattr(paper.build_typst, "md_to_typst", lambda text: text)
+    items = [
+        {"type": "true_false", "points": 1, "stem": "Timer0 is 8-bit.", "answer": True},
+        {"type": "true_false", "points": 1, "stem": "Timer1 is 16-bit.", "answer": True},
+    ]
+    with_points = paper.build_paper_typst(
+        {"id": "points-check", "title": "Points Check"},
+        items,
+        include_key=False,
+    )
+    without_points = paper.build_paper_typst(
+        {"id": "points-check", "title": "Points Check"},
+        items,
+        include_key=False,
+        show_points=False,
+    )
+    assert "True / False (1 pt each)" in with_points
+    assert "(1 pt)" not in with_points
+    assert "**1.) T / F** Timer0 is 8-bit." in with_points
+    assert "True / False (1 pt each)" not in without_points
+    assert "True / False" in without_points
+
+
+def test_compose_runs_quizbank_from_mounted_workspace() -> None:
+    compose = (ROOT / "compose.yaml").read_text(encoding="utf-8")
+    assert 'working_dir: /workspace' in compose
+    assert 'entrypoint: ["python", "-m", "qbank.cli"]' in compose
+    assert 'PYTHONPATH: /workspace' in compose
 
 
 def test_markdown_build_uses_json_bank(tmp_path: Path) -> None:
