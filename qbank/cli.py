@@ -117,6 +117,12 @@ def build_parser() -> argparse.ArgumentParser:
     build_parser.add_argument("--output-dir", default="build")
     build_parser.add_argument("--seed", type=int, default=42, help="Seed for question pools and shuffling")
     build_parser.add_argument("--no-key", action="store_true", help="Omit the answer key from paper outputs")
+    build_parser.add_argument(
+        "--points",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Show point values in paper section headers (default: on)",
+    )
 
     new_parser = sub.add_parser("new", help="Create an empty JSON bank")
     new_parser.add_argument("output", nargs="?", default="banks/new.bank.json")
@@ -177,6 +183,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 Path(args.output_dir),
                 formats,
                 include_key=not args.no_key,
+                show_points=args.points,
             )
             print(
                 f"Built {assessment['title']} from {len(items)} question(s), seed {args.seed}:"
