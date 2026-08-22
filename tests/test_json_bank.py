@@ -145,9 +145,26 @@ def test_native_paper_points_and_true_false_layout(monkeypatch) -> None:
     )
     assert "True / False (1 pt each)" in with_points
     assert "(1 pt)" not in with_points
-    assert "**1.) T / F** Timer0 is 8-bit." in with_points
+    assert "**1.) T\u2002/\u2002F** Timer0 is 8-bit." in with_points
     assert "True / False (1 pt each)" not in without_points
     assert "True / False" in without_points
+
+
+def test_native_paper_mc_choices_are_plain_lines_without_bullets() -> None:
+    markdown = paper._question_markdown(
+        1,
+        {
+            "type": "mcq_one",
+            "points": 1,
+            "stem": "Choose one.",
+            "choices": [
+                {"text": "Alpha", "correct": True},
+                {"text": "Beta"},
+            ],
+        },
+    )
+    assert "\n- A. Alpha" not in markdown
+    assert "A. Alpha  \nB. Beta" in markdown
 
 
 def test_compose_runs_quizbank_from_mounted_workspace() -> None:
