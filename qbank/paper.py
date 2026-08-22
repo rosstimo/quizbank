@@ -94,14 +94,17 @@ def _question_markdown(number: int, item: dict[str, Any]) -> str:
         stem = stem.replace("{{blank}}", "____________________")
 
     if item_type == "true_false":
-        return f"**{number}.) T / F** {stem}\n"
+        # En spaces leave enough room to circle either choice without making the row too wide.
+        return f"**{number}.) T\u2002/\u2002F** {stem}\n"
 
     lines: list[str] = [f"**{number}.)** {stem}", ""]
 
     if item_type in {"mcq_one", "mcq_multi"}:
         for index, choice in enumerate(item.get("choices", []) or []):
             text = str(choice.get("text", "")).rstrip()
-            lines.append(f"- {build_typst.choice_letter(index)}. {text}")
+            # Markdown list markers add an unwanted bullet in the paper PDF. A hard line
+            # break keeps A/B/C/D choices aligned while remaining plain text.
+            lines.append(f"{build_typst.choice_letter(index)}. {text}  ")
         lines.append("")
     elif item_type == "numeric":
         unit = item.get("unit")
