@@ -27,6 +27,10 @@ include = ["qbank*", "tools*"]
   "schemas/bank.schema.json",
   "schemas/quiz-item.schema.json",
 ]
+"share/quizbank/paper" = [
+  "paper/inc.typ",
+  "paper/renderers.typ",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
