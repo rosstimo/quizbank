@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import shutil
 import subprocess
+import sysconfig
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -10,6 +11,7 @@ from typing import Any
 
 from tools import build_latex, build_qti, build_typst
 
+from qbank import paper
 from qbank.bank import BankError
 
 
@@ -26,6 +28,24 @@ def _write(path: Path, content: str) -> BuildResult:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
     return BuildResult(path)
+
+
+def _paper_template_dir() -> Path:
+    candidates = (
+        Path(__file__).resolve().parents[1] / "paper",
+        Path.cwd() / "paper",
+        Path(sysconfig.get_path("data")) / "share" / "quizbank" / "paper",
+    )
+    for candidate in candidates:
+        if (candidate / "inc.typ").is_file() and (candidate / "renderers.typ").is_file():
+            return candidate
+    raise BankError("Quizbank's paper Typst templates are missing from the installation")
+
+
+def _copy_paper_templates(output_dir: Path) -> None:
+    source = _paper_template_dir()
+    shutil.copyfile(source / "inc.typ", output_dir / "inc.typ")
+    shutil.copyfile(source / "renderers.typ", output_dir / "renderers.typ")
 
 
 def _qti_package(
@@ -87,17 +107,11 @@ def build_outputs(
 
     typst_path = output_dir / f"{assessment_id}.typ"
     if formats.intersection({"typst", "pdf"}):
-        typst_md = build_typst.build_markdown_doc(
+        _copy_paper_templates(output_dir)
+        typst_text = paper.build_paper_typst(
             assessment,
             items,
-            no_key=not include_key,
-            inline_solutions=False,
-            typst_mode=True,
-        )
-        typst_text = (
-            "#set page(paper: \"us-letter\", margin: 1in)\n"
-            "#let horizontalrule = line(length: 100%)\n\n"
-            + build_typst.md_to_typst(typst_md)
+            include_key=include_key,
         )
         result = _write(typst_path, typst_text)
         if "typst" in formats:
