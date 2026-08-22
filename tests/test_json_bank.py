@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from qbank import paper
 from qbank.bank import Bank, BankError, validate_data
 from qbank.cli import main
 from qbank.migrate import migrate_legacy
@@ -78,6 +79,28 @@ def test_qmp_html_lint_still_rejects_raw_html() -> None:
     assert "contains raw HTML tags (not allowed in QMP)" in lint_qmp_string(
         "Do not use <strong>raw HTML</strong>."
     )
+
+
+def test_native_paper_numeric_response_is_a_real_blank() -> None:
+    markdown = paper._question_markdown(
+        1,
+        {
+            "type": "numeric",
+            "points": 1,
+            "stem": "What voltage is measured?",
+            "unit": "V",
+        },
+    )
+    assert "Answer: numeric" not in markdown
+    assert "______________________________ V" in markdown
+
+
+def test_native_paper_renderer_keeps_ordinary_questions_together() -> None:
+    renderer = (ROOT / "paper" / "renderers.typ").read_text(encoding="utf-8")
+    assert "breakable: false" in renderer
+    controls = (ROOT / "paper" / "inc.typ").read_text(encoding="utf-8")
+    assert "pagebreak_every_mc = 5" in controls
+    assert "pagebreak_every_cr = 1" in controls
 
 
 def test_markdown_build_uses_json_bank(tmp_path: Path) -> None:
