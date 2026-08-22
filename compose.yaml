@@ -5,8 +5,9 @@ services:
     image: quizbank-local:0.2.0
     user: "${QUIZBANK_UID:-0}:${QUIZBANK_GID:-0}"
     working_dir: /workspace
+    entrypoint: ["python", "-m", "qbank.cli"]
     volumes:
       - .:/workspace
     environment:
       HOME: /tmp/quizbank-home
-
+      PYTHONPATH: /workspace
