@@ -103,6 +103,29 @@ def test_native_paper_renderer_keeps_ordinary_questions_together() -> None:
     assert "pagebreak_every_cr = 1" in controls
 
 
+def test_native_paper_starts_each_nonempty_section_on_new_page(monkeypatch) -> None:
+    monkeypatch.setattr(paper.build_typst, "md_to_typst", lambda text: text)
+    source = paper.build_paper_typst(
+        {"id": "layout-check", "title": "Layout Check"},
+        [
+            {"type": "true_false", "points": 1, "stem": "First statement", "answer": True},
+            {
+                "type": "mcq_one",
+                "points": 1,
+                "stem": "Second question",
+                "choices": [
+                    {"text": "A", "correct": True},
+                    {"text": "B"},
+                ],
+            },
+        ],
+        include_key=False,
+    )
+    assert source.count("#pagebreak()") == 1
+    assert source.index("True / False") < source.index("#pagebreak()")
+    assert source.index("#pagebreak()") < source.index("Multiple Choice Questions")
+
+
 def test_markdown_build_uses_json_bank(tmp_path: Path) -> None:
     result = main(
         [
