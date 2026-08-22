@@ -10,6 +10,7 @@ from qbank.bank import Bank, BankError, validate_data
 from qbank.cli import main
 from qbank.migrate import migrate_legacy
 from tools.build_qti import build_item_mcq_multi
+from tools.validate_items import lint_qmp_string
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +68,16 @@ def test_pool_reports_when_too_few_questions_match() -> None:
     bank.assessments_by_id["quiz-example-random"]["pools"][0]["pick"] = 99
     with pytest.raises(BankError, match="only 5 match"):
         bank.resolve("quiz-example-random")
+
+
+def test_qmp_html_lint_ignores_inline_code() -> None:
+    assert lint_qmp_string("A private `List<SensorSample>` owns the samples.") == []
+
+
+def test_qmp_html_lint_still_rejects_raw_html() -> None:
+    assert "contains raw HTML tags (not allowed in QMP)" in lint_qmp_string(
+        "Do not use <strong>raw HTML</strong>."
+    )
 
 
 def test_markdown_build_uses_json_bank(tmp_path: Path) -> None:
