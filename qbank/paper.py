@@ -169,7 +169,12 @@ def build_paper_typst(
 
     numbered: list[tuple[int, dict[str, Any]]] = []
     number = 1
+    first_section = True
     for kind, group in grouped.items():
+        if not first_section:
+            out.extend(["#pagebreak()", ""])
+        first_section = False
+
         title_text = SECTION_TITLES.get(kind, kind.replace("_", " ").title())
         out.extend([f"== *{title_text}*", "#v(0.45em)", ""])
         renderer = RENDERERS.get(kind, "render_sa")
