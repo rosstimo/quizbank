@@ -118,7 +118,7 @@ def lint_qmp_string(s: str) -> List[str]:
         return issues
     if RE_LATEX_WRAPPERS.search(s):
         issues.append("contains LaTeX wrappers (use $...$ or $$...$$, not \\( \\) \\[ \\] or \\text{...})")
-    if RE_HTML_TAG.search(s):
+    if RE_HTML_TAG.search(strip_code(s)):
         issues.append("contains raw HTML tags (not allowed in QMP)")
     issues.extend(check_dollar_balance(s))
     issues.extend(check_images(s))
