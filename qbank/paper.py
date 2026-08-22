@@ -141,7 +141,7 @@ def build_paper_typst(
     paper_instructions = (assessment.get("metadata") or {}).get("paper_instructions")
 
     out = [
-        '#import "paper-renderers.typ": *',
+        '#import "renderers.typ": *',
         "",
         '#set page("us-letter", margin: (top: 1in, bottom: 0.75in, left: 1in, right: 0.75in))',
         '#set text(font: "Libertinus Serif", size: 12pt)',
