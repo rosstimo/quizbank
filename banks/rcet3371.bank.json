@@ -127,7 +127,7 @@
     {
       "id": "oop.composition.001", "version": 1, "type": "mcq_one", "points": 1,
       "category_ids": ["oop.composition"], "difficulty": "medium", "tags": ["f26-w2", "ownership"],
-      "stem": "A SampleSession owns a private List<SensorSample>. Which design choice best preserves that ownership boundary?",
+      "stem": "A SampleSession owns a private `List<SensorSample>`. Which design choice best preserves that ownership boundary?",
       "choices": [{"text": "Expose the mutable List publicly so every form can edit it directly"}, {"text": "Provide meaningful operations such as Add, Count, and Latest while keeping the mutable list private", "correct": true}, {"text": "Duplicate the list in every class that needs it"}, {"text": "Store every sample in static global fields"}],
       "solution": "Keeping the mutable collection private and exposing coherent operations reduces uncontrolled coupling to internal state.",
       "metadata": {"semester_weeks": ["F26-W02"], "lesson": "02-Composition-Collections", "reviewed": false, "origin": "starter-bank"}
