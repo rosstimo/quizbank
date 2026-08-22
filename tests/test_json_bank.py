@@ -8,7 +8,7 @@ import pytest
 
 from qbank import paper
 from qbank.bank import Bank, BankError, validate_data
-from qbank.cli import main
+from qbank.cli import build_parser, main
 from qbank.migrate import migrate_legacy
 from tools.build_qti import build_item_mcq_multi
 from tools.validate_items import lint_qmp_string
@@ -93,6 +93,35 @@ def test_native_paper_numeric_response_is_a_real_blank() -> None:
     )
     assert "Answer: numeric" not in markdown
     assert "______________________________ V" in markdown
+
+
+def test_native_paper_true_false_choice_is_inline() -> None:
+    markdown = paper._question_markdown(
+        7,
+        {
+            "type": "true_false",
+            "points": 1,
+            "stem": "Timer0 is an 8-bit timer/counter module.",
+            "answer": True,
+        },
+    )
+    assert markdown.strip() == "**7.) T / F** Timer0 is an 8-bit timer/counter module."
+    assert "(1 pt)" not in markdown
+
+
+def test_native_paper_section_points_can_be_shown_or_hidden() -> None:
+    group = [
+        {"type": "true_false", "points": 1},
+        {"type": "true_false", "points": 1},
+    ]
+    assert paper._section_title("true_false", group, True) == "True / False (1 pt each)"
+    assert paper._section_title("true_false", group, False) == "True / False"
+
+
+def test_build_points_flag_defaults_on_and_can_be_disabled() -> None:
+    parser = build_parser()
+    assert parser.parse_args(["build"]).points is True
+    assert parser.parse_args(["build", "--no-points"]).points is False
 
 
 def test_native_paper_renderer_keeps_ordinary_questions_together() -> None:
