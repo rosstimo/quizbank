@@ -8,7 +8,6 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
-        fonts-libertinus \
         fonts-noto-core \
         texlive-fonts-recommended \
         texlive-latex-recommended \
