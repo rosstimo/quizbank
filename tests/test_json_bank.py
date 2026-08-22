@@ -143,11 +143,25 @@ def test_native_paper_points_and_true_false_layout(monkeypatch) -> None:
         include_key=False,
         show_points=False,
     )
-    assert "True / False (1 pt each)" in with_points
+    assert "True / False (1 pt each): Circle one choice." in with_points
     assert "(1 pt)" not in with_points
-    assert "**1.) T\u2002/\u2002F** Timer0 is 8-bit." in with_points
-    assert "True / False (1 pt each)" not in without_points
-    assert "True / False" in without_points
+    assert (
+        '#strong[1.)] #text(size: 14pt, weight: "bold")'
+        "[T#h(0.65em)/#h(0.65em)F] Timer0 is 8-bit."
+    ) in with_points
+    assert "True / False: Circle one choice." in without_points
+    assert "1 pt each" not in without_points
+
+
+def test_native_paper_mc_section_instruction_matches_question_type() -> None:
+    single = paper._section_title(
+        "mcq", [{"type": "mcq_one", "points": 1}], show_points=True
+    )
+    multi = paper._section_title(
+        "mcq", [{"type": "mcq_multi", "points": 1}], show_points=True
+    )
+    assert single == "Multiple Choice Questions (1 pt each): Circle one choice."
+    assert multi == "Multiple Choice Questions (1 pt each): Circle all that apply."
 
 
 def test_native_paper_mc_choices_are_plain_lines_without_bullets() -> None:
