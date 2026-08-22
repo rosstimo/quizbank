@@ -70,20 +70,36 @@ def _format_points(value: Any) -> str:
     return f"{number:g}"
 
 
+def _section_instruction(kind: str, group: list[dict[str, Any]]) -> str | None:
+    if kind == "true_false":
+        return "Circle one choice."
+    if kind == "mcq":
+        item_types = {str(item.get("type", "")) for item in group}
+        if item_types == {"mcq_one"}:
+            return "Circle one choice."
+        if item_types == {"mcq_multi"}:
+            return "Circle all that apply."
+        return "Circle the requested choice(s)."
+    return None
+
+
 def _section_title(kind: str, group: list[dict[str, Any]], show_points: bool) -> str:
     title = SECTION_TITLES.get(kind, kind.replace("_", " ").title())
-    if not show_points or not group:
-        return title
+    if show_points and group:
+        values = sorted({float(item.get("points", 0)) for item in group})
+        if len(values) == 1:
+            value = values[0]
+            unit = "pt" if value == 1 else "pts"
+            title = f"{title} ({_format_points(value)} {unit} each)"
+        else:
+            low = _format_points(values[0])
+            high = _format_points(values[-1])
+            title = f"{title} ({low}-{high} pts each)"
 
-    values = sorted({float(item.get("points", 0)) for item in group})
-    if len(values) == 1:
-        value = values[0]
-        unit = "pt" if value == 1 else "pts"
-        return f"{title} ({_format_points(value)} {unit} each)"
-
-    low = _format_points(values[0])
-    high = _format_points(values[-1])
-    return f"{title} ({low}-{high} pts each)"
+    instruction = _section_instruction(kind, group)
+    if instruction:
+        title = f"{title}: {instruction}"
+    return title
 
 
 def _question_markdown(number: int, item: dict[str, Any]) -> str:
@@ -94,7 +110,8 @@ def _question_markdown(number: int, item: dict[str, Any]) -> str:
         stem = stem.replace("{{blank}}", "____________________")
 
     if item_type == "true_false":
-        # En spaces leave enough room to circle either choice without making the row too wide.
+        # Kept as a plain-text fallback; the paper renderer uses native Typst
+        # for the larger, circle-friendly T / F choice.
         return f"**{number}.) T\u2002/\u2002F** {stem}\n"
 
     lines: list[str] = [f"**{number}.)** {stem}", ""]
@@ -141,6 +158,18 @@ def _question_markdown(number: int, item: dict[str, Any]) -> str:
         lines.append("")
 
     return "\n".join(lines)
+
+
+def _question_typst(number: int, item: dict[str, Any]) -> str:
+    if str(item.get("type", "")) == "true_false":
+        stem = str(item.get("stem", "")).rstrip()
+        stem_typst = build_typst.md_to_typst(stem + "\n").strip()
+        return (
+            f"#strong[{number}.)] "
+            '#text(size: 14pt, weight: "bold")[T#h(0.65em)/#h(0.65em)F] '
+            f"{stem_typst}"
+        )
+    return build_typst.md_to_typst(_question_markdown(number, item)).strip()
 
 
 def _answer_key_markdown(numbered: list[tuple[int, dict[str, Any]]]) -> str:
@@ -206,7 +235,7 @@ def build_paper_typst(
         out.extend([f"== *{title_text}*", "#v(0.45em)", ""])
         renderer = RENDERERS.get(kind, "render_sa")
         for item in group:
-            body = build_typst.md_to_typst(_question_markdown(number, item)).strip()
+            body = _question_typst(number, item)
             out.extend([f"#{renderer}([", body, "])", "#v(0.35em)", ""])
             numbered.append((number, item))
             number += 1
