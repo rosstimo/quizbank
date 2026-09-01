@@ -16,6 +16,7 @@ from qbank.bank import (
 )
 from qbank.exporters import ALL_FORMATS, build_outputs, dependency_versions
 from qbank.migrate import migrate_legacy, write_json
+from qbank.reference import build_reference
 
 
 def _discover_bank() -> Path:
@@ -33,7 +34,15 @@ def _discover_bank() -> Path:
 
 
 def _bank_path(value: str | None) -> Path:
+    external = os.environ.get("QUIZBANK_EXTERNAL_BANK")
+    if value and external:
+        return Path(external)
     return Path(value) if value else _discover_bank()
+
+
+def _output_path(value: str) -> Path:
+    external = os.environ.get("QUIZBANK_EXTERNAL_OUTPUT")
+    return Path(external) if external else Path(value)
 
 
 def _print_validation_error(error: BankValidationError) -> None:
@@ -93,7 +102,7 @@ def _starter(bank_id: str, title: str) -> dict:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="quizbank",
-        description="Author once in a JSON bank, then build paper and Canvas assessments.",
+        description="Author once in a JSON bank, then build paper, Canvas, and reference outputs.",
     )
     parser.add_argument("--version", action="version", version=f"quizbank {__version__}")
     sub = parser.add_subparsers(dest="command")
@@ -117,6 +126,13 @@ def build_parser() -> argparse.ArgumentParser:
     build_parser.add_argument("--output-dir", default="build")
     build_parser.add_argument("--seed", type=int, default=42, help="Seed for question pools and shuffling")
     build_parser.add_argument("--no-key", action="store_true", help="Omit the answer key from paper outputs")
+
+    reference_parser = sub.add_parser(
+        "reference",
+        help="Build GitHub-friendly practice questions and a linked answer key from the whole bank",
+    )
+    reference_parser.add_argument("--bank")
+    reference_parser.add_argument("--output-dir", default="reference")
 
     new_parser = sub.add_parser("new", help="Create an empty JSON bank")
     new_parser.add_argument("output", nargs="?", default="banks/new.bank.json")
@@ -174,7 +190,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             results = build_outputs(
                 assessment,
                 items,
-                Path(args.output_dir),
+                _output_path(args.output_dir),
                 formats,
                 include_key=not args.no_key,
             )
@@ -184,6 +200,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             for result in results:
                 detail = f" ({result.detail})" if result.detail else ""
                 print(f"  {result.path}{detail}")
+            return 0
+
+        if args.command == "reference":
+            bank = Bank.load(_bank_path(args.bank))
+            output_dir = _output_path(args.output_dir)
+            results = build_reference(bank, output_dir)
+            print(f"Built GitHub reference from {len(bank.questions)} question(s):")
+            for path in results:
+                print(f"  {path}")
             return 0
 
         if args.command == "new":
@@ -229,14 +254,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     except BankValidationError as error:
         _print_validation_error(error)
         return 1
-    except RuntimeError as error:
+    except (BankError, RuntimeError) as error:
         print(f"Error: {error}", file=sys.stderr)
         return 2
     except KeyboardInterrupt:
         print("Cancelled", file=sys.stderr)
         return 130
     return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
