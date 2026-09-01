@@ -1,19 +1,89 @@
 #!/bin/sh
 set -eu
 
+SCRIPT_DIR=$(CDPATH= cd -P "$(dirname "$0")" && pwd)
+CALLER_DIR=$(pwd -P)
+
+bank_path=""
+output_path=""
+expect_bank=0
+expect_output=0
+
+for arg in "$@"; do
+    if [ "$expect_bank" -eq 1 ]; then
+        bank_path=$arg
+        expect_bank=0
+        continue
+    fi
+    if [ "$expect_output" -eq 1 ]; then
+        output_path=$arg
+        expect_output=0
+        continue
+    fi
+    case "$arg" in
+        --bank)
+            expect_bank=1
+            ;;
+        --bank=*)
+            bank_path=${arg#--bank=}
+            ;;
+        --output-dir)
+            expect_output=1
+            ;;
+        --output-dir=*)
+            output_path=${arg#--output-dir=}
+            ;;
+    esac
+done
+
+if [ -n "$bank_path" ]; then
+    case "$bank_path" in
+        /*) bank_abs=$bank_path ;;
+        *) bank_abs=$CALLER_DIR/$bank_path ;;
+    esac
+    bank_dir=$(dirname "$bank_abs")
+    if [ ! -d "$bank_dir" ]; then
+        printf '%s\n' "Quizbank bank directory not found: $bank_dir" >&2
+        exit 2
+    fi
+    bank_dir=$(CDPATH= cd -P "$bank_dir" && pwd)
+    export QUIZBANK_BANK_DIR=$bank_dir
+    export QUIZBANK_EXTERNAL_BANK=/quizbank-bank/$(basename "$bank_abs")
+fi
+
+if [ -n "$output_path" ]; then
+    case "$output_path" in
+        /*) output_abs=$output_path ;;
+        *) output_abs=$CALLER_DIR/$output_path ;;
+    esac
+    output_parent=$(dirname "$output_abs")
+    if [ ! -d "$output_parent" ]; then
+        printf '%s\n' "Quizbank output parent directory not found: $output_parent" >&2
+        exit 2
+    fi
+    output_parent=$(CDPATH= cd -P "$output_parent" && pwd)
+    export QUIZBANK_OUTPUT_DIR=$output_parent
+    export QUIZBANK_EXTERNAL_OUTPUT=/quizbank-output/$(basename "$output_abs")
+fi
+
 if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
     if command -v id >/dev/null 2>&1; then
         export QUIZBANK_UID="$(id -u)"
         export QUIZBANK_GID="$(id -g)"
     fi
-    exec docker compose run --rm quizbank "$@"
+    exec docker compose \
+        --project-directory "$SCRIPT_DIR" \
+        -f "$SCRIPT_DIR/compose.yaml" \
+        run --rm quizbank "$@"
 fi
 
 if command -v podman >/dev/null 2>&1 && podman compose version >/dev/null 2>&1; then
-    exec podman compose run --rm quizbank "$@"
+    exec podman compose \
+        --project-directory "$SCRIPT_DIR" \
+        -f "$SCRIPT_DIR/compose.yaml" \
+        run --rm quizbank "$@"
 fi
 
 printf '%s\n' "Quizbank needs Docker Desktop, Docker Engine with Compose, or Podman Compose." >&2
 printf '%s\n' "Install one of those tools, then run this command again." >&2
 exit 2
-
