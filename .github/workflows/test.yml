@@ -1,0 +1,46 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - agent/json-bank-cli
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependencies
+        run: python -m pip install -e '.[dev]'
+
+      - name: Run Python tests
+        run: pytest -q
+
+      - name: Check launcher syntax
+        run: |
+          sh -n quizbank
+          pwsh -NoProfile -Command "[ScriptBlock]::Create((Get-Content -Raw quizbank.ps1)) | Out-Null"
+
+      - name: Validate Compose configuration
+        run: docker compose config >/dev/null
+
+      - name: Test an external bank and external reference output
+        run: |
+          mkdir -p /tmp/quizbank-external-bank /tmp/quizbank-external-output
+          cp banks/example.bank.json /tmp/quizbank-external-bank/example.bank.json
+          ./quizbank validate --bank /tmp/quizbank-external-bank/example.bank.json
+          ./quizbank reference \
+            --bank /tmp/quizbank-external-bank/example.bank.json \
+            --output-dir /tmp/quizbank-external-output/reference
+          test -f /tmp/quizbank-external-output/reference/example-bank.md
+          test -f /tmp/quizbank-external-output/reference/keys/example-bank-key.md
+          grep -q 'key-example-topic-001' /tmp/quizbank-external-output/reference/example-bank.md
+          grep -q 'q-example-topic-001' /tmp/quizbank-external-output/reference/keys/example-bank-key.md
