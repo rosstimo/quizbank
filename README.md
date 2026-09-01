@@ -1,8 +1,10 @@
 # Quizbank
 
-Keep questions, categories, metadata, and assessment recipes in one JSON bank. Build a printable PDF, editable source, Markdown, or a Canvas QTI package from that bank.
+Keep questions, categories, metadata, and assessment recipes in one JSON bank. Build printable assessments, editable source, Canvas QTI packages, and GitHub-friendly practice/reference Markdown from that bank.
 
 Quizbank runs its Python packages, Pandoc, Typst, and LaTeX inside a container. The host only needs Docker Desktop, Docker Engine with Compose, or Podman Compose.
+
+See [docs/USAGE.md](docs/USAGE.md) for the full command guide and course-repository workflow.
 
 ## Start here
 
@@ -45,9 +47,47 @@ Use a narrower export when that is all you need:
 
 Run `./quizbank doctor` to see the exact tools available inside the container. `make help` provides short aliases for the same commands.
 
+## Banks and output can live anywhere
+
+The bank does not need to live inside the Quizbank repository. The launcher mounts the requested bank directory into the container automatically, and an explicit output directory can live somewhere else as well.
+
+```bash
+/home/tim/src/quizbank/quizbank validate \
+  --bank /home/tim/Documents/course/F26/QuizBanks/course.bank.json
+
+/home/tim/src/quizbank/quizbank build assessment-id \
+  --bank /home/tim/Documents/course/F26/QuizBanks/course.bank.json \
+  --output-dir /home/tim/Documents/course/generated
+```
+
+Relative paths are interpreted from the directory where you invoke the launcher. The launcher locates its own `compose.yaml`, so you do not need to `cd` into Quizbank first.
+
+## GitHub reference/practice Markdown
+
+`reference` is separate from the printable Markdown produced by `build --format markdown`. It renders the **whole bank** as a question-only practice document plus a linked answer-key document suitable for committing to GitHub.
+
+```bash
+/home/tim/src/quizbank/quizbank reference \
+  --bank /home/tim/Documents/course/F26/QuizBanks/course.bank.json \
+  --output-dir /home/tim/Documents/course/F26/QuizBanks/Markdown
+```
+
+For a bank ID such as `course.topic`, the output is:
+
+```text
+Markdown/
+├── course-topic.md
+└── keys/
+    └── course-topic-key.md
+```
+
+Each practice question links directly to its exact key entry. Each key entry repeats the original question, gives the answer/solution/feedback/provenance, and links back to the exact practice question. Stable HTML anchors are derived from the question ID so the links remain predictable on GitHub.
+
+The existing PDF, Typst, LaTeX, QTI, and printable Markdown assessment exporters are unchanged by the reference exporter.
+
 ## One JSON bank
 
-Files under `banks/` are the authored source of truth. A bank contains five parts:
+Files under `banks/` are the authored source of truth for the included example, but real course banks may live anywhere on the user's computer. A bank contains five parts:
 
 ```json
 {
@@ -175,14 +215,15 @@ Create a clean bank instead:
 
 ## Export behavior
 
-| Format | Output | Notes |
+| Format / command | Output | Notes |
 |---|---|---|
-| `pdf` | `.pdf` | Compiled with Typst inside the container |
-| `typst` | `.typ` | Editable source |
-| `latex` | `.tex` | Editable source |
-| `markdown` | `.md` | Portable source and answer key |
-| `qti` | `-qti12.zip` | Import into Canvas as QTI 1.2 |
-| `all` | all of the above | Default |
+| `build --format pdf` | `.pdf` | Compiled with Typst inside the container |
+| `build --format typst` | `.typ` | Editable assessment source |
+| `build --format latex` | `.tex` | Editable assessment source |
+| `build --format markdown` | `.md` | Printable-style assessment plus answer key |
+| `build --format qti` | `-qti12.zip` | Import into Canvas as QTI 1.2 |
+| `build` | all of the above | Default assessment build |
+| `reference` | question `.md` + `keys/*-key.md` | Whole-bank GitHub practice/reference view |
 
 Paper formats support every question type. QTI currently exports multiple choice, multiple select, true/false, numeric, short answer, and fill in the blank. It reports manually graded types that it leaves out instead of discarding them silently.
 
@@ -194,4 +235,4 @@ make test
 
 Tests run in the same containerized environment as normal commands. Generated files go under `build/` and are ignored by Git.
 
-The original one-question-per-YAML tools are still present under `tools/`, `qbank/`, and `quizzes/` as migration inputs. New work should go into a JSON file under `banks/`.
+The original one-question-per-YAML tools are still present under `tools/`, `qbank/`, and `quizzes/` as migration inputs. New work should use JSON banks.
