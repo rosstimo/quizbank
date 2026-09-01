@@ -6,7 +6,17 @@ services:
     user: "${QUIZBANK_UID:-0}:${QUIZBANK_GID:-0}"
     working_dir: /workspace
     volumes:
-      - .:/workspace
+      - type: bind
+        source: .
+        target: /workspace
+      - type: bind
+        source: ${QUIZBANK_BANK_DIR:-.}
+        target: /quizbank-bank
+        read_only: true
+      - type: bind
+        source: ${QUIZBANK_OUTPUT_DIR:-.}
+        target: /quizbank-output
     environment:
       HOME: /tmp/quizbank-home
-
+      QUIZBANK_EXTERNAL_BANK: "${QUIZBANK_EXTERNAL_BANK:-}"
+      QUIZBANK_EXTERNAL_OUTPUT: "${QUIZBANK_EXTERNAL_OUTPUT:-}"
