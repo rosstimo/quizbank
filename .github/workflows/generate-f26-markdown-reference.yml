@@ -1,0 +1,117 @@
+name: Bootstrap Fall 2026 Markdown Reference
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/generate-f26-markdown-reference.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-reference:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Fall 2026 bank branch
+        uses: actions/checkout@v4
+        with:
+          ref: curriculum/f26-question-banks
+
+      - name: Check out latest reference renderer
+        uses: actions/checkout@v4
+        with:
+          repository: rosstimo/quizbank
+          ref: agent/json-bank-cli
+          path: _renderer
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install reference renderer
+        run: python -m pip install -e ./_renderer
+
+      - name: Generate whole-bank Markdown references
+        shell: bash
+        run: |
+          rm -rf reference/F26
+          mkdir -p reference/F26
+          python <<'PY'
+          from __future__ import annotations
+
+          import os
+          from pathlib import Path
+
+          from qbank.bank import Bank
+          from qbank.reference import build_reference
+
+          root = Path.cwd()
+          output_dir = root / "reference" / "F26"
+          records = []
+
+          for path in sorted((root / "banks").glob("*.bank.json")):
+              if path.name == "example.bank.json":
+                  continue
+              bank = Bank.load(path, lint_level="off")
+              question_path, key_path = build_reference(bank, output_dir)
+              records.append({
+                  "title": bank.info["title"],
+                  "bank_id": bank.info["id"],
+                  "questions": len(bank.questions),
+                  "question_path": question_path,
+                  "key_path": key_path,
+                  "source": path,
+              })
+
+          records.sort(key=lambda record: (record["title"].lower(), record["bank_id"]))
+          total_questions = sum(record["questions"] for record in records)
+
+          lines = [
+              "# Fall 2026 Quizbank Markdown Reference",
+              "",
+              "> Generated from the course banks on `curriculum/f26-question-banks` using the reference renderer from `agent/json-bank-cli`. The JSON banks remain the source of truth.",
+              "",
+              f"**Banks:** {len(records)}  ",
+              f"**Questions:** {total_questions}",
+              "",
+              "| Bank | Questions | Practice | Answer key | Source |",
+              "|---|---:|---|---|---|",
+          ]
+
+          for record in records:
+              title = str(record["title"]).replace("|", "\\|")
+              practice = record["question_path"].relative_to(output_dir).as_posix()
+              key = record["key_path"].relative_to(output_dir).as_posix()
+              source = Path(os.path.relpath(record["source"], output_dir)).as_posix()
+              lines.append(
+                  f"| {title} | {record['questions']} | [questions]({practice}) | [key]({key}) | [JSON bank]({source}) |"
+              )
+
+          lines.extend([
+              "",
+              "## Scope",
+              "",
+              "This index includes every Fall 2026 course bank currently stored under `banks/`, except the generic example bank. Legacy-named course banks are included rather than silently omitted.",
+              "",
+          ])
+          (output_dir / "README.md").write_text("\n".join(lines), encoding="utf-8")
+          print(f"Generated {len(records)} banks containing {total_questions} questions.")
+          PY
+
+      - name: Commit generated Markdown to Fall 2026 branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain -- reference/F26)" ]]; then
+            git add reference/F26
+            git commit -m "docs: regenerate Fall 2026 quizbank previews"
+            git push origin HEAD:curriculum/f26-question-banks
+          else
+            echo "Fall 2026 Markdown references are already current."
+          fi
