@@ -1,0 +1,41 @@
+name: Audit All Question Sources
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/audit-all-question-sources.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Fall 2026 bank branch
+        uses: actions/checkout@v4
+        with:
+          ref: curriculum/f26-question-banks
+          fetch-depth: 0
+      - name: Check out audit tool branch
+        uses: actions/checkout@v4
+        with:
+          repository: rosstimo/quizbank
+          ref: agent/json-bank-cli
+          path: _quizbank
+          persist-credentials: false
+      - run: python -m pip install pyyaml
+      - name: Audit all Quizbank branches
+        run: |
+          git fetch --all --prune
+          python _quizbank/tools/inventory_legacy_questions.py --output migration
+      - name: Commit inventory to Fall 2026 branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain -- migration)" ]]; then
+            git add migration
+            git commit -m "audit: record complete quizbank source inventory"
+            git push origin HEAD:curriculum/f26-question-banks
+          fi
