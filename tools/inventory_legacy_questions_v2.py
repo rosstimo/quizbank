@@ -1,8 +1,16 @@
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
 from typing import Any
+
+# When this file is invoked by path, Python puts tools/ rather than the
+# repository root on sys.path. Add the root so the existing tools package is
+# importable both locally and from planning-repo Actions checkouts.
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from tools import inventory_legacy_questions as base
 
@@ -94,7 +102,6 @@ def enhanced_parse_typst_tuple_bank(
             if choices:
                 raw["legacy_choices"] = choices
             if correct is not None:
-                # The historical Typst helpers use zero-based indexes.
                 raw["legacy_correct"] = correct
             if answer_text is not None:
                 raw["legacy_answer"] = answer_text
@@ -125,8 +132,6 @@ def enhanced_parse_typst_tuple_bank(
             if answer_text is not None:
                 raw["sample_answer"] = answer_text
 
-        # Preserve old inline Ref comments for the enrichment pass. They are
-        # evidence locators, not verified citations until mapped to an official document.
         refs = []
         for match in re.finditer(r"(?im)//\s*Ref:\s*([^\n|]+(?:/[^\n|]+)*)", block):
             value = re.sub(r"\s+", " ", match.group(1)).strip()
