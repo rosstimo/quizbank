@@ -1,0 +1,22 @@
+{
+  "$schema": "../schemas/bank.schema.json",
+  "format_version": 1,
+  "bank": {
+    "id": "rcet2265",
+    "title": "RCET 2265 Computer Fundamentals and Introduction to Programming",
+    "description": "Canonical JSON bank scaffold for Fall 2026. This pass does not invent new RCET2265 questions because the first-three-week content review focused on the RCET337x sequence.",
+    "language": "en-US",
+    "authors": ["Tim Rossiter"],
+    "default_points": 1,
+    "metadata": {"semester": "Fall 2026", "status": "scaffold", "review_needed": true}
+  },
+  "categories": [
+    {"id": "computer-fundamentals", "title": "Computer Fundamentals"},
+    {"id": "programming", "title": "Programming Fundamentals"},
+    {"id": "csharp", "title": "C#"},
+    {"id": "git", "title": "Git and Source Control"}
+  ],
+  "questions": [],
+  "assessments": [],
+  "metadata": {"all_starter_questions_reviewed": false, "note": "Populate from current RCET2265 curriculum rather than guessing from the 337x sequence."}
+}

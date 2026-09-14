@@ -1,0 +1,210 @@
+{
+  "$schema": "../schemas/bank.schema.json",
+  "format_version": 1,
+  "bank": {
+    "id": "rcet3375-legacy-section01",
+    "title": "RCET3375 Legacy Section 01 Renderer Benchmark",
+    "description": "Exact question selection from RCET3375-planning/old/quiz_modular_typst/quizzes/quiz_section-01.typ for paper-renderer comparison.",
+    "language": "en-US",
+    "authors": ["Tim Rossiter"],
+    "default_points": 1,
+    "metadata": {
+      "purpose": "renderer-regression",
+      "legacy_quiz": "quiz_section-01.typ",
+      "legacy_repo": "rosstimo/RCET3375-planning"
+    }
+  },
+  "categories": [
+    {"id": "legacy", "title": "Legacy Assessment Benchmarks"},
+    {"id": "legacy.section01", "title": "PIC Section 01", "parent": "legacy"}
+  ],
+  "questions": [
+    {
+      "id": "tf051", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "If a TRISx bit is 1, the corresponding pin is configured as an input.", "answer": true,
+      "metadata": {"legacy_id": "tf051", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf054", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "Writing a 1 to PORTx forces a pin high even if the pin is configured as an input.", "answer": false,
+      "metadata": {"legacy_id": "tf054", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf058", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "The PIC16F883 has a 13-bit Program Counter.", "answer": true,
+      "metadata": {"legacy_id": "tf058", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf059", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "The Reset vector is at address 0x0000.", "answer": true,
+      "metadata": {"legacy_id": "tf059", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf061", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "PIC16F883 program memory words are 14 bits wide.", "answer": true,
+      "metadata": {"legacy_id": "tf061", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf068", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "Most instructions execute in one instruction cycle, but GOTO/CALL typically take more due to PC changes.", "answer": true,
+      "metadata": {"legacy_id": "tf068", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf070", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "MOVWF copies a literal constant into a file register.", "answer": false,
+      "metadata": {"legacy_id": "tf070", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf072", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "'Sinking current' means current flows out of the pin when output is high.", "answer": false,
+      "metadata": {"legacy_id": "tf072", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf069", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "MOVLW copies a literal constant into the W register.", "answer": true,
+      "metadata": {"legacy_id": "tf069", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "tf071", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "DECFSZ skips the next instruction if the result becomes zero.", "answer": true,
+      "metadata": {"legacy_id": "tf071", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/tf_bank.typ"}
+    },
+    {
+      "id": "mc051", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "Which setting makes a pin an output?",
+      "choices": [
+        {"text": "TRISx bit = 1"}, {"text": "TRISx bit = 0", "correct": true},
+        {"text": "PORTx bit = 1"}, {"text": "PORTx bit = 0"}
+      ],
+      "metadata": {"legacy_id": "mc051", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc055", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "For the PIC16F883, the program memory size is closest to:",
+      "choices": [
+        {"text": "2K × 14"}, {"text": "4K × 14", "correct": true},
+        {"text": "8K × 14"}, {"text": "1K × 14"}
+      ],
+      "metadata": {"legacy_id": "mc055", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc058", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "What does RETURN do (best answer)?",
+      "choices": [
+        {"text": "Pops a return address into PC", "correct": true},
+        {"text": "Pushes PC onto the stack"}, {"text": "Sets the Zero flag"}, {"text": "Loads a literal into W"}
+      ],
+      "metadata": {"legacy_id": "mc058", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc060", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "On PIC16 mid-range devices, one instruction cycle is generally:",
+      "choices": [
+        {"text": "Fosc"}, {"text": "Fosc/2"}, {"text": "Fosc/4", "correct": true}, {"text": "Fosc/8"}
+      ],
+      "metadata": {"legacy_id": "mc060", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc062", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "Which instruction stores W into a file register?",
+      "choices": [
+        {"text": "MOVLW"}, {"text": "MOVWF", "correct": true}, {"text": "SUBLW"}, {"text": "RLF"}
+      ],
+      "metadata": {"legacy_id": "mc062", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc063", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "Which instruction is 'bit-oriented' (operates on a single bit)?",
+      "choices": [
+        {"text": "INCF"}, {"text": "BSF", "correct": true}, {"text": "ADDLW"}, {"text": "MOVF"}
+      ],
+      "metadata": {"legacy_id": "mc063", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc067", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "If you nest too many CALLs without proper RETURNs, what is the most likely symptom?",
+      "choices": [
+        {"text": "W becomes stuck at 0x00 forever"},
+        {"text": "The chip permanently disables MCLR"},
+        {"text": "Return addresses are lost/overwritten (bad returns)", "correct": true},
+        {"text": "TRIS registers become read-only"}
+      ],
+      "metadata": {"legacy_id": "mc067", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc073", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "Why do some instructions take two cycles instead of one?",
+      "choices": [
+        {"text": "They require analog hardware"},
+        {"text": "They flush/refill the instruction pipeline when changing PC", "correct": true},
+        {"text": "They change TRIS registers automatically"},
+        {"text": "They write to EEPROM"}
+      ],
+      "metadata": {"legacy_id": "mc073", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc075", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "Which statement best matches how the stack works?",
+      "choices": [
+        {"text": "You can directly read/write the stack pointer like a normal register."},
+        {"text": "The stack holds return addresses and is managed automatically by CALL/RETURN.", "correct": true},
+        {"text": "The stack stores all general-purpose RAM variables."},
+        {"text": "The stack is located in program memory and must be erased manually."}
+      ],
+      "metadata": {"legacy_id": "mc075", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "mc064", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "Which instruction is 'literal and control' (uses a literal constant)?",
+      "choices": [
+        {"text": "ADDLW", "correct": true}, {"text": "INCF"}, {"text": "BCF"}, {"text": "RRF"}
+      ],
+      "metadata": {"legacy_id": "mc064", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/mc_bank.typ"}
+    },
+    {
+      "id": "sa001", "version": 1, "type": "short_answer", "points": 1,
+      "category_ids": ["legacy.section01"], "difficulty": "easy", "tags": ["legacy", "section01"],
+      "stem": "What does the acronym \"SFR\" stand for, and give two examples of SFRs in the PIC16F883?",
+      "answers": [
+        {"text": "SFR stands for Special Function Register. Examples include PORTA, PORTB, PORTC, TRISA, TRISB, TRISC, STATUS, INTCON, etc.", "case_sensitive": false}
+      ],
+      "solution": "SFR stands for Special Function Register. Examples include PORTA, PORTB, PORTC, TRISA, TRISB, TRISC, STATUS, INTCON, etc.",
+      "metadata": {"legacy_id": "sa001", "origin": "RCET3375-planning/old/quiz_modular_typst/banks/sa_bank.typ"}
+    }
+  ],
+  "assessments": [
+    {
+      "id": "rcet3375-legacy-section01",
+      "title": "PIC",
+      "items": [
+        "tf051", "tf054", "tf058", "tf059", "tf061", "tf068", "tf070", "tf072", "tf069", "tf071",
+        "mc051", "mc055", "mc058", "mc060", "mc062", "mc063", "mc067", "mc073", "mc075", "mc064",
+        "sa001"
+      ],
+      "metadata": {
+        "purpose": "paper-renderer comparison",
+        "legacy_quiz": "RCET3375-planning/old/quiz_modular_typst/quizzes/quiz_section-01.typ"
+      }
+    }
+  ]
+}

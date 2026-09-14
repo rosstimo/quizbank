@@ -1,7 +1,8 @@
 from __future__ import annotations
 from pathlib import Path
-from typing import List, Dict
+from typing import Any, Dict, List
 import csv
+import json
 from tools.importers.common import (
     coerce_list_tags, parse_letters, choice_letter, to_bool
 )
@@ -28,7 +29,7 @@ def import_items(path: Path, opts) -> List[Dict]:
             stem = (col(row, "stem") or "").strip()
             if not stem:
                 continue
-            item: Dict[str, any] = {
+            item: Dict[str, Any] = {
                 "id": (col(row, "id") or "").strip(),
                 "version": 1,
                 "type": t,
@@ -70,13 +71,17 @@ def import_items(path: Path, opts) -> List[Dict]:
             elif t == "short_answer":
                 answers = col(row, "answers").strip()
                 if answers:
-                    import json
-                    print(f"DEBUG: Raw answers field: {answers}")  # Debugging output
                     try:
-                        # Ensure proper parsing of JSON strings
                         item["answers"] = json.loads(answers)
                     except json.JSONDecodeError as e:
-                        raise ValueError(f"Invalid JSON format for answers: {answers}. Error: {e}")
+                        raise ValueError(
+                            f"Invalid JSON in the CSV 'answers' column: {e.msg} "
+                            f"at character {e.pos}"
+                        ) from e
+                else:
+                    answer = (col(row, "answer") or "").strip()
+                    if answer:
+                        item["answers"] = [{"text": answer, "case_sensitive": False}]
             fc = (col(row, "feedback_correct") or "").strip()
             fi = (col(row, "feedback_incorrect") or "").strip()
             sol = (col(row, "solution") or "").strip()

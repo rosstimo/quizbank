@@ -1,0 +1,19 @@
+#!/bin/sh
+set -eu
+
+if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+    if command -v id >/dev/null 2>&1; then
+        export QUIZBANK_UID="$(id -u)"
+        export QUIZBANK_GID="$(id -g)"
+    fi
+    exec docker compose run --rm quizbank "$@"
+fi
+
+if command -v podman >/dev/null 2>&1 && podman compose version >/dev/null 2>&1; then
+    exec podman compose run --rm quizbank "$@"
+fi
+
+printf '%s\n' "Quizbank needs Docker Desktop, Docker Engine with Compose, or Podman Compose." >&2
+printf '%s\n' "Install one of those tools, then run this command again." >&2
+exit 2
+

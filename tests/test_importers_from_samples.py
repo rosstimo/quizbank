@@ -61,17 +61,18 @@ def assert_type_specific(item: Dict):
 
 def sample_path_for(format_name: str) -> Path:
     """
-    Enforce one sample file per importer:
+    Return a deterministic, non-empty sample for an importer from:
       samples/<format>/<file>
-    Accept any file in the directory.
     """
     fmt_dir = SAMPLES_ROOT / format_name
     assert fmt_dir.is_dir(), f"Missing sample dir for '{format_name}': {fmt_dir}"
-    candidates = [p for p in fmt_dir.iterdir() if p.is_file()]
-    assert len(candidates) >= 1, (
-        f"Expected at least one sample file for '{format_name}' under {fmt_dir}. Found: {[p.name for p in candidates]}"
+    all_files = sorted((p for p in fmt_dir.iterdir() if p.is_file()), key=lambda p: p.name)
+    candidates = [p for p in all_files if p.stat().st_size > 0]
+    assert candidates, (
+        f"Expected at least one non-empty sample file for '{format_name}' under {fmt_dir}. "
+        f"Found: {[p.name for p in all_files]}"
     )
-    return candidates[0]  # Return the first file found
+    return candidates[0]
 
 def fake_opts(**overrides):
     class O: pass

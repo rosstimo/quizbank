@@ -118,7 +118,7 @@ def lint_qmp_string(s: str) -> List[str]:
         return issues
     if RE_LATEX_WRAPPERS.search(s):
         issues.append("contains LaTeX wrappers (use $...$ or $$...$$, not \\( \\) \\[ \\] or \\text{...})")
-    if RE_HTML_TAG.search(s):
+    if RE_HTML_TAG.search(strip_code(s)):
         issues.append("contains raw HTML tags (not allowed in QMP)")
     issues.extend(check_dollar_balance(s))
     issues.extend(check_images(s))
@@ -145,6 +145,14 @@ def iter_qmp_fields(item: Dict[str, Any]) -> Iterable[Tuple[str, str]]:
     # solution
     if isinstance(item.get("solution"), str):
         yield ("solution", item["solution"])
+    # manually graded / code-review fields
+    for field in ("rubric", "sample_answer"):
+        if isinstance(item.get(field), str):
+            yield (field, item[field])
+    for field in ("prompts", "answers"):
+        for i, value in enumerate(item.get(field, []) or []):
+            if isinstance(value, str):
+                yield (f"{field}[{i}]", value)
 
 def lint_item(item: Dict[str, Any]) -> List[Tuple[str, str]]:
     """Return list of (path, message) lint violations."""

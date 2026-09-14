@@ -1,0 +1,89 @@
+name: Build Quizbank Review Artifacts
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "banks/**"
+      - "qbank/**"
+      - "paper/**"
+      - "tools/**"
+      - "Dockerfile"
+      - "compose.yaml"
+      - "quizbank"
+      - ".github/workflows/build-review-artifacts.yml"
+  push:
+    paths:
+      - "banks/**"
+      - "qbank/**"
+      - "paper/**"
+      - "tools/**"
+      - "Dockerfile"
+      - "compose.yaml"
+      - "quizbank"
+      - ".github/workflows/build-review-artifacts.yml"
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Build Quizbank container
+        run: docker compose build
+
+      - name: Validate and render every bank
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p build/review
+          manifest="build/review/manifest.md"
+          printf '# Quizbank review artifacts\n\n' > "$manifest"
+          printf 'Commit: `%s`\n\n' "$GITHUB_SHA" >> "$manifest"
+
+          failed=0
+          shopt -s nullglob
+          banks=(banks/*.bank.json banks/*.json)
+          if [ ${#banks[@]} -eq 0 ]; then
+            echo "No banks found under banks/." | tee -a "$manifest"
+            exit 1
+          fi
+
+          declare -A seen
+          for bank in "${banks[@]}"; do
+            [ -n "${seen[$bank]:-}" ] && continue
+            seen[$bank]=1
+            name="$(basename "$bank")"
+            log="build/review/${name}.validation.txt"
+
+            printf '## %s\n\n' "$name" >> "$manifest"
+            if ./quizbank validate --bank "$bank" 2>&1 | tee "$log"; then
+              printf -- '- validation: PASS\n' >> "$manifest"
+            else
+              printf -- '- validation: FAIL\n' >> "$manifest"
+              failed=1
+              continue
+            fi
+
+            if ./quizbank review --bank "$bank" --format pdf --format markdown --output-dir build/review 2>&1 | tee -a "$log"; then
+              printf -- '- rendered review PDF and Markdown: PASS\n\n' >> "$manifest"
+            else
+              printf -- '- rendered review PDF and Markdown: FAIL\n\n' >> "$manifest"
+              failed=1
+            fi
+          done
+
+          exit "$failed"
+
+      - name: Upload review bundle
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: quizbank-review-${{ github.sha }}
+          path: build/review
+          if-no-files-found: warn
+          retention-days: 30

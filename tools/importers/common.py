@@ -32,7 +32,7 @@ def html_to_qmp(html: str) -> str:
 class LiteralStr(str): pass
 def _repr_literal(dumper, data):
     return dumper.represent_scalar("tag:yaml.org,2002:str", data, style="|")
-yaml.add_representer(LiteralStr, _repr_literal)
+yaml.add_representer(LiteralStr, _repr_literal, Dumper=yaml.SafeDumper)
 
 def blockify(s: Optional[str]) -> Optional[LiteralStr]:
     if s is None:

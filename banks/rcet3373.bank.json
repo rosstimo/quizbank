@@ -1,0 +1,290 @@
+{
+  "$schema": "../schemas/bank.schema.json",
+  "format_version": 1,
+  "bank": {
+    "id": "rcet3373",
+    "title": "RCET 3373 Advanced Computer Architecture and Embedded Systems Theory",
+    "description": "Fall 2026 working theory question pool for the first three weeks. Starter items require instructor review before graded use.",
+    "language": "en-US",
+    "authors": ["Tim Rossiter"],
+    "default_points": 1,
+    "metadata": {"semester": "Fall 2026", "status": "working"}
+  },
+  "categories": [
+    {"id": "digital", "title": "Digital Systems Review"},
+    {"id": "digital.representation", "title": "Representation", "parent": "digital"},
+    {"id": "digital.logic-interfaces", "title": "Logic Interfaces", "parent": "digital"},
+    {"id": "digital.timing", "title": "Digital Timing", "parent": "digital"},
+    {"id": "digital.buses", "title": "Address Data and Control", "parent": "digital"},
+    {"id": "digital.memory", "title": "Memory", "parent": "digital"},
+    {"id": "digital.conversion", "title": "ADC and DAC Concepts", "parent": "digital"},
+    {"id": "pic", "title": "PIC16F883"},
+    {"id": "pic.documentation", "title": "Documentation and Architecture", "parent": "pic"},
+    {"id": "pic.program-memory", "title": "Program Memory and Reset", "parent": "pic"},
+    {"id": "pic.data-memory", "title": "Data Memory SFRs and Banking", "parent": "pic"},
+    {"id": "pic.io", "title": "Digital I/O", "parent": "pic"},
+    {"id": "pic.instruction-timing", "title": "Instruction Timing", "parent": "pic"},
+    {"id": "pic.delays", "title": "Software Delays", "parent": "pic"},
+    {"id": "pic.stack", "title": "Program Counter Subroutines and Stack", "parent": "pic"},
+    {"id": "pic.measurement", "title": "Timing Measurement", "parent": "pic"}
+  ],
+  "questions": [
+    {
+      "id": "digital.representation.001", "version": 1, "type": "numeric", "points": 1,
+      "category_ids": ["digital.representation"], "difficulty": "easy", "tags": ["f26-w1", "hex"],
+      "stem": "What unsigned decimal value is represented by `0xAD`?",
+      "answer": 173, "tolerance": 0, "unit": null,
+      "solution": "0xAD = 10*16 + 13 = 173.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "01-Digital-Representation", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.representation.002", "version": 1, "type": "numeric", "points": 1,
+      "category_ids": ["digital.representation"], "difficulty": "medium", "tags": ["f26-w1", "twos-complement"],
+      "stem": "Interpret `11111011` as an 8-bit two's-complement integer.",
+      "answer": -5, "tolerance": 0, "unit": null,
+      "solution": "The pattern is the 8-bit two's-complement representation of -5.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "01-Digital-Representation", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.logic-interfaces.001", "version": 1, "type": "numeric", "points": 2,
+      "category_ids": ["digital.logic-interfaces"], "difficulty": "medium", "tags": ["f26-w1", "noise-margin"],
+      "stem": "A driver guarantees `VOH >= 4.2 V` and a receiver requires `VIH >= 3.5 V`. What is the HIGH-state noise margin?",
+      "answer": 0.7, "tolerance": 0.0001, "unit": "V",
+      "solution": "NMH = VOH(min) - VIH(min) = 4.2 - 3.5 = 0.7 V.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "02-Logic-Interfaces", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.logic-interfaces.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["digital.logic-interfaces"], "difficulty": "easy", "tags": ["f26-w1", "logic-levels"],
+      "stem": "Which statement is most accurate about a measured digital HIGH?",
+      "choices": [{"text": "It must equal the supply voltage exactly"}, {"text": "It is an analog voltage that is interpreted as HIGH when it satisfies the receiver's guaranteed input requirement", "correct": true}, {"text": "It has no relationship to voltage"}, {"text": "It is valid whenever it is above half the supply voltage"}],
+      "solution": "Digital interpretation is based on specified voltage regions and conditions, not an exact ideal voltage or a universal half-supply rule.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "Electrical Specifications / DC Characteristics"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "02-Logic-Interfaces", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.timing.001", "version": 1, "type": "numeric", "points": 1,
+      "category_ids": ["digital.timing"], "difficulty": "easy", "tags": ["f26-w1", "frequency-period"],
+      "stem": "What is the period of a 10 kHz waveform in microseconds?",
+      "answer": 100, "tolerance": 0, "unit": "us",
+      "solution": "T = 1/f = 1/10,000 s = 100 us.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "03-Digital-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.timing.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["digital.timing"], "difficulty": "medium", "tags": ["f26-w1", "setup-hold"],
+      "stem": "A device requires 20 ns setup and 10 ns hold. Data is stable 35 ns before the clock edge but changes 8 ns after it. Which statement is correct?",
+      "choices": [{"text": "Both requirements pass"}, {"text": "Setup fails, hold passes"}, {"text": "Setup passes, hold fails", "correct": true}, {"text": "Both requirements fail"}],
+      "solution": "35 ns exceeds the 20 ns setup requirement, but 8 ns does not meet the 10 ns hold requirement.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "03-Digital-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.buses.001", "version": 1, "type": "matching", "points": 3,
+      "category_ids": ["digital.buses"], "difficulty": "easy", "tags": ["f26-w1", "address-data-control"],
+      "stem": "Match the information type with its role in a digital transaction.",
+      "pairs": [{"source": "Address", "target": "Where the transaction occurs"}, {"source": "Data", "target": "The value being transferred"}, {"source": "Control", "target": "What operation occurs and/or when"}],
+      "shuffle_pairs": true,
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "04-Buses-Memory-Conversion", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.memory.001", "version": 1, "type": "matching", "points": 4,
+      "category_ids": ["digital.memory"], "difficulty": "easy", "tags": ["f26-w1", "volatility"],
+      "stem": "Match each general memory category with a typical role.",
+      "pairs": [{"source": "RAM", "target": "Temporary working variables/state"}, {"source": "EEPROM", "target": "Occasionally changed data that should survive power loss"}, {"source": "Flash program memory", "target": "Reprogrammable nonvolatile program storage"}, {"source": "ROM concept", "target": "Fixed nonvolatile information"}],
+      "shuffle_pairs": true,
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "04-Buses-Memory-Conversion", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.conversion.001", "version": 1, "type": "numeric", "points": 2,
+      "category_ids": ["digital.conversion"], "difficulty": "easy", "tags": ["f26-w1", "adc-resolution"],
+      "stem": "Using `ideal step = range / 2^N`, what is the ideal step size in millivolts for an 8-bit converter covering 0 to 5 V?",
+      "answer": 19.53125, "tolerance": 0.001, "unit": "mV/count",
+      "solution": "5 V / 256 = 0.01953125 V = 19.53125 mV per count.",
+      "source": {"document": "AN693 Understanding A/D Converter Performance Specifications", "publisher": "Microchip"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "04-Buses-Memory-Conversion", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "digital.conversion.002", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["digital.conversion"], "difficulty": "medium", "tags": ["f26-w1", "accuracy"],
+      "stem": "A converter with more bits is automatically more accurate in every practical measurement system.",
+      "answer": false,
+      "solution": "More bits improve ideal resolution, but total accuracy also depends on reference error, offset/gain/nonlinearity, noise, acquisition/source behavior, and other system effects.",
+      "source": {"document": "AN693 Understanding A/D Converter Performance Specifications", "publisher": "Microchip"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lesson": "04-Buses-Memory-Conversion", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.documentation.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["pic.documentation"], "difficulty": "easy", "tags": ["f26-w2", "authority"],
+      "stem": "Which source should be treated as the primary authority for the PIC16F883-specific reset value and bit definition of an SFR?",
+      "choices": [{"text": "A remembered classroom slide"}, {"text": "The current PIC16F883 family device datasheet", "correct": true}, {"text": "A generic C tutorial"}, {"text": "An old lab answer key"}],
+      "solution": "Device-specific register definitions should be checked against the current device datasheet.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "01-Datasheet-Architecture", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.program-memory.001", "version": 1, "type": "numeric", "points": 1,
+      "category_ids": ["pic.program-memory"], "difficulty": "easy", "tags": ["f26-w2", "vectors"],
+      "stem": "What hexadecimal program-memory address is the PIC16F883 reset vector? Enter the numeric value.",
+      "answer": 0, "tolerance": 0, "unit": null,
+      "solution": "The reset vector is at program-memory address 0x0000.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "Memory Organization / Program Memory"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "02-Program-Memory-Reset-Source", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.program-memory.002", "version": 1, "type": "numeric", "points": 1,
+      "category_ids": ["pic.program-memory"], "difficulty": "easy", "tags": ["f26-w2", "vectors"],
+      "stem": "What hexadecimal program-memory address is the PIC16F883 interrupt vector? Enter the numeric value.",
+      "answer": 4, "tolerance": 0, "unit": null,
+      "solution": "The interrupt vector is at program-memory address 0x0004.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "Memory Organization / Program Memory"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "02-Program-Memory-Reset-Source", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.program-memory.003", "version": 1, "type": "matching", "points": 3,
+      "category_ids": ["pic.program-memory"], "difficulty": "medium", "tags": ["f26-w2", "source-anatomy"],
+      "stem": "Match each source element with its role.",
+      "pairs": [{"source": "GOTO Setup", "target": "CPU instruction that changes program flow"}, {"source": "PSECT resetVect,...", "target": "Assembler/linker directive describing a code section"}, {"source": "Setup:", "target": "Label naming a program location"}],
+      "shuffle_pairs": true,
+      "source": {"document": "MPLAB XC8 PIC Assembler User's Guide", "document_id": "DS50002974"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "02-Program-Memory-Reset-Source", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.data-memory.001", "version": 1, "type": "matching", "points": 2,
+      "category_ids": ["pic.data-memory"], "difficulty": "easy", "tags": ["f26-w2", "sfr-gpr"],
+      "stem": "Match the register category with its typical role.",
+      "pairs": [{"source": "GPR", "target": "Program working data/variables"}, {"source": "SFR", "target": "Controls or reports hardware/peripheral state"}],
+      "shuffle_pairs": true,
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "Data Memory Organization"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "03-Data-Memory-SFRs-Banking", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.data-memory.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["pic.data-memory"], "difficulty": "medium", "tags": ["f26-w2", "banksel"],
+      "stem": "What is the main purpose of `BANKSEL TRISB` in readable PIC-AS source?",
+      "choices": [{"text": "It sets every TRISB bit to input"}, {"text": "It emits the bank-selection operations needed so a following file-register access refers to TRISB", "correct": true}, {"text": "It programs the device"}, {"text": "It changes the oscillator frequency"}],
+      "solution": "BANKSEL is assembler support for selecting the bank containing the named register; the following instruction still performs the register read/write.",
+      "source": {"document": "MPLAB XC8 PIC Assembler User's Guide", "document_id": "DS50002974"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "03-Data-Memory-SFRs-Banking", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.io.001", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["pic.io"], "difficulty": "easy", "tags": ["f26-w2", "tris"],
+      "stem": "For the PIC16F883 TRIS direction registers, a bit value of 1 configures the corresponding port pin as an input and 0 as an output.",
+      "answer": true,
+      "solution": "The PIC16F883 I/O documentation uses 1=input and 0=output for TRIS bits.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "I/O Ports"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "04-Digital-IO-Verification", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.io.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["pic.io"], "difficulty": "medium", "tags": ["f26-w2", "analog-digital"],
+      "stem": "A PIC pin intended for digital I/O is still configured for an analog function. Which is the best first response?",
+      "choices": [{"text": "Add a longer software delay"}, {"text": "Use the datasheet to identify and configure the analog-selection controls for that pin", "correct": true}, {"text": "Change the Git branch"}, {"text": "Increase the oscilloscope time base"}],
+      "solution": "Multifunction pins must be configured for the intended function. The datasheet's I/O/analog-selection documentation is the authority.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "I/O Ports / Analog Selection"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "04-Digital-IO-Verification", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.io.003", "version": 1, "type": "ordering", "points": 2,
+      "category_ids": ["pic.io"], "difficulty": "medium", "tags": ["f26-w2", "troubleshooting"],
+      "stem": "Place these checks in a reasonable early troubleshooting order when the device programs successfully but a digital output does not behave as expected.",
+      "items": ["Confirm the programmed build/source is the intended one", "Confirm power reset and clock assumptions", "Check analog/digital function selection", "Check TRIS direction and target register/bank", "Confirm the physical pin and measurement connection", "Evaluate loading/electrical level"],
+      "shuffle_items": true,
+      "solution": "The course emphasizes evidence-first diagnosis before random source edits or rewiring.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lesson": "04-Digital-IO-Verification", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.instruction-timing.001", "version": 1, "type": "numeric", "points": 2,
+      "category_ids": ["pic.instruction-timing"], "difficulty": "easy", "tags": ["f26-w3", "tcy"],
+      "stem": "For the course's classic mid-range PIC timing model, `FOSC = 8 MHz`. What is `TCY` in microseconds?",
+      "answer": 0.5, "tolerance": 0.0001, "unit": "us",
+      "solution": "TOSC = 1/8 MHz = 0.125 us. TCY = 4*TOSC = 0.5 us.",
+      "source": {"document": "PICmicro Mid-Range MCU Family Reference Manual", "document_id": "DS33023A", "section": "Clocking Scheme / Instruction Cycle"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "01-Oscillator-Instruction-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.instruction-timing.002", "version": 1, "type": "numeric", "points": 2,
+      "category_ids": ["pic.instruction-timing"], "difficulty": "medium", "tags": ["f26-w3", "waveform"],
+      "stem": "At `FOSC = 4 MHz`, a symmetric loop changes RB0 once every 4 instruction cycles. What is the full waveform period in microseconds?",
+      "answer": 8, "tolerance": 0, "unit": "us",
+      "solution": "At 4 MHz, TCY=1 us. One transition interval is 4 us; a complete HIGH+LOW period is 8 us.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "Instruction Set Summary"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "01-Oscillator-Instruction-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.delays.001", "version": 1, "type": "numeric", "points": 3,
+      "category_ids": ["pic.delays"], "difficulty": "medium", "tags": ["f26-w3", "decfsz"],
+      "stem": "A loop is `DECFSZ count,1` followed by `GOTO Loop`, with count initially N. Using 1 cycle for a normal DECFSZ, 2 cycles when it skips, and 2 cycles for GOTO, how many loop-body cycles occur for N=4? Do not include setup instructions.",
+      "answer": 11, "tolerance": 0, "unit": "cycles",
+      "solution": "Three normal iterations cost 3 cycles each, and the final skip iteration costs 2: 3*3+2=11 cycles, equivalent to 3N-1.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "Instruction Set Summary"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "02-Software-Delay-Loops", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.delays.002", "version": 1, "type": "code_review", "points": 3,
+      "category_ids": ["pic.delays"], "difficulty": "medium", "tags": ["f26-w3", "final-iteration"],
+      "stem": "A student calculates a DECFSZ/GOTO loop by multiplying every iteration by 3 cycles, including the final one.",
+      "code": "DelayLoop:\n    DECFSZ count,1\n    GOTO DelayLoop",
+      "language": "pic-as",
+      "prompts": ["Explain why the final iteration is different.", "State the loop-body formula for N iterations using the documented cycle counts."],
+      "answers": ["When DECFSZ reaches zero it takes the skip path and the GOTO does not execute.", "3N - 1 cycles for the loop body."],
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "02-Software-Delay-Loops", "reviewed": false, "origin": "starter-bank", "manual_grading": true}
+    },
+    {
+      "id": "pic.stack.001", "version": 1, "type": "ordering", "points": 2,
+      "category_ids": ["pic.stack"], "difficulty": "medium", "tags": ["f26-w3", "call-return"],
+      "stem": "Order the conceptual actions of a normal subroutine call and return.",
+      "items": ["CALL preserves the return address on the hardware return stack", "Program Counter changes to the subroutine destination", "Subroutine executes", "RETURN retrieves the most recent saved return address", "Program Counter resumes at the caller"],
+      "shuffle_items": true,
+      "source": {"document": "PICmicro Mid-Range MCU Family Reference Manual", "document_id": "DS33023A", "section": "Program Counter / Stack"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "03-Subroutines-PC-Stack", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.stack.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["pic.stack"], "difficulty": "easy", "tags": ["f26-w3", "return-instructions"],
+      "stem": "Which instruction returns from a subroutine and also loads W with a literal value?",
+      "choices": [{"text": "RETURN"}, {"text": "RETLW", "correct": true}, {"text": "RETFIE"}, {"text": "GOTO"}],
+      "solution": "RETLW returns and loads W with the literal encoded in the instruction.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "Instruction Set Summary"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "03-Subroutines-PC-Stack", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.measurement.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["pic.measurement"], "difficulty": "medium", "tags": ["f26-w3", "consistency"],
+      "stem": "A student records a symmetric waveform with 50 us HIGH, 50 us LOW, a 100 us period, and a displayed frequency of 20 kHz. Which value is inconsistent with the others?",
+      "choices": [{"text": "HIGH pulse width"}, {"text": "LOW pulse width"}, {"text": "Period"}, {"text": "Frequency", "correct": true}],
+      "solution": "A 100 us period corresponds to 10 kHz, so the 20 kHz frequency is inconsistent.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "04-Measurement-C-Comparison", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "pic.measurement.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["pic.measurement"], "difficulty": "medium", "tags": ["f26-w3", "c-comparison"],
+      "stem": "Why can the exact instruction-cycle timing of an embedded C loop usually not be determined from the C source alone?",
+      "choices": [{"text": "C has no loops"}, {"text": "The compiler, optimization settings, target, and generated machine instructions determine the executed path", "correct": true}, {"text": "C always executes one instruction per source line"}, {"text": "Only an oscilloscope can determine any timing"}],
+      "solution": "Cycle-accurate timing belongs to the machine instructions that actually execute; compiler output and optimization can change that implementation.",
+      "source": {"document": "MPLAB XC8 compiler documentation", "publisher": "Microchip"},
+      "metadata": {"semester_weeks": ["F26-W03"], "lesson": "04-Measurement-C-Comparison", "reviewed": false, "origin": "starter-bank"}
+    }
+  ],
+  "assessments": [
+    {
+      "id": "rcet3373-w1-starter", "title": "RCET3373 Week 1 Starter Form", "version": 1,
+      "instructions": "Working draft. Review the selected questions before student use.",
+      "pools": [{"id": "week1", "pick": 8, "where": {"tags": ["f26-w1"]}}],
+      "shuffle_questions": true, "metadata": {"reviewed": false}
+    },
+    {
+      "id": "rcet3373-w2-starter", "title": "RCET3373 Week 2 Starter Form", "version": 1,
+      "instructions": "Working draft. Review the selected questions before student use.",
+      "pools": [{"id": "week2", "pick": 8, "where": {"tags": ["f26-w2"]}}],
+      "shuffle_questions": true, "metadata": {"reviewed": false}
+    },
+    {
+      "id": "rcet3373-w3-starter", "title": "RCET3373 Week 3 Starter Form", "version": 1,
+      "instructions": "Working draft. Review the selected questions before student use.",
+      "pools": [{"id": "week3", "pick": 8, "where": {"tags": ["f26-w3"]}}],
+      "shuffle_questions": true, "metadata": {"reviewed": false}
+    }
+  ],
+  "metadata": {"default_assessment": "rcet3373-w1-starter", "all_starter_questions_reviewed": false}
+}

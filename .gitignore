@@ -5,6 +5,7 @@ __pycache__/
 # Virtual envs
 .venv/
 .env/
+*.egg-info/
 
 # Build artifacts
 build/

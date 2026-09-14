@@ -1,0 +1,198 @@
+{
+  "$schema": "../schemas/bank.schema.json",
+  "format_version": 1,
+  "bank": {
+    "id": "rcet3375",
+    "title": "RCET 3375 Advanced Computer Architecture and Embedded Systems Laboratory",
+    "description": "Fall 2026 working lab-readiness and troubleshooting question pool for Labs 01-03. Starter items require instructor review before graded use.",
+    "language": "en-US",
+    "authors": ["Tim Rossiter"],
+    "default_points": 1,
+    "metadata": {"semester": "Fall 2026", "status": "working"}
+  },
+  "categories": [
+    {"id": "lab", "title": "Laboratory Practice"},
+    {"id": "lab.measurement", "title": "Measurement", "parent": "lab"},
+    {"id": "lab.documentation", "title": "Documentation and Evidence", "parent": "lab"},
+    {"id": "lab.logic-interface", "title": "Logic Interface Checkout", "parent": "lab"},
+    {"id": "lab.converter", "title": "Converter Checkout", "parent": "lab"},
+    {"id": "lab.memory", "title": "Memory Checkout", "parent": "lab"},
+    {"id": "lab.pic-bringup", "title": "PIC Bring-Up", "parent": "lab"},
+    {"id": "lab.pic-io", "title": "PIC Digital I/O", "parent": "lab"},
+    {"id": "lab.troubleshooting", "title": "Troubleshooting", "parent": "lab"},
+    {"id": "lab.software-timing", "title": "Software Timing", "parent": "lab"},
+    {"id": "lab.delay-verification", "title": "Delay Verification", "parent": "lab"}
+  ],
+  "questions": [
+    {
+      "id": "lab.measurement.001", "version": 1, "type": "ordering", "points": 2,
+      "category_ids": ["lab.measurement"], "difficulty": "easy", "tags": ["f26-w1", "prediction"],
+      "stem": "Order the preferred laboratory evidence workflow.",
+      "items": ["State or calculate the expected result", "Build or configure the system", "Measure the actual result", "Compare measured behavior with the prediction", "Explain discrepancies and troubleshoot from evidence", "Document and demonstrate the result"],
+      "shuffle_items": true,
+      "solution": "The lab workflow is prediction -> implementation -> measurement -> comparison -> troubleshooting/explanation -> documentation/demonstration.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lab": "Lab01-Digital-Systems-Review", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.measurement.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["lab.measurement"], "difficulty": "easy", "tags": ["f26-w1", "scope"],
+      "stem": "You need to verify pulse width, duty cycle, and edge timing on a digital signal. Which instrument is the better primary choice?",
+      "choices": [{"text": "Oscilloscope", "correct": true}, {"text": "Ohmmeter"}, {"text": "Power supply current-limit knob"}, {"text": "Text editor"}],
+      "solution": "An oscilloscope shows signal level versus time and is appropriate for pulse width, duty cycle, and timing relationships.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lab": "Lab01-Digital-Systems-Review", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.documentation.001", "version": 1, "type": "mcq_multi", "points": 2,
+      "category_ids": ["lab.documentation"], "difficulty": "easy", "tags": ["f26-w1", "evidence"],
+      "stem": "Which items make an oscilloscope screenshot useful engineering evidence? Select all that apply.",
+      "choices": [{"text": "A prediction or expected value recorded before measurement", "correct": true}, {"text": "Enough scale/settings context to understand the capture", "correct": true}, {"text": "The measured point/signal identified", "correct": true}, {"text": "A filename such as IMG_0001 with no explanation"}, {"text": "A statement of what the capture demonstrates", "correct": true}],
+      "solution": "A capture should be tied to an expectation, measurement point, instrument context, and interpretation.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lab": "Lab01-Digital-Systems-Review", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.logic-interface.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["lab.logic-interface"], "difficulty": "medium", "tags": ["f26-w1", "logic-voltage"],
+      "stem": "A digital output measures 4.72 V. What should you do before declaring the result a valid logic HIGH?",
+      "choices": [{"text": "Assume any voltage above zero is HIGH"}, {"text": "Compare the measurement and load condition with the receiver/driver electrical specifications", "correct": true}, {"text": "Round it to 5.0 V and stop"}, {"text": "Change the software delay"}],
+      "solution": "Logical validity depends on specified guaranteed voltage regions and conditions, not the ideal supply value alone.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "Electrical Specifications"},
+      "metadata": {"semester_weeks": ["F26-W01"], "lab": "Lab01-Digital-Systems-Review", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.converter.001", "version": 1, "type": "numeric", "points": 2,
+      "category_ids": ["lab.converter"], "difficulty": "easy", "tags": ["f26-w1", "prelab-calculation"],
+      "stem": "Using `ideal step = range / 2^N`, what is the ideal step size in millivolts for a 10-bit converter covering 0 to 3.3 V?",
+      "answer": 3.22265625, "tolerance": 0.001, "unit": "mV/count",
+      "solution": "3.3 V / 1024 = 0.00322265625 V = 3.22265625 mV/count.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lab": "Lab01-Digital-Systems-Review", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.memory.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["lab.memory"], "difficulty": "easy", "tags": ["f26-w1", "volatility"],
+      "stem": "During a memory checkout, what observation most directly demonstrates volatility?",
+      "choices": [{"text": "The device has an address bus"}, {"text": "Previously written state is lost after power is removed and restored", "correct": true}, {"text": "The data value is written in hexadecimal"}, {"text": "The oscilloscope has two channels"}],
+      "solution": "Volatile storage does not retain its stored state without power under normal operation.",
+      "metadata": {"semester_weeks": ["F26-W01"], "lab": "Lab01-Digital-Systems-Review", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.pic-bringup.001", "version": 1, "type": "ordering", "points": 3,
+      "category_ids": ["lab.pic-bringup"], "difficulty": "medium", "tags": ["f26-w2", "failure-class"],
+      "stem": "A project does not reach the expected hardware behavior. Put these diagnostic questions in a useful high-level order.",
+      "items": ["Does the source/project build successfully?", "Can the programmer communicate with and program the target?", "Does the programmed device run with correct power reset and clock?", "Are the intended pins configured for digital function and correct direction?", "Does the main code path reach the intended register operation?", "Is the measurement on the correct physical pin with legal loading?"],
+      "shuffle_items": true,
+      "solution": "Separate build, programming connection, core hardware execution, peripheral configuration, code path, and physical measurement rather than changing everything at once.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lab": "Lab02-PIC-Bringup-Digital-IO", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.pic-bringup.002", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["lab.pic-bringup"], "difficulty": "easy", "tags": ["f26-w2", "build-program"],
+      "stem": "The assembler reports an unknown directive and no programming operation occurs. Which subsystem should be investigated first?",
+      "choices": [{"text": "Source/toolchain/project configuration", "correct": true}, {"text": "RB0 LED polarity"}, {"text": "Oscilloscope trigger level"}, {"text": "PORTB loading current"}],
+      "solution": "A build failure occurs before target programming or I/O behavior, so source/toolchain/project diagnostics come first.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lab": "Lab02-PIC-Bringup-Digital-IO", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.pic-io.001", "version": 1, "type": "mcq_multi", "points": 2,
+      "category_ids": ["lab.pic-io"], "difficulty": "medium", "tags": ["f26-w2", "no-output"],
+      "stem": "The PIC programs successfully but RB0 does not actively drive the expected output. Which checks are directly relevant? Select all that apply.",
+      "choices": [{"text": "Confirm RB0 is configured for digital rather than analog function", "correct": true}, {"text": "Confirm the corresponding TRIS direction is output", "correct": true}, {"text": "Confirm the physical pin being probed is actually RB0", "correct": true}, {"text": "Verify the main code path writes/toggles the intended port", "correct": true}, {"text": "Change the question-bank seed"}],
+      "solution": "Digital-function selection, direction, code path, and physical measurement point are all direct causes of missing I/O behavior.",
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "I/O Ports"},
+      "metadata": {"semester_weeks": ["F26-W02"], "lab": "Lab02-PIC-Bringup-Digital-IO", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.pic-io.002", "version": 1, "type": "short_answer", "points": 2,
+      "category_ids": ["lab.pic-io"], "difficulty": "medium", "tags": ["f26-w2", "datasheet"],
+      "stem": "What two categories of PIC configuration should you verify before blaming the output algorithm when a multifunction port pin does not behave as digital output?",
+      "answers": [{"text": "analog selection and TRIS direction", "case_sensitive": false, "score": 1}, {"text": "digital function selection and direction", "case_sensitive": false, "score": 1}],
+      "solution": "Verify that the pin is configured for digital function and that its direction register configures it as an output.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lab": "Lab02-PIC-Bringup-Digital-IO", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.troubleshooting.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["lab.troubleshooting"], "difficulty": "medium", "tags": ["f26-w2", "loading"],
+      "stem": "The correct output code is executing, but a supposed HIGH pin measures below the receiving device's guaranteed HIGH threshold under load. What should be investigated next?",
+      "choices": [{"text": "Electrical loading/wiring and the datasheet VOH/VIH conditions", "correct": true}, {"text": "The spelling of a Git commit message"}, {"text": "Add more NOP instructions"}, {"text": "Change the source language"}],
+      "solution": "Once code/configuration are proven, an invalid electrical level points toward loading, wiring, supply, or interface-specification issues.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lab": "Lab02-PIC-Bringup-Digital-IO", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.documentation.002", "version": 1, "type": "true_false", "points": 1,
+      "category_ids": ["lab.documentation"], "difficulty": "easy", "tags": ["f26-w2", "source-commit"],
+      "stem": "A timing or I/O capture is easier to reproduce when the lab record identifies the exact source repository/commit that produced it.",
+      "answer": true,
+      "solution": "Source provenance helps prove which program image and configuration correspond to the recorded measurement.",
+      "metadata": {"semester_weeks": ["F26-W02"], "lab": "Lab02-PIC-Bringup-Digital-IO", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.software-timing.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["lab.software-timing"], "difficulty": "easy", "tags": ["f26-w3", "gate"],
+      "stem": "Before measuring a newly designed software timing loop, what should the student have first?",
+      "choices": [{"text": "A predicted interval/frequency based on the actual executed instruction path", "correct": true}, {"text": "A screenshot from another student's circuit"}, {"text": "A random count value that looks close"}, {"text": "Only the desired frequency with no cycle calculation"}],
+      "solution": "The measurement should test an explicit prediction derived from oscillator and documented instruction timing.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lab": "Lab03-Software-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.software-timing.002", "version": 1, "type": "numeric", "points": 2,
+      "category_ids": ["lab.software-timing"], "difficulty": "medium", "tags": ["f26-w3", "consistency"],
+      "stem": "A symmetric waveform has measured HIGH time 40 us and LOW time 40 us. What frequency in kHz is consistent with those measurements?",
+      "answer": 12.5, "tolerance": 0.0001, "unit": "kHz",
+      "solution": "Period = 40+40 = 80 us; frequency = 1/80 us = 12.5 kHz.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lab": "Lab03-Software-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.delay-verification.001", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["lab.delay-verification"], "difficulty": "medium", "tags": ["f26-w3", "nop"],
+      "stem": "A single NOP is inserted into a timing path and the documented instruction-cycle time is 1 us. What is the most useful experiment?",
+      "choices": [{"text": "Predict a 1 us change in the interval containing that NOP, then measure whether the waveform changes by that amount", "correct": true}, {"text": "Assume the compiler removes it"}, {"text": "Change the oscillator until the old waveform returns"}, {"text": "Measure only the DC supply voltage"}],
+      "solution": "The intentional one-instruction change provides a direct prediction-versus-measurement test of instruction timing.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lab": "Lab03-Software-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.delay-verification.002", "version": 1, "type": "ordering", "points": 2,
+      "category_ids": ["lab.delay-verification"], "difficulty": "medium", "tags": ["f26-w3", "discrepancy"],
+      "stem": "A calculated delay and measured delay disagree. Put these checks in the preferred diagnostic order.",
+      "items": ["Confirm actual oscillator/configuration matches the calculation", "Confirm the programmed image comes from the source/commit used in the calculation", "Retrace the instruction path including branches/skips", "Confirm calculated interval and measured interval are the same physical quantity", "Verify probe/channel/time-base/counter settings", "Investigate remaining hardware tolerance/loading effects"],
+      "shuffle_items": true,
+      "solution": "Check assumptions and reproducibility before adding unexplained correction factors.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lab": "Lab03-Software-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.software-timing.003", "version": 1, "type": "mcq_one", "points": 1,
+      "category_ids": ["lab.software-timing"], "difficulty": "medium", "tags": ["f26-w3", "instrument"],
+      "stem": "Which instrument is especially useful when the primary question is the precise frequency of a stable repetitive signal over many cycles?",
+      "choices": [{"text": "Frequency counter", "correct": true}, {"text": "Continuity tester"}, {"text": "Logic-level pull-up resistor"}, {"text": "Programmer"}],
+      "solution": "A frequency counter is well suited to measuring stable repetitive frequency; the oscilloscope remains better for waveform shape and timing relationships.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lab": "Lab03-Software-Timing", "reviewed": false, "origin": "starter-bank"}
+    },
+    {
+      "id": "lab.delay-verification.003", "version": 1, "type": "essay", "points": 3,
+      "category_ids": ["lab.delay-verification"], "difficulty": "medium", "tags": ["f26-w3", "error-analysis"],
+      "stem": "Your calculated pulse width is 50.0 us and the oscilloscope measures 52.0 us. Write a short evidence-based troubleshooting plan before modifying the delay count.",
+      "response_lines": 6,
+      "rubric": "Full credit checks oscillator/configuration, exact programmed source, executed instruction path, interval interpretation, and instrument settings before changing the count; it should quantify the 2 us discrepancy rather than saying only that it is close.",
+      "metadata": {"semester_weeks": ["F26-W03"], "lab": "Lab03-Software-Timing", "reviewed": false, "origin": "starter-bank", "manual_grading": true}
+    }
+  ],
+  "assessments": [
+    {
+      "id": "rcet3375-lab01-readiness", "title": "Lab 01 Readiness Pool", "version": 1,
+      "instructions": "Working draft. Use as a short readiness/checkout pool after instructor review.",
+      "pools": [{"id": "lab01", "pick": 5, "where": {"tags": ["f26-w1"]}}],
+      "shuffle_questions": true, "metadata": {"reviewed": false}
+    },
+    {
+      "id": "rcet3375-lab02-readiness", "title": "Lab 02 PIC Bring-Up Readiness Pool", "version": 1,
+      "instructions": "Working draft. Use as a prelab or oral-check pool after instructor review.",
+      "pools": [{"id": "lab02", "pick": 5, "where": {"tags": ["f26-w2"]}}],
+      "shuffle_questions": true, "metadata": {"reviewed": false}
+    },
+    {
+      "id": "rcet3375-lab03-readiness", "title": "Lab 03 Timing Readiness Pool", "version": 1,
+      "instructions": "Working draft. Use as a calculation/troubleshooting gate after instructor review.",
+      "pools": [{"id": "lab03", "pick": 5, "where": {"tags": ["f26-w3"]}}],
+      "shuffle_questions": true, "metadata": {"reviewed": false}
+    }
+  ],
+  "metadata": {"default_assessment": "rcet3375-lab01-readiness", "all_starter_questions_reviewed": false}
+}

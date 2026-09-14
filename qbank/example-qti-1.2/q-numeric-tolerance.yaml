@@ -1,4 +1,4 @@
-id: example.qti.numeric
+id: example.qti.numeric_tolerance
 version: 1
 type: numeric
 points: 2

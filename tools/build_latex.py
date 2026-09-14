@@ -83,10 +83,17 @@ def choice_letter(i: int) -> str:
 
 def render_item_tex(n: int, it: Dict[str, Any]) -> str:
     typ = it.get("type")
-    stem = t(it.get("stem"))
+    stem_source = str(it.get("stem") or "")
+    if typ == "fill_blank":
+        stem_source = stem_source.replace("{{blank}}", "QUIZBANKBLANK")
+    stem = t(stem_source)
+    if typ == "fill_blank":
+        stem = stem.replace("QUIZBANKBLANK", r"\rule{2in}{0.4pt}")
     pts = it.get("points", 0)
 
     lines: List[str] = []
+    if typ == "code_review":
+        lines.append(r"\clearpage")
     lines.append(r"\noindent\textbf{" + f"{n}. ({pts} pt{'s' if pts != 1 else ''})" + r"}")
     lines.append(r"")
     lines.append(stem)
@@ -120,10 +127,43 @@ def render_item_tex(n: int, it: Dict[str, Any]) -> str:
     elif typ == "short_answer":
         lines.append(r"\emph{Answer: short text}")
         lines.append(r"")
+    elif typ == "fill_blank":
+        lines.append(r"\emph{Fill in the blank.}")
+        lines.append(r"")
+    elif typ == "essay":
+        for _ in range(int(it.get("response_lines", 8))):
+            lines.append(r"\vspace{0.35in}\hrule")
+        lines.append(r"")
+    elif typ == "code_review":
+        lines.append(r"\begin{verbatim}")
+        lines.append(str(it.get("code", "")))
+        lines.append(r"\end{verbatim}")
+        for prompt in it.get("prompts", []) or []:
+            lines.append(t(prompt))
+            for _ in range(int(it.get("response_lines", 3))):
+                lines.append(r"\vspace{0.3in}\hrule")
+            lines.append(r"\par\vspace{0.2in}")
+        lines.append(r"")
+    elif typ == "matching":
+        pairs = it.get("pairs", []) or []
+        targets = ", ".join(sorted(str(pair.get("target", "")) for pair in pairs))
+        lines.append(r"\textbf{Choices:} " + t(targets))
+        lines.append(r"\begin{itemize}")
+        for pair in pairs:
+            lines.append(r"\item " + t(pair.get("source", "")) + r": \rule{2in}{0.4pt}")
+        lines.append(r"\end{itemize}")
+    elif typ == "ordering":
+        values = sorted(str(value) for value in (it.get("items", []) or []))
+        lines.append(r"\textbf{Put these in order:} " + t(", ".join(values)))
+        lines.append(r"\begin{enumerate}")
+        for _ in values:
+            lines.append(r"\item \rule{3in}{0.4pt}")
+        lines.append(r"\end{enumerate}")
     else:
         lines.append(r"\emph{Unsupported type in renderer}")
         lines.append(r"")
 
+    lines.append(r"\par\medskip")
     return "\n".join(lines)
 
 def answer_for(it: Dict[str, Any]) -> str:
@@ -148,7 +188,7 @@ def answer_for(it: Dict[str, Any]) -> str:
         if unit:
             parts.append(str(unit))
         return " ".join(parts)
-    if typ == "short_answer":
+    if typ in {"short_answer", "fill_blank"}:
         answers = it.get("answers") or []
         if not answers:
             return "?"
@@ -158,9 +198,21 @@ def answer_for(it: Dict[str, Any]) -> str:
             show.append(f"/{txt}/" if a.get("regex") else txt)
         more = " ..." if len(answers) > 3 else ""
         return "; ".join(show) + more
+    if typ == "essay":
+        return str(it.get("sample_answer") or it.get("rubric") or "Manual grading")
+    if typ == "code_review":
+        answers = it.get("answers") or []
+        return "; ".join(str(answer) for answer in answers) or "Manual grading"
+    if typ == "matching":
+        return "; ".join(
+            f"{pair.get('source', '')} → {pair.get('target', '')}"
+            for pair in it.get("pairs", [])
+        )
+    if typ == "ordering":
+        return " → ".join(str(value) for value in it.get("items", []))
     return "?"
 
-def build_tex(quiz: Dict[str, Any], items: List[Dict[str, Any]]) -> str:
+def build_tex(quiz: Dict[str, Any], items: List[Dict[str, Any]], include_key: bool = True) -> str:
     title = t(quiz.get("title") or quiz.get("id") or "Quiz")
     instr = t(quiz.get("instructions") or "")
 
@@ -174,9 +226,9 @@ def build_tex(quiz: Dict[str, Any], items: List[Dict[str, Any]]) -> str:
     out.append(r"\else")
     out.append(r"  \usepackage{fontspec}")
     out.append(r"  % Pick Unicode fonts with broad coverage. Swap if you prefer others.")
-    out.append(r"  \setmainfont{Noto Serif}[Scale=MatchLowercase]")
-    out.append(r"  \setsansfont{Noto Sans}[Scale=MatchLowercase]")
-    out.append(r"  \setmonofont{Noto Sans Mono}[Scale=MatchLowercase]")
+    out.append(r"  \IfFontExistsTF{Noto Serif}{\setmainfont{Noto Serif}[Scale=MatchLowercase]}{\setmainfont{DejaVu Serif}[Scale=MatchLowercase]}")
+    out.append(r"  \IfFontExistsTF{Noto Sans}{\setsansfont{Noto Sans}[Scale=MatchLowercase]}{\setsansfont{DejaVu Sans}[Scale=MatchLowercase]}")
+    out.append(r"  \IfFontExistsTF{Noto Sans Mono}{\setmonofont{Noto Sans Mono}[Scale=MatchLowercase]}{\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]}")
     out.append(r"\fi")
     out.append(r"\usepackage[margin=1in]{geometry}")
     out.append(r"\usepackage{enumitem}")
@@ -193,25 +245,26 @@ def build_tex(quiz: Dict[str, Any], items: List[Dict[str, Any]]) -> str:
     out.append(r"\end{center}")
     if instr:
         out.append(instr + r"\\[6pt]")
+    out.append(r"\noindent Name: \rule{0.42\textwidth}{0.4pt}\hfill Date: \rule{0.22\textwidth}{0.4pt}\\[12pt]")
     out.append(r"\vspace{0.5\baselineskip}")
 
     # Questions
     for n, it in enumerate(items, start=1):
         out.append(render_item_tex(n, it))
 
-    # Answer key
-    out.append(r"\clearpage")
-    out.append(r"\section*{Answer Key}")
-    out.append(r"\begin{enumerate}")
-    for n, it in enumerate(items, start=1):
-        ans = t(answer_for(it))
-        sol = t((it.get("solution") or "").strip())
-        out.append(r"\item " + r"\textbf{" + ans + r"}")
-        if sol:
-            out.append(r"\begin{itemize}")
-            out.append(r"\item \textit{Solution:} " + sol)
-            out.append(r"\end{itemize}")
-    out.append(r"\end{enumerate}")
+    if include_key:
+        out.append(r"\clearpage")
+        out.append(r"\section*{Answer Key}")
+        out.append(r"\begin{enumerate}")
+        for n, it in enumerate(items, start=1):
+            ans = t(answer_for(it))
+            sol = t((it.get("solution") or "").strip())
+            out.append(r"\item " + r"\textbf{" + ans + r"}")
+            if sol:
+                out.append(r"\begin{itemize}")
+                out.append(r"\item \textit{Solution:} " + sol)
+                out.append(r"\end{itemize}")
+        out.append(r"\end{enumerate}")
 
     out.append(r"\end{document}")
     return "\n".join(out)

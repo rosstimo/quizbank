@@ -361,8 +361,6 @@ def build_item_numeric(item: Dict[str, Any]) -> QtiItem:
         add_display_feedback(rc_bad, "incorrect_fb")
     add_display_general(rc_bad, bool(fb_general_html))
 
-    print(f"DEBUG: Processing numeric item {qid} with answer {ans} and tolerance {tol}")
-
     return QtiItem(ident=qid, title=title, element=item_el)
 
 def build_item_short_answer(item: Dict[str, Any]) -> QtiItem:
@@ -512,7 +510,6 @@ def main(argv: List[str]) -> int:
     for it in items:
         t = it.get("type")
         qid = it["id"]
-        print(f"DEBUG: Processing item {it['id']} of type {it['type']}")
         try:
             if t == "mcq_one":
                 qti_items.append(build_item_mcq_one(it))
