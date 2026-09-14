@@ -5,6 +5,8 @@ on:
     paths:
       - 'banks/*.bank.json'
       - 'schemas/**'
+      - 'qbank/**'
+      - 'pyproject.toml'
       - '.github/workflows/validate-banks.yml'
   push:
     branches:
@@ -14,6 +16,8 @@ on:
     paths:
       - 'banks/*.bank.json'
       - 'schemas/**'
+      - 'qbank/**'
+      - 'pyproject.toml'
       - '.github/workflows/validate-banks.yml'
   workflow_dispatch:
 
@@ -29,21 +33,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check out Quizbank validator
-        uses: actions/checkout@v4
-        with:
-          repository: rosstimo/quizbank
-          ref: agent/json-bank-cli
-          path: _validator
-          persist-credentials: false
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install validator
-        run: python -m pip install -e ./_validator
+      - name: Install validator from this checkout
+        run: python -m pip install -e .
 
       - name: Validate every JSON bank
         shell: bash
@@ -69,9 +65,8 @@ jobs:
 
           base="$BASE_REF"
           if [[ -z "$base" ]]; then
-            # Fall 2026 stacked curriculum branches currently derive from this bank branch.
-            # Pull-request runs use the actual PR base through github.base_ref.
-            base='curriculum/f26-question-banks'
+            # Feature/curriculum push runs compare against the durable integration branch.
+            base='main'
           fi
 
           git fetch origin "$base" --depth=1
