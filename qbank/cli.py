@@ -90,6 +90,19 @@ def _starter(bank_id: str, title: str) -> dict:
     }
 
 
+def _review_assessment(bank: Bank) -> dict:
+    return {
+        "id": f"{bank.info['id']}-all-questions",
+        "title": f"{bank.info['title']} - All Questions Review",
+        "metadata": {
+            "paper_instructions": (
+                "Instructor review copy. This document renders every question in the bank "
+                "through the normal Quizbank paper pipeline and includes the answer key."
+            )
+        },
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="quizbank",
@@ -118,6 +131,25 @@ def build_parser() -> argparse.ArgumentParser:
     build_parser.add_argument("--seed", type=int, default=42, help="Seed for question pools and shuffling")
     build_parser.add_argument("--no-key", action="store_true", help="Omit the answer key from paper outputs")
     build_parser.add_argument(
+        "--points",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Show point values in paper section headers (default: on)",
+    )
+
+    review_parser = sub.add_parser(
+        "review",
+        help="Render every question in a bank through the normal paper pipeline",
+    )
+    review_parser.add_argument("--bank")
+    review_parser.add_argument(
+        "--format",
+        action="append",
+        default=[],
+        help="markdown, typst, latex, pdf, or all (default: pdf,markdown)",
+    )
+    review_parser.add_argument("--output-dir", default="build/review")
+    review_parser.add_argument(
         "--points",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -188,6 +220,30 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(
                 f"Built {assessment['title']} from {len(items)} question(s), seed {args.seed}:"
             )
+            for result in results:
+                detail = f" ({result.detail})" if result.detail else ""
+                print(f"  {result.path}{detail}")
+            return 0
+
+        if args.command == "review":
+            bank = Bank.load(_bank_path(args.bank))
+            formats = _parse_formats(args.format or ["pdf", "markdown"])
+            if "qti" in formats:
+                raise BankError(
+                    "The review command is for instructor paper review and does not emit QTI. "
+                    "Use 'quizbank build' for assessment QTI exports."
+                )
+            assessment = _review_assessment(bank)
+            items = list(bank.questions)
+            results = build_outputs(
+                assessment,
+                items,
+                Path(args.output_dir),
+                formats,
+                include_key=True,
+                show_points=args.points,
+            )
+            print(f"Built full-bank review from {len(items)} question(s):")
             for result in results:
                 detail = f" ({result.detail})" if result.detail else ""
                 print(f"  {result.path}{detail}")
