@@ -1,0 +1,91 @@
+name: Validate Quizbank JSON
+
+on:
+  pull_request:
+    paths:
+      - 'banks/*.bank.json'
+      - 'schemas/**'
+      - '.github/workflows/validate-banks.yml'
+  push:
+    branches:
+      - 'curriculum/**'
+      - 'feature/**'
+      - 'fix/**'
+    paths:
+      - 'banks/*.bank.json'
+      - 'schemas/**'
+      - '.github/workflows/validate-banks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-banks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check out Quizbank validator
+        uses: actions/checkout@v4
+        with:
+          repository: rosstimo/quizbank
+          ref: agent/json-bank-cli
+          path: _validator
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install validator
+        run: python -m pip install -e ./_validator
+
+      - name: Validate every JSON bank
+        shell: bash
+        run: |
+          set -euo pipefail
+          found=0
+          for bank in banks/*.bank.json; do
+            [[ -e "$bank" ]] || continue
+            found=1
+            quizbank validate --bank "$bank" --lint-level off
+          done
+          if [[ "$found" -eq 0 ]]; then
+            echo 'No JSON banks found.' >&2
+            exit 1
+          fi
+
+      - name: Strict-lint changed banks
+        shell: bash
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+
+          base="$BASE_REF"
+          if [[ -z "$base" ]]; then
+            # Fall 2026 stacked curriculum branches currently derive from this bank branch.
+            # Pull-request runs use the actual PR base through github.base_ref.
+            base='curriculum/f26-question-banks'
+          fi
+
+          git fetch origin "$base" --depth=1
+          mapfile -t changed < <(
+            git diff --name-only "origin/$base...HEAD" -- 'banks/*.bank.json'
+          )
+
+          if [[ "${#changed[@]}" -eq 0 ]]; then
+            echo 'No changed JSON bank files to strict-lint.'
+            exit 0
+          fi
+
+          for bank in "${changed[@]}"; do
+            if [[ -f "$bank" ]]; then
+              quizbank validate --bank "$bank" --lint-level error
+            fi
+          done

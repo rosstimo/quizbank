@@ -5,11 +5,15 @@ This branch is the Fall 2026 working branch for the JSON Quizbank design.
 ## Banks
 
 ```text
-banks/rcet2265.bank.json   scaffold; populate from mature RCET2265 curriculum
-banks/rcet3371.bank.json   Weeks 1-3 starter pool
-banks/rcet3373.bank.json   Weeks 1-3 starter theory pool
-banks/rcet3375.bank.json   Labs 01-03 readiness/troubleshooting pool
+banks/rcet2265.bank.json                    scaffold; populate from mature RCET2265 curriculum
+banks/rcet3371.bank.json                    Weeks 1-3 starter pool
+banks/rcet3373.bank.json                    Weeks 1-3 starter theory pool
+banks/rcet3373-w03-lookup-timing.bank.json  W03D03 lookup/dynamic-timing review staging bank
+banks/rcet3373-w03-interrupts.bank.json     W03D04 interrupt/context review staging bank
+banks/rcet3375.bank.json                    Labs 01-03 readiness/troubleshooting pool
 ```
+
+The two RCET3373 Week 3 supplemental banks are intentionally separate during instructor review so the existing durable course bank does not have to be reconstructed or partially overwritten. After review, promote accepted questions into `banks/rcet3373.bank.json` and retire the supplemental staging files.
 
 All newly generated starter questions are intentionally marked `reviewed: false`. A question should not become exam-ready merely because it validates.
 
@@ -21,6 +25,8 @@ Because this repository now contains multiple banks, always specify the bank exp
 ./quizbank validate --bank banks/rcet2265.bank.json
 ./quizbank validate --bank banks/rcet3371.bank.json
 ./quizbank validate --bank banks/rcet3373.bank.json
+./quizbank validate --bank banks/rcet3373-w03-lookup-timing.bank.json
+./quizbank validate --bank banks/rcet3373-w03-interrupts.bank.json
 ./quizbank validate --bank banks/rcet3375.bank.json
 ```
 
