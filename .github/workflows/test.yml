@@ -1,0 +1,70 @@
+name: Test Quizbank
+
+on:
+  pull_request:
+    paths:
+      - 'qbank/**'
+      - 'tests/**'
+      - 'quizbank'
+      - 'quizbank.ps1'
+      - 'compose.yaml'
+      - 'Dockerfile'
+      - 'pyproject.toml'
+      - '.github/workflows/test.yml'
+  push:
+    branches:
+      - 'feature/**'
+      - 'fix/**'
+    paths:
+      - 'qbank/**'
+      - 'tests/**'
+      - 'quizbank'
+      - 'quizbank.ps1'
+      - 'compose.yaml'
+      - 'Dockerfile'
+      - 'pyproject.toml'
+      - '.github/workflows/test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check launcher syntax
+        run: |
+          sh -n quizbank
+          pwsh -NoProfile -Command "[ScriptBlock]::Create((Get-Content -Raw quizbank.ps1)) | Out-Null"
+
+      - name: Validate Compose configuration
+        run: docker compose config >/dev/null
+
+      - name: Run Python tests in the Quizbank container
+        run: docker compose run --rm --entrypoint python quizbank -m pytest -q
+
+      - name: Test external bank and output workflows
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/quizbank-external-bank /tmp/quizbank-external-output
+          cp banks/example.bank.json /tmp/quizbank-external-bank/example.bank.json
+
+          ./quizbank validate --bank /tmp/quizbank-external-bank/example.bank.json
+          ./quizbank reference \
+            --bank /tmp/quizbank-external-bank/example.bank.json \
+            --output-dir /tmp/quizbank-external-output/reference
+
+          test -f /tmp/quizbank-external-output/reference/example-bank.md
+          test -f /tmp/quizbank-external-output/reference/keys/example-bank-key.md
+          grep -q 'key-example-topic-001' /tmp/quizbank-external-output/reference/example-bank.md
+          grep -q 'q-example-topic-001' /tmp/quizbank-external-output/reference/keys/example-bank-key.md
+
+          ./quizbank new /tmp/quizbank-external-bank/new-course.bank.json \
+            --id new-course \
+            --title 'New Course'
+          test -f /tmp/quizbank-external-bank/new-course.bank.json
+          ./quizbank validate --bank /tmp/quizbank-external-bank/new-course.bank.json

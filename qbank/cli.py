@@ -16,6 +16,7 @@ from qbank.bank import (
 )
 from qbank.exporters import ALL_FORMATS, build_outputs, dependency_versions
 from qbank.migrate import migrate_legacy, write_json
+from qbank.reference import build_reference
 
 
 def _discover_bank() -> Path:
@@ -33,7 +34,15 @@ def _discover_bank() -> Path:
 
 
 def _bank_path(value: str | None) -> Path:
+    external = os.environ.get("QUIZBANK_EXTERNAL_BANK")
+    if value and external:
+        return Path(external)
     return Path(value) if value else _discover_bank()
+
+
+def _output_path(value: str | Path) -> Path:
+    external = os.environ.get("QUIZBANK_EXTERNAL_OUTPUT")
+    return Path(external) if external else Path(value)
 
 
 def _print_validation_error(error: BankValidationError) -> None:
@@ -106,7 +115,9 @@ def _review_assessment(bank: Bank) -> dict:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="quizbank",
-        description="Author once in a JSON bank, then build paper and Canvas assessments.",
+        description=(
+            "Author once in a JSON bank, then build paper, Canvas, and reference outputs."
+        ),
     )
     parser.add_argument("--version", action="version", version=f"quizbank {__version__}")
     sub = parser.add_subparsers(dest="command")
@@ -116,10 +127,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     validate_parser = sub.add_parser("validate", help="Validate a JSON bank")
     validate_parser.add_argument("--bank")
-    validate_parser.add_argument("--lint-level", choices=("off", "warn", "error"), default="error")
+    validate_parser.add_argument(
+        "--lint-level", choices=("off", "warn", "error"), default="error"
+    )
 
     build_parser = sub.add_parser("build", help="Build an assessment")
-    build_parser.add_argument("assessment", nargs="?", help="Assessment id; optional when the bank contains one")
+    build_parser.add_argument(
+        "assessment", nargs="?", help="Assessment id; optional when the bank contains one"
+    )
     build_parser.add_argument("--bank")
     build_parser.add_argument(
         "--format",
@@ -128,8 +143,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="markdown, typst, latex, qti, pdf, or all (default: all)",
     )
     build_parser.add_argument("--output-dir", default="build")
-    build_parser.add_argument("--seed", type=int, default=42, help="Seed for question pools and shuffling")
-    build_parser.add_argument("--no-key", action="store_true", help="Omit the answer key from paper outputs")
+    build_parser.add_argument(
+        "--seed", type=int, default=42, help="Seed for question pools and shuffling"
+    )
+    build_parser.add_argument(
+        "--no-key", action="store_true", help="Omit the answer key from paper outputs"
+    )
     build_parser.add_argument(
         "--points",
         action=argparse.BooleanOptionalAction,
@@ -156,13 +175,25 @@ def build_parser() -> argparse.ArgumentParser:
         help="Show point values in paper section headers (default: on)",
     )
 
+    reference_parser = sub.add_parser(
+        "reference",
+        help=(
+            "Build GitHub-friendly practice questions and a linked answer key "
+            "from the whole bank"
+        ),
+    )
+    reference_parser.add_argument("--bank")
+    reference_parser.add_argument("--output-dir", default="reference")
+
     new_parser = sub.add_parser("new", help="Create an empty JSON bank")
     new_parser.add_argument("output", nargs="?", default="banks/new.bank.json")
     new_parser.add_argument("--id", required=True, dest="bank_id")
     new_parser.add_argument("--title", required=True)
     new_parser.add_argument("--force", action="store_true")
 
-    migrate_parser = sub.add_parser("migrate", help="Combine legacy YAML questions and quizzes into one JSON bank")
+    migrate_parser = sub.add_parser(
+        "migrate", help="Combine legacy YAML questions and quizzes into one JSON bank"
+    )
     migrate_parser.add_argument("--items", default="qbank")
     migrate_parser.add_argument("--quizzes", default="quizzes")
     migrate_parser.add_argument("--output", default="banks/migrated.bank.json")
@@ -212,7 +243,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             results = build_outputs(
                 assessment,
                 items,
-                Path(args.output_dir),
+                _output_path(args.output_dir),
                 formats,
                 include_key=not args.no_key,
                 show_points=args.points,
@@ -238,7 +269,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             results = build_outputs(
                 assessment,
                 items,
-                Path(args.output_dir),
+                _output_path(args.output_dir),
                 formats,
                 include_key=True,
                 show_points=args.points,
@@ -249,8 +280,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 print(f"  {result.path}{detail}")
             return 0
 
+        if args.command == "reference":
+            bank = Bank.load(_bank_path(args.bank))
+            output_dir = _output_path(args.output_dir)
+            results = build_reference(bank, output_dir)
+            print(f"Built GitHub reference from {len(bank.questions)} question(s):")
+            for path in results:
+                print(f"  {path}")
+            return 0
+
         if args.command == "new":
-            output = Path(args.output)
+            output = _output_path(args.output)
             data = _starter(args.bank_id, args.title)
             problems = validate_data(data)
             if problems:
@@ -260,7 +300,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
 
         if args.command == "migrate":
-            output = Path(args.output)
+            output = _output_path(args.output)
             data = migrate_legacy(
                 Path(args.items),
                 Path(args.quizzes),
@@ -292,7 +332,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     except BankValidationError as error:
         _print_validation_error(error)
         return 1
-    except RuntimeError as error:
+    except (BankError, RuntimeError) as error:
         print(f"Error: {error}", file=sys.stderr)
         return 2
     except KeyboardInterrupt:

@@ -7,7 +7,18 @@ services:
     working_dir: /workspace
     entrypoint: ["python", "-m", "qbank.cli"]
     volumes:
-      - .:/workspace
+      - type: bind
+        source: .
+        target: /workspace
+      - type: bind
+        source: ${QUIZBANK_BANK_DIR:-.}
+        target: /quizbank-bank
+        read_only: true
+      - type: bind
+        source: ${QUIZBANK_OUTPUT_DIR:-.}
+        target: /quizbank-output
     environment:
       HOME: /tmp/quizbank-home
       PYTHONPATH: /workspace
+      QUIZBANK_EXTERNAL_BANK: "${QUIZBANK_EXTERNAL_BANK:-}"
+      QUIZBANK_EXTERNAL_OUTPUT: "${QUIZBANK_EXTERNAL_OUTPUT:-}"
