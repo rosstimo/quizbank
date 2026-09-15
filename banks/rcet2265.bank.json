@@ -4,19 +4,2385 @@
   "bank": {
     "id": "rcet2265",
     "title": "RCET 2265 Computer Fundamentals and Introduction to Programming",
-    "description": "Canonical JSON bank scaffold for Fall 2026. This pass does not invent new RCET2265 questions because the first-three-week content review focused on the RCET337x sequence.",
+    "description": "Fall 2026 durable course bank reconciled from RCET2265-planning candidate sets. Questions remain instructor-review candidates until metadata.reviewed is explicitly changed after review.",
     "language": "en-US",
-    "authors": ["Tim Rossiter"],
+    "authors": [
+      "Tim Rossiter"
+    ],
     "default_points": 1,
-    "metadata": {"semester": "Fall 2026", "status": "scaffold", "review_needed": true}
+    "metadata": {
+      "semester": "Fall 2026",
+      "status": "candidate-reconciliation",
+      "review_needed": true
+    }
   },
   "categories": [
-    {"id": "computer-fundamentals", "title": "Computer Fundamentals"},
-    {"id": "programming", "title": "Programming Fundamentals"},
-    {"id": "csharp", "title": "C#"},
-    {"id": "git", "title": "Git and Source Control"}
+    {
+      "id": "computer-fundamentals",
+      "title": "Computer Fundamentals"
+    },
+    {
+      "id": "programming",
+      "title": "Programming Fundamentals"
+    },
+    {
+      "id": "csharp",
+      "title": "C#"
+    },
+    {
+      "id": "git",
+      "title": "Git and Source Control"
+    },
+    {
+      "id": "w01",
+      "title": "Week 1"
+    },
+    {
+      "id": "w01.debugging",
+      "title": "Visual Studio debugging",
+      "parent": "w01"
+    },
+    {
+      "id": "w01.operators",
+      "title": "Arithmetic operators",
+      "parent": "w01"
+    },
+    {
+      "id": "w01.variables",
+      "title": "Variables and assignment",
+      "parent": "w01"
+    },
+    {
+      "id": "w01.types",
+      "title": "Built-in data types",
+      "parent": "w01"
+    },
+    {
+      "id": "w02",
+      "title": "Week 2"
+    },
+    {
+      "id": "w02.console",
+      "title": "Console input and output",
+      "parent": "w02"
+    },
+    {
+      "id": "rcet2265",
+      "title": "RCET2265"
+    },
+    {
+      "id": "rcet2265.cat-c",
+      "title": "C#",
+      "parent": "rcet2265"
+    },
+    {
+      "id": "rcet2265.cat-c.conditional-control-flow",
+      "title": "Conditional Control Flow",
+      "parent": "rcet2265.cat-c"
+    }
   ],
-  "questions": [],
-  "assessments": [],
-  "metadata": {"all_starter_questions_reviewed": false, "note": "Populate from current RCET2265 curriculum rather than guessing from the 337x sequence."}
+  "questions": [
+    {
+      "id": "w01.debugging.001",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > debugging",
+      "category_ids": [
+        "w01.debugging"
+      ],
+      "tags": [
+        "breakpoint",
+        "visual-studio"
+      ],
+      "difficulty": "easy",
+      "stem": "When execution stops at a breakpoint, the highlighted current statement has generally not executed yet. What can you do at that point?",
+      "feedback": {
+        "correct": "Correct. Microsoft Visual Studio documentation, First look at the debugger: https://learn.microsoft.com/en-us/visualstudio/debugger/debugger-feature-tour?view=visualstudio. A breakpoint suspends execution so current state can be inspected before stepping onward.",
+        "incorrect": "Recheck Microsoft Visual Studio documentation, First look at the debugger: https://learn.microsoft.com/en-us/visualstudio/debugger/debugger-feature-tour?view=visualstudio. A breakpoint suspends execution so current state can be inspected before stepping onward."
+      },
+      "solution": "A breakpoint suspends execution so current state can be inspected before stepping onward.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc6"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-debugging.bank.json"
+      },
+      "choices": [
+        {
+          "text": "Inspect current program state before executing that statement",
+          "correct": true
+        },
+        {
+          "text": "Only edit the Git commit message"
+        },
+        {
+          "text": "Assume every local already has its post-statement value"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.debugging.002",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > debugging",
+      "category_ids": [
+        "w01.debugging"
+      ],
+      "tags": [
+        "continue",
+        "step"
+      ],
+      "difficulty": "easy",
+      "stem": "Which debugger action normally runs until the next breakpoint, break event, exception, or program completion?",
+      "feedback": {
+        "correct": "Correct. Microsoft Visual Studio documentation, First look at the debugger: https://learn.microsoft.com/en-us/visualstudio/debugger/debugger-feature-tour?view=visualstudio. Continue resumes normal execution until another stopping condition.",
+        "incorrect": "Recheck Microsoft Visual Studio documentation, First look at the debugger: https://learn.microsoft.com/en-us/visualstudio/debugger/debugger-feature-tour?view=visualstudio. Continue resumes normal execution until another stopping condition."
+      },
+      "solution": "Continue resumes normal execution until another stopping condition.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc6"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-debugging.bank.json"
+      },
+      "choices": [
+        {
+          "text": "Continue",
+          "correct": true
+        },
+        {
+          "text": "Step Into"
+        },
+        {
+          "text": "Toggle Breakpoint"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.debugging.003",
+      "version": 1,
+      "type": "ordering",
+      "points": 1,
+      "topic": "w01 > debugging",
+      "category_ids": [
+        "w01.debugging"
+      ],
+      "tags": [
+        "debugging",
+        "state"
+      ],
+      "difficulty": "medium",
+      "stem": "Put these actions in the most sensible order for observing a variable assignment in the debugger.",
+      "feedback": {
+        "correct": "Correct. Microsoft Visual Studio documentation, First look at the debugger: https://learn.microsoft.com/en-us/visualstudio/debugger/debugger-feature-tour?view=visualstudio. Set breakpoint before/at assignment, run to it, inspect pre-state, step the assignment, inspect post-state.",
+        "incorrect": "Recheck Microsoft Visual Studio documentation, First look at the debugger: https://learn.microsoft.com/en-us/visualstudio/debugger/debugger-feature-tour?view=visualstudio. Set breakpoint before/at assignment, run to it, inspect pre-state, step the assignment, inspect post-state."
+      },
+      "solution": "Set breakpoint before/at assignment, run to it, inspect pre-state, step the assignment, inspect post-state.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc6"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "note": "Ordering schema uses listed order as answer",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-debugging.bank.json"
+      },
+      "items": [
+        "Set a breakpoint before or on the assignment",
+        "Run until execution stops there",
+        "Inspect the variable state",
+        "Step over/into the assignment as appropriate",
+        "Inspect the variable again"
+      ]
+    },
+    {
+      "id": "w01.operators.001",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > operators",
+      "category_ids": [
+        "w01.operators"
+      ],
+      "tags": [
+        "arithmetic",
+        "integer-division",
+        "exam-ready"
+      ],
+      "difficulty": "easy",
+      "stem": "In C#, what is the value of `15 / 4` when both operands are `int`?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. For integer operands, `/` performs integer division; 15 / 4 is 3.",
+        "incorrect": "Recheck Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. For integer operands, `/` performs integer division; 15 / 4 is 3."
+      },
+      "solution": "For integer operands, `/` performs integer division; 15 / 4 is 3.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc1"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "integer-division",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      },
+      "choices": [
+        {
+          "text": "3",
+          "correct": true,
+          "rationale": "Integer division discards the fractional remainder."
+        },
+        {
+          "text": "3.75",
+          "rationale": "That requires a floating-point operand/result."
+        },
+        {
+          "text": "4",
+          "rationale": "Integer division does not round to nearest."
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.operators.002",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > operators",
+      "category_ids": [
+        "w01.operators"
+      ],
+      "tags": [
+        "remainder",
+        "modulo",
+        "exam-ready"
+      ],
+      "difficulty": "easy",
+      "stem": "What does `15 % 4` evaluate to for integer operands?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. The remainder after 15 / 4 is 3.",
+        "incorrect": "Recheck Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. The remainder after 15 / 4 is 3."
+      },
+      "solution": "The remainder after 15 / 4 is 3.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc1"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "remainder",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      },
+      "choices": [
+        {
+          "text": "3",
+          "correct": true
+        },
+        {
+          "text": "4"
+        },
+        {
+          "text": "0"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.operators.003",
+      "version": 1,
+      "type": "true_false",
+      "points": 1,
+      "topic": "w01 > operators",
+      "category_ids": [
+        "w01.operators"
+      ],
+      "tags": [
+        "precedence",
+        "parentheses"
+      ],
+      "difficulty": "easy",
+      "stem": "Parentheses can be used to make the intended grouping of an arithmetic expression explicit even when operator precedence would already give the same result.",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. Parentheses explicitly control or document grouping.",
+        "incorrect": "Recheck Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. Parentheses explicitly control or document grouping."
+      },
+      "solution": "Parentheses explicitly control or document grouping.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc1"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      },
+      "answer": true
+    },
+    {
+      "id": "w01.variables.001",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > variables",
+      "category_ids": [
+        "w01.variables"
+      ],
+      "tags": [
+        "int",
+        "system-int32"
+      ],
+      "difficulty": "easy",
+      "stem": "Which .NET type is the C# keyword `int` an alias for?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. `int` is the alias for signed 32-bit `System.Int32`.",
+        "incorrect": "Recheck Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. `int` is the alias for signed 32-bit `System.Int32`."
+      },
+      "solution": "`int` is the alias for signed 32-bit `System.Int32`.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc2"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "type-alias",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      },
+      "choices": [
+        {
+          "text": "System.Int32",
+          "correct": true
+        },
+        {
+          "text": "System.Int16"
+        },
+        {
+          "text": "System.UInt32"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.variables.002",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > variables",
+      "category_ids": [
+        "w01.variables"
+      ],
+      "tags": [
+        "assignment",
+        "declaration"
+      ],
+      "difficulty": "easy",
+      "stem": "In `int age = 7;`, what is the role of `=`?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# language specification, Variables: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables. The initializer assigns the value 7 to the local variable.",
+        "incorrect": "Recheck Microsoft C# language specification, Variables: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables. The initializer assigns the value 7 to the local variable."
+      },
+      "solution": "The initializer assigns the value 7 to the local variable.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc3"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      },
+      "choices": [
+        {
+          "text": "assignment operator",
+          "correct": true
+        },
+        {
+          "text": "equality comparison"
+        },
+        {
+          "text": "type conversion"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.operators.004",
+      "version": 1,
+      "type": "numeric",
+      "points": 1,
+      "topic": "w01 > operators",
+      "category_ids": [
+        "w01.operators"
+      ],
+      "tags": [
+        "precedence",
+        "calculation"
+      ],
+      "difficulty": "medium",
+      "stem": "Evaluate the C# integer expression `2 + 3 * 4`.",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. Multiplication has higher precedence than addition: 2 + (3*4) = 14.",
+        "incorrect": "Recheck Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. Multiplication has higher precedence than addition: 2 + (3*4) = 14."
+      },
+      "solution": "Multiplication has higher precedence than addition: 2 + (3*4) = 14.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc1"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "precedence-calc",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      },
+      "answer": 14,
+      "tolerance": 0,
+      "unit": null
+    },
+    {
+      "id": "w01.operators.005",
+      "version": 1,
+      "type": "numeric",
+      "points": 1,
+      "topic": "w01 > operators",
+      "category_ids": [
+        "w01.operators"
+      ],
+      "tags": [
+        "precedence",
+        "parentheses",
+        "calculation"
+      ],
+      "difficulty": "medium",
+      "stem": "Evaluate the C# integer expression `(2 + 3) * 4`.",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. Parentheses force 2+3 first, then multiply by 4.",
+        "incorrect": "Recheck Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. Parentheses force 2+3 first, then multiply by 4."
+      },
+      "solution": "Parentheses force 2+3 first, then multiply by 4.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc1"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "precedence-calc",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      },
+      "answer": 20,
+      "tolerance": 0,
+      "unit": null
+    },
+    {
+      "id": "w01.operators.006",
+      "version": 1,
+      "type": "numeric",
+      "points": 1,
+      "topic": "w01 > operators",
+      "category_ids": [
+        "w01.operators"
+      ],
+      "tags": [
+        "integer-division",
+        "remainder",
+        "calculation"
+      ],
+      "difficulty": "hard",
+      "stem": "For integer operands, evaluate `17 / 5 * 5 + 17 % 5`.",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. 17/5 is 3, 3*5 is 15, 17%5 is 2, total 17. This reconstructs dividend = quotient*divisor + remainder.",
+        "incorrect": "Recheck Microsoft C# reference, Arithmetic operators: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators. 17/5 is 3, 3*5 is 15, 17%5 is 2, total 17. This reconstructs dividend = quotient*divisor + remainder."
+      },
+      "solution": "17/5 is 3, 3*5 is 15, 17%5 is 2, total 17. This reconstructs dividend = quotient*divisor + remainder.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc1"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "quotient-remainder",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      },
+      "answer": 17,
+      "tolerance": 0,
+      "unit": null
+    },
+    {
+      "id": "w01.types.001",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "float",
+        "literal"
+      ],
+      "difficulty": "easy",
+      "stem": "Which literal has type `float`?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Floating-point numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types. A real literal with `f` or `F` suffix is `float`; unsuffixed real literals are `double`.",
+        "incorrect": "Recheck Microsoft C# reference, Floating-point numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types. A real literal with `f` or `F` suffix is `float`; unsuffixed real literals are `double`."
+      },
+      "solution": "A real literal with `f` or `F` suffix is `float`; unsuffixed real literals are `double`.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc4"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "float-literal",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "choices": [
+        {
+          "text": "10.0f",
+          "correct": true
+        },
+        {
+          "text": "10.0"
+        },
+        {
+          "text": "10"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.types.002",
+      "version": 1,
+      "type": "true_false",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "long",
+        "integral",
+        "correction"
+      ],
+      "difficulty": "easy",
+      "stem": "C# `long` becomes a 32-bit type when the program runs on a 32-bit operating system.",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. C# `long` is always `System.Int64`; native-sized `nint`/`nuint` depend on process architecture.",
+        "incorrect": "Recheck Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. C# `long` is always `System.Int64`; native-sized `nint`/`nuint` depend on process architecture."
+      },
+      "solution": "C# `long` is always `System.Int64`; native-sized `nint`/`nuint` depend on process architecture.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc2"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "answer": false
+    },
+    {
+      "id": "w01.types.003",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "byte",
+        "range",
+        "correction"
+      ],
+      "difficulty": "easy",
+      "stem": "What is the range of C# `byte`?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. `byte` is an unsigned 8-bit integer: 0..255.",
+        "incorrect": "Recheck Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. `byte` is an unsigned 8-bit integer: 0..255."
+      },
+      "solution": "`byte` is an unsigned 8-bit integer: 0..255.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc2"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "integral-range",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "choices": [
+        {
+          "text": "0 through 255",
+          "correct": true
+        },
+        {
+          "text": "-128 through 127"
+        },
+        {
+          "text": "0 through 127"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.types.004",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "sbyte",
+        "range"
+      ],
+      "difficulty": "easy",
+      "stem": "What is the range of C# `sbyte`?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. `sbyte` is signed 8-bit: -128..127.",
+        "incorrect": "Recheck Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. `sbyte` is signed 8-bit: -128..127."
+      },
+      "solution": "`sbyte` is signed 8-bit: -128..127.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc2"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "integral-range",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "choices": [
+        {
+          "text": "-128 through 127",
+          "correct": true
+        },
+        {
+          "text": "0 through 255"
+        },
+        {
+          "text": "-127 through 128"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.types.005",
+      "version": 1,
+      "type": "true_false",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "char",
+        "unicode",
+        "correction"
+      ],
+      "difficulty": "easy",
+      "stem": "A C# `char` is always one complete user-perceived character.",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET documentation, Character encoding in .NET: https://learn.microsoft.com/en-us/dotnet/standard/base-types/character-encoding-introduction. `char` is one UTF-16 code unit; some Unicode scalar values and grapheme clusters require multiple code units.",
+        "incorrect": "Recheck Microsoft .NET documentation, Character encoding in .NET: https://learn.microsoft.com/en-us/dotnet/standard/base-types/character-encoding-introduction. `char` is one UTF-16 code unit; some Unicode scalar values and grapheme clusters require multiple code units."
+      },
+      "solution": "`char` is one UTF-16 code unit; some Unicode scalar values and grapheme clusters require multiple code units.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc5"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "answer": false
+    },
+    {
+      "id": "w01.types.006",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "numeric-conversion",
+        "float",
+        "correction"
+      ],
+      "difficulty": "medium",
+      "stem": "Why is the statement “converting any `int` to `float` is exact” incorrect?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Built-in numeric conversions: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/numeric-conversions. C# allows the implicit conversion, but sufficiently large integers can lose precision in `float`.",
+        "incorrect": "Recheck Microsoft C# reference, Built-in numeric conversions: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/numeric-conversions. C# allows the implicit conversion, but sufficiently large integers can lose precision in `float`."
+      },
+      "solution": "C# allows the implicit conversion, but sufficiently large integers can lose precision in `float`.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc9"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "choices": [
+        {
+          "text": "Some large integer values cannot be represented exactly by `float` and lose precision",
+          "correct": true
+        },
+        {
+          "text": "C# forbids all `int` to `float` conversions"
+        },
+        {
+          "text": "A `float` has a larger exact integer precision than every `int` value"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.types.007",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "overflow",
+        "checked",
+        "correction"
+      ],
+      "difficulty": "medium",
+      "stem": "In the usual unchecked context, what happens when an `int` operation overflows at run time?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, checked and unchecked statements: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/checked-and-unchecked. Unchecked non-constant integral overflow wraps/truncates; checked context can throw OverflowException.",
+        "incorrect": "Recheck Microsoft C# reference, checked and unchecked statements: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/checked-and-unchecked. Unchecked non-constant integral overflow wraps/truncates; checked context can throw OverflowException."
+      },
+      "solution": "Unchecked non-constant integral overflow wraps/truncates; checked context can throw OverflowException.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc10"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "overflow-context",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "choices": [
+        {
+          "text": "The value wraps according to unchecked integral arithmetic",
+          "correct": true
+        },
+        {
+          "text": "The process always crashes immediately"
+        },
+        {
+          "text": "The compiler automatically changes the variable to `long`"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.types.008",
+      "version": 1,
+      "type": "true_false",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "overflow",
+        "checked",
+        "correction"
+      ],
+      "difficulty": "medium",
+      "stem": "C# integral overflow always throws `OverflowException`.",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, checked and unchecked statements: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/checked-and-unchecked. It throws for checked run-time integral operations; ordinary unchecked arithmetic can wrap.",
+        "incorrect": "Recheck Microsoft C# reference, checked and unchecked statements: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/checked-and-unchecked. It throws for checked run-time integral operations; ordinary unchecked arithmetic can wrap."
+      },
+      "solution": "It throws for checked run-time integral operations; ordinary unchecked arithmetic can wrap.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc10"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "overflow-context",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "answer": false
+    },
+    {
+      "id": "w01.types.009",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "type-selection",
+        "range",
+        "correction"
+      ],
+      "difficulty": "hard",
+      "stem": "A variable must represent every integer from -120 through +120. Which of these types is the narrowest type that covers the complete range?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. sbyte spans -128..127; byte cannot represent negatives; short works but is wider.",
+        "incorrect": "Recheck Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. sbyte spans -128..127; byte cannot represent negatives; short works but is wider."
+      },
+      "solution": "sbyte spans -128..127; byte cannot represent negatives; short works but is wider.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc2"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "type-selection",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "choices": [
+        {
+          "text": "sbyte",
+          "correct": true
+        },
+        {
+          "text": "byte"
+        },
+        {
+          "text": "short"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.types.010",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "type-selection",
+        "range"
+      ],
+      "difficulty": "hard",
+      "stem": "A value is guaranteed to remain between 0 and 250 inclusive. Which listed integral type is the narrowest that covers the range?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. byte spans 0..255; sbyte ends at 127; short works but is wider.",
+        "incorrect": "Recheck Microsoft C# reference, Integral numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types. byte spans 0..255; sbyte ends at 127; short works but is wider."
+      },
+      "solution": "byte spans 0..255; sbyte ends at 127; short works but is wider.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc2"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "type-selection",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "choices": [
+        {
+          "text": "byte",
+          "correct": true
+        },
+        {
+          "text": "sbyte"
+        },
+        {
+          "text": "short"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w01.types.011",
+      "version": 1,
+      "type": "code_review",
+      "points": 1,
+      "topic": "w01 > types",
+      "category_ids": [
+        "w01.types"
+      ],
+      "tags": [
+        "float",
+        "compiler-diagnostic"
+      ],
+      "difficulty": "hard",
+      "stem": "Why does this assignment fail, and what is the smallest source change that makes the literal a `float`?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# reference, Floating-point numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types. Unsuffixed 10.0 is double and there is no implicit double-to-float conversion. Add f/F suffix.",
+        "incorrect": "Recheck Microsoft C# reference, Floating-point numeric types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types. Unsuffixed 10.0 is double and there is no implicit double-to-float conversion. Add f/F suffix."
+      },
+      "solution": "Unsuffixed 10.0 is double and there is no implicit double-to-float conversion. Add f/F suffix.",
+      "source": {
+        "teaching_refs": [
+          "W01D04-summary",
+          "W01D05-summary",
+          "W01D05-accuracy-review",
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc4"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      },
+      "code": "float voltage = 10.0;",
+      "language": "csharp",
+      "prompts": [
+        "Identify the type of `10.0`.",
+        "Give the corrected assignment."
+      ],
+      "answers": [
+        "double",
+        "float voltage = 10.0f;"
+      ]
+    },
+    {
+      "id": "w02.console.001",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "readline",
+        "nullable",
+        "api"
+      ],
+      "difficulty": "easy",
+      "stem": "What is the documented return type of `Console.ReadLine()` in current .NET?",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET API documentation, Console.ReadLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0. `Console.ReadLine()` returns `string?`: the next line, or `null` when no more lines are available.",
+        "incorrect": "Recheck Microsoft .NET API documentation, Console.ReadLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0. `Console.ReadLine()` returns `string?`: the next line, or `null` when no more lines are available."
+      },
+      "solution": "`Console.ReadLine()` returns `string?`: the next line, or `null` when no more lines are available.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc7"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "readline-contract",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "choices": [
+        {
+          "text": "string?",
+          "correct": true
+        },
+        {
+          "text": "int"
+        },
+        {
+          "text": "bool"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w02.console.002",
+      "version": 1,
+      "type": "true_false",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "readline",
+        "blocking"
+      ],
+      "difficulty": "easy",
+      "stem": "In the normal interactive console case, `Console.ReadLine()` waits for input until a line terminator is entered or the input stream ends.",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET API documentation, Console.ReadLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0. `ReadLine` reads the next line from standard input and can wait for interactive input.",
+        "incorrect": "Recheck Microsoft .NET API documentation, Console.ReadLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0. `ReadLine` reads the next line from standard input and can wait for interactive input."
+      },
+      "solution": "`ReadLine` reads the next line from standard input and can wait for interactive input.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc7"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "answer": true
+    },
+    {
+      "id": "w02.console.003",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "writeline",
+        "newline"
+      ],
+      "difficulty": "easy",
+      "stem": "What does `Console.WriteLine(...)` add after the supplied output?",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET API documentation, Console.WriteLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.writeline?view=net-10.0. `WriteLine` writes the value followed by the current line terminator.",
+        "incorrect": "Recheck Microsoft .NET API documentation, Console.WriteLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.writeline?view=net-10.0. `WriteLine` writes the value followed by the current line terminator."
+      },
+      "solution": "`WriteLine` writes the value followed by the current line terminator.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc8"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "choices": [
+        {
+          "text": "The current line terminator",
+          "correct": true
+        },
+        {
+          "text": "A null character only"
+        },
+        {
+          "text": "A numeric conversion"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w02.console.004",
+      "version": 1,
+      "type": "true_false",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "stdin",
+        "stream",
+        "correction"
+      ],
+      "difficulty": "easy",
+      "stem": "Standard input is a stream and can be redirected; it is not inherently limited to keyboard input from a console window.",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET API documentation, System.Console: https://learn.microsoft.com/en-us/dotnet/api/system.console?view=net-10.0. The Console API exposes standard input as a TextReader stream that can be redirected.",
+        "incorrect": "Recheck Microsoft .NET API documentation, System.Console: https://learn.microsoft.com/en-us/dotnet/api/system.console?view=net-10.0. The Console API exposes standard input as a TextReader stream that can be redirected."
+      },
+      "solution": "The Console API exposes standard input as a TextReader stream that can be redirected.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc11"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "answer": true
+    },
+    {
+      "id": "w02.console.005",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "readline",
+        "numeric-input",
+        "conversion"
+      ],
+      "difficulty": "medium",
+      "stem": "The user types `25` and presses Enter. Why can the direct result of `Console.ReadLine()` not be used as an integer operand without parsing/conversion?",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET API documentation, Console.ReadLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0. `ReadLine` returns text, not an integer value; numeric text must be parsed/converted before numeric arithmetic.",
+        "incorrect": "Recheck Microsoft .NET API documentation, Console.ReadLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0. `ReadLine` returns text, not an integer value; numeric text must be parsed/converted before numeric arithmetic."
+      },
+      "solution": "`ReadLine` returns text, not an integer value; numeric text must be parsed/converted before numeric arithmetic.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc7"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "choices": [
+        {
+          "text": "`ReadLine()` returns text (`string?`), so numeric text must be parsed or converted",
+          "correct": true
+        },
+        {
+          "text": "The console always returns a `double`"
+        },
+        {
+          "text": "Arithmetic operators cannot work with user-entered values"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w02.console.006",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "local-variable",
+        "definite-assignment",
+        "correction"
+      ],
+      "difficulty": "medium",
+      "stem": "What is true about a local variable declared as `string userInput;` before it has been assigned?",
+      "feedback": {
+        "correct": "Correct. Microsoft C# language specification, Variables: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables. Local variables must be definitely assigned before their value is read; an uninitialized local is not automatically usable as `null` or an empty string.",
+        "incorrect": "Recheck Microsoft C# language specification, Variables: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables. Local variables must be definitely assigned before their value is read; an uninitialized local is not automatically usable as `null` or an empty string."
+      },
+      "solution": "Local variables must be definitely assigned before their value is read; an uninitialized local is not automatically usable as `null` or an empty string.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc3"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "definite-assignment",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "choices": [
+        {
+          "text": "It must be definitely assigned before it is read",
+          "correct": true
+        },
+        {
+          "text": "It is automatically an empty string"
+        },
+        {
+          "text": "It is automatically usable as `null`"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "w02.console.007",
+      "version": 1,
+      "type": "code_review",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "concatenation",
+        "spacing",
+        "output"
+      ],
+      "difficulty": "medium",
+      "stem": "The intended output is `Hello Tim`, but the code prints `HelloTim`. Identify the cause and give a minimal correction.",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET API documentation, Console.WriteLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.writeline?view=net-10.0. String concatenation does not invent whitespace; include the desired space in one of the strings or use another formatting/interpolation method.",
+        "incorrect": "Recheck Microsoft .NET API documentation, Console.WriteLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.writeline?view=net-10.0. String concatenation does not invent whitespace; include the desired space in one of the strings or use another formatting/interpolation method."
+      },
+      "solution": "String concatenation does not invent whitespace; include the desired space in one of the strings or use another formatting/interpolation method.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc8"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "code": "string name = \"Tim\";\nConsole.WriteLine(\"Hello\" + name);",
+      "language": "csharp",
+      "prompts": [
+        "Why is the space missing?",
+        "Give one minimal corrected `WriteLine` statement."
+      ],
+      "answers": [
+        "No space character occurs in either concatenated string.",
+        "Console.WriteLine(\"Hello \" + name);"
+      ]
+    },
+    {
+      "id": "w02.console.008",
+      "version": 1,
+      "type": "true_false",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "readline",
+        "nullable",
+        "correction"
+      ],
+      "difficulty": "medium",
+      "stem": "`Console.ReadLine()` is guaranteed by its API contract to return a non-null string every time it is called.",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET API documentation, Console.ReadLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0. The return type is `string?`; `null` can be returned if no more input lines are available.",
+        "incorrect": "Recheck Microsoft .NET API documentation, Console.ReadLine: https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0. The return type is `string?`; `null` can be returned if no more input lines are available."
+      },
+      "solution": "The return type is `string?`; `null` can be returned if no more input lines are available.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc7"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "variant_group": "readline-contract",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "answer": false
+    },
+    {
+      "id": "w02.console.009",
+      "version": 1,
+      "type": "code_review",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "definite-assignment",
+        "nullable",
+        "readline",
+        "correction"
+      ],
+      "difficulty": "hard",
+      "stem": "Distinguish the two different issues represented by these declarations/usages.",
+      "feedback": {
+        "correct": "Correct. Microsoft C# language specification, Variables: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables. The first violates definite assignment when read. The second is assigned, but `ReadLine()` returns `string?`, so assigning to non-nullable `string` can produce a nullable warning.",
+        "incorrect": "Recheck Microsoft C# language specification, Variables: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables. The first violates definite assignment when read. The second is assigned, but `ReadLine()` returns `string?`, so assigning to non-nullable `string` can produce a nullable warning."
+      },
+      "solution": "The first violates definite assignment when read. The second is assigned, but `ReadLine()` returns `string?`, so assigning to non-nullable `string` can produce a nullable warning.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc3",
+          "doc7"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "code": "string a;\nConsole.WriteLine(a);\n\nstring b = Console.ReadLine();",
+      "language": "csharp",
+      "prompts": [
+        "What is wrong with using `a`?",
+        "Why can the declaration of `b` produce a nullable warning?"
+      ],
+      "answers": [
+        "a is not definitely assigned before use.",
+        "ReadLine returns string?, which can be null, while b is declared non-nullable string."
+      ]
+    },
+    {
+      "id": "w02.console.010",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "w02 > console",
+      "category_ids": [
+        "w02.console"
+      ],
+      "tags": [
+        "intellisense",
+        "f1",
+        "api-discovery"
+      ],
+      "difficulty": "hard",
+      "stem": "You encounter an unfamiliar `Console` method in Visual Studio. Which workflow best matches the class approach for discovering its valid overloads and official behavior?",
+      "feedback": {
+        "correct": "Correct. Microsoft .NET API documentation, System.Console: https://learn.microsoft.com/en-us/dotnet/api/system.console?view=net-10.0. IntelliSense exposes members/signatures and F1 can navigate from symbols to official documentation; both are discovery tools, not substitutes for understanding the contract.",
+        "incorrect": "Recheck Microsoft .NET API documentation, System.Console: https://learn.microsoft.com/en-us/dotnet/api/system.console?view=net-10.0. IntelliSense exposes members/signatures and F1 can navigate from symbols to official documentation; both are discovery tools, not substitutes for understanding the contract."
+      },
+      "solution": "IntelliSense exposes members/signatures and F1 can navigate from symbols to official documentation; both are discovery tools, not substitutes for understanding the contract.",
+      "source": {
+        "teaching_refs": [
+          "W02D01-summary",
+          "W02D01-accuracy-review"
+        ],
+        "official_refs": [
+          "doc11"
+        ]
+      },
+      "metadata": {
+        "reviewed": false,
+        "draft_origin": "AI starter",
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      },
+      "choices": [
+        {
+          "text": "Inspect IntelliSense/signature help, then use F1 or Microsoft Learn to verify the API contract",
+          "correct": true
+        },
+        {
+          "text": "Guess parameter types until the compiler accepts something"
+        },
+        {
+          "text": "Copy an unrelated example and avoid opening the API documentation"
+        }
+      ],
+      "shuffle_choices": true
+    },
+    {
+      "id": "rcet2265.controlflow.001",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "RCET2265 > C# > Conditional Control Flow",
+      "difficulty": "easy",
+      "tags": [
+        "w02",
+        "conditionals",
+        "operators"
+      ],
+      "stem": "Which operator should test whether the string variable `userInput` contains the value `\"2\"`?",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0",
+      "shuffle_choices": true,
+      "choices": [
+        {
+          "text": "`=`",
+          "rationale": "`=` is the assignment operator; it stores a value rather than asking whether two values are equal."
+        },
+        {
+          "text": "`==`",
+          "rationale": "`==` is the equality operator used for this value comparison.",
+          "correct": true
+        },
+        {
+          "text": "`=>`",
+          "rationale": "`=>` has other C# meanings, but it is not the equality operator."
+        }
+      ],
+      "feedback": {
+        "correct": "Correct. Check Microsoft Learn, C# arithmetic, comparison, logical, and assignment operators: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/expressions/operators",
+        "incorrect": "Recheck Microsoft Learn, C# arithmetic, comparison, logical, and assignment operators: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/expressions/operators"
+      },
+      "solution": "`==` asks whether the operands are equal; `=` performs assignment. Teaching provenance: F26/TeachingRecord/Week02/analysis/W02D04.",
+      "category_ids": [
+        "rcet2265.cat-c.conditional-control-flow"
+      ],
+      "metadata": {
+        "reviewed": false,
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/W02D04-conditionals"
+      }
+    },
+    {
+      "id": "rcet2265.controlflow.002",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "RCET2265 > C# > Conditional Control Flow",
+      "difficulty": "easy",
+      "tags": [
+        "w02",
+        "conditionals",
+        "boolean"
+      ],
+      "stem": "Given `int firstNumber = 7;`, what does the expression `firstNumber > 1` evaluate to?",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0",
+      "shuffle_choices": true,
+      "choices": [
+        {
+          "text": "`true`",
+          "rationale": "Seven is greater than one, so the relational expression is true.",
+          "correct": true
+        },
+        {
+          "text": "`false`",
+          "rationale": "This would be the result if seven were not greater than one."
+        },
+        {
+          "text": "`7`",
+          "rationale": "A comparison expression produces a Boolean result, not the original operand."
+        }
+      ],
+      "feedback": {
+        "correct": "Correct. Check Microsoft Learn, C# operators: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/expressions/operators",
+        "incorrect": "Recheck Microsoft Learn, C# operators: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/expressions/operators"
+      },
+      "solution": "Relational operators such as `>` evaluate to a Boolean value. Teaching provenance: F26/TeachingRecord/Week02/analysis/W02D04.",
+      "category_ids": [
+        "rcet2265.cat-c.conditional-control-flow"
+      ],
+      "metadata": {
+        "reviewed": false,
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/W02D04-conditionals"
+      }
+    },
+    {
+      "id": "rcet2265.controlflow.003",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "RCET2265 > C# > Conditional Control Flow",
+      "difficulty": "medium",
+      "tags": [
+        "w02",
+        "conditionals",
+        "branch-order"
+      ],
+      "stem": "What prints?\n```csharp\nint x = 20;\nif (x > 0)\n{\n    Console.WriteLine(\"A\");\n}\nelse if (x > 10)\n{\n    Console.WriteLine(\"B\");\n}\nelse\n{\n    Console.WriteLine(\"C\");\n}\n```",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0",
+      "shuffle_choices": true,
+      "choices": [
+        {
+          "text": "A",
+          "rationale": "The first condition is true, so its block runs and the rest of the chain is skipped.",
+          "correct": true
+        },
+        {
+          "text": "B",
+          "rationale": "`x > 10` is also true independently, but this condition is never reached after the first branch succeeds."
+        },
+        {
+          "text": "A then B",
+          "rationale": "An `else if` chain selects the first true branch; it does not execute every true comparison."
+        },
+        {
+          "text": "C",
+          "rationale": "The final `else` runs only if the earlier conditions are false."
+        }
+      ],
+      "feedback": {
+        "correct": "Correct. Check Microsoft Learn, Selection statements in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/statements/selection",
+        "incorrect": "Recheck Microsoft Learn, Selection statements in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/statements/selection"
+      },
+      "solution": "An `if` / `else if` / `else` chain is evaluated in order and stops at the first selected branch. Teaching provenance: F26/TeachingRecord/Week02/analysis/W02D04.",
+      "category_ids": [
+        "rcet2265.cat-c.conditional-control-flow"
+      ],
+      "metadata": {
+        "reviewed": false,
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/W02D04-conditionals"
+      }
+    },
+    {
+      "id": "rcet2265.controlflow.004",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "RCET2265 > C# > Conditional Control Flow",
+      "difficulty": "medium",
+      "tags": [
+        "w02",
+        "conditionals",
+        "else",
+        "user-input"
+      ],
+      "stem": "A menu has branches for the string choices `\"1\"`, `\"2\"`, and `\"3\"`, followed by a final `else`. The user enters `\"banana\"`. Which block runs?",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0",
+      "shuffle_choices": true,
+      "choices": [
+        {
+          "text": "The branch for `\"1\"`",
+          "rationale": "`\"banana\"` is not equal to `\"1\"`."
+        },
+        {
+          "text": "The branch for `\"3\"`",
+          "rationale": "`\"banana\"` is not equal to `\"3\"`."
+        },
+        {
+          "text": "The final `else`",
+          "rationale": "None of the earlier comparisons matched, so the final `else` handles the remaining case.",
+          "correct": true
+        },
+        {
+          "text": "No block can run because the program must crash",
+          "rationale": "A string outside the listed choices is still a valid string value; the final `else` can handle it."
+        }
+      ],
+      "feedback": {
+        "correct": "Correct. Check Microsoft Learn, Selection statements in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/statements/selection",
+        "incorrect": "Recheck Microsoft Learn, Selection statements in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/statements/selection"
+      },
+      "solution": "A final `else` handles the path left after all preceding conditions evaluate false. Teaching provenance: F26/TeachingRecord/Week02/analysis/W02D04.",
+      "category_ids": [
+        "rcet2265.cat-c.conditional-control-flow"
+      ],
+      "metadata": {
+        "reviewed": false,
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/W02D04-conditionals"
+      }
+    },
+    {
+      "id": "rcet2265.controlflow.005",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "RCET2265 > C# > Conditional Control Flow",
+      "difficulty": "medium",
+      "tags": [
+        "w02",
+        "conditionals",
+        "blocks",
+        "style"
+      ],
+      "stem": "In C#, what determines that several statements belong to the body of an `if` branch?",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0",
+      "shuffle_choices": true,
+      "choices": [
+        {
+          "text": "Their indentation level",
+          "rationale": "Indentation is important for readability, but C# does not use indentation to define a block."
+        },
+        {
+          "text": "The `{ }` block that encloses them",
+          "rationale": "Braces define a block containing the statements controlled by the branch.",
+          "correct": true
+        },
+        {
+          "text": "Their source line numbers",
+          "rationale": "Line numbers do not define control-flow blocks."
+        },
+        {
+          "text": "Whether the lines are shorter than 80 characters",
+          "rationale": "Line length is a style choice, not the syntax that defines an `if` body."
+        }
+      ],
+      "feedback": {
+        "correct": "Correct. Check Microsoft Learn, Selection statements in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/statements/selection",
+        "incorrect": "Recheck Microsoft Learn, Selection statements in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/statements/selection"
+      },
+      "solution": "A block statement enclosed in braces can contain multiple statements; indentation communicates structure to human readers. Teaching provenance: F26/TeachingRecord/Week02/analysis/W02D04.",
+      "category_ids": [
+        "rcet2265.cat-c.conditional-control-flow"
+      ],
+      "metadata": {
+        "reviewed": false,
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/W02D04-conditionals"
+      }
+    },
+    {
+      "id": "rcet2265.controlflow.006",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "RCET2265 > C# > Conditional Control Flow",
+      "difficulty": "easy",
+      "tags": [
+        "w02",
+        "strings",
+        "escape-sequence",
+        "menu"
+      ],
+      "stem": "Inside a regular C# string literal, what does the escape sequence `\\n` represent?",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0",
+      "shuffle_choices": true,
+      "choices": [
+        {
+          "text": "A newline/LF character",
+          "rationale": "`\\n` is the newline escape sequence in a regular C# string.",
+          "correct": true
+        },
+        {
+          "text": "A tab",
+          "rationale": "The tab escape sequence is `\\t`."
+        },
+        {
+          "text": "A literal backslash followed by the letter n",
+          "rationale": "A single backslash starts an escape sequence in a regular string literal."
+        },
+        {
+          "text": "The end of the program",
+          "rationale": "String escape sequences do not control program termination."
+        }
+      ],
+      "feedback": {
+        "correct": "Correct. Check Microsoft Learn, Strings in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/strings/",
+        "incorrect": "Recheck Microsoft Learn, Strings in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/strings/"
+      },
+      "solution": "`\\n` is the newline escape sequence, representing LF in the string. Teaching provenance: F26/TeachingRecord/Week02/analysis/W02D04.",
+      "category_ids": [
+        "rcet2265.cat-c.conditional-control-flow"
+      ],
+      "metadata": {
+        "reviewed": false,
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/W02D04-conditionals"
+      }
+    },
+    {
+      "id": "rcet2265.controlflow.007",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "RCET2265 > C# > Conditional Control Flow",
+      "difficulty": "hard",
+      "tags": [
+        "w02",
+        "definite-assignment",
+        "debugging",
+        "correction"
+      ],
+      "stem": "Which statement about a local variable declared as `int x;` is correct in C#?",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0",
+      "shuffle_choices": true,
+      "choices": [
+        {
+          "text": "It can always be read immediately and is guaranteed to contain 0",
+          "rationale": "C# definite-assignment rules do not allow normal code to read an unassigned local just because its type is `int`."
+        },
+        {
+          "text": "It must be definitely assigned before code can read it",
+          "rationale": "The compiler requires a local to be definitely assigned before its value is read.",
+          "correct": true
+        },
+        {
+          "text": "It contains a random value and C# allows the program to read it",
+          "rationale": "The language prevents the normal unassigned read."
+        },
+        {
+          "text": "The value depends on whether the debugger is open",
+          "rationale": "Debugger display does not change the language's definite-assignment rule."
+        }
+      ],
+      "feedback": {
+        "correct": "Correct. Check C# language specification, Variables §9.4 Definite assignment: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables",
+        "incorrect": "Recheck C# language specification, Variables §9.4 Definite assignment: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables"
+      },
+      "solution": "Local variables are governed by definite-assignment analysis. Debugger storage display before an initializer executes is not a C# language guarantee. Teaching provenance: F26/TeachingRecord/Week02/analysis/W02D04.",
+      "category_ids": [
+        "rcet2265.cat-c.conditional-control-flow"
+      ],
+      "metadata": {
+        "reviewed": false,
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/W02D04-conditionals"
+      }
+    },
+    {
+      "id": "rcet2265.controlflow.008",
+      "version": 1,
+      "type": "mcq_one",
+      "points": 1,
+      "topic": "RCET2265 > C# > Conditional Control Flow",
+      "difficulty": "hard",
+      "tags": [
+        "w02",
+        "simple-calculator",
+        "control-flow",
+        "design"
+      ],
+      "stem": "For the beginner Simple Calculator using concepts taught through W02D04, which sequence best describes the operation-selection part?",
+      "author": "Tim Rossiter",
+      "license": "CC-BY-4.0",
+      "shuffle_choices": true,
+      "choices": [
+        {
+          "text": "Read the operation choice, compare it with menu choices, execute the first matching branch, then display the result",
+          "rationale": "This matches the prompt/read/compare/branch model taught in W02D04.",
+          "correct": true
+        },
+        {
+          "text": "Run every arithmetic operation and let the user choose which printed answer to keep",
+          "rationale": "Conditionals exist so the program can select one path rather than execute every operation."
+        },
+        {
+          "text": "Convert the operation choice to a floating-point number before any comparison",
+          "rationale": "The menu can compare direct string choices such as `\"1\"`, `\"2\"`, and `\"3\"`."
+        },
+        {
+          "text": "Use a loop because conditionals cannot select among menu choices",
+          "rationale": "Loops repeat work; the current operation selection is handled by conditional branching."
+        }
+      ],
+      "feedback": {
+        "correct": "Correct. Check Microsoft Learn, Selection statements in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/statements/selection",
+        "incorrect": "Recheck Microsoft Learn, Selection statements in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/statements/selection"
+      },
+      "solution": "The W02D04 design is prompt/read/compare/branch. Loops were explicitly deferred for this week's assignment. Teaching provenance: F26/TeachingRecord/Week02/analysis/W02D04.",
+      "category_ids": [
+        "rcet2265.cat-c.conditional-control-flow"
+      ],
+      "metadata": {
+        "reviewed": false,
+        "reconciliation_source": "rosstimo/RCET2265-planning:F26/QuizBanks/W02D04-conditionals"
+      }
+    }
+  ],
+  "assessments": [
+    {
+      "id": "f26-w01-w02-all-candidates-review",
+      "title": "RCET2265 Fall 2026 Weeks 1-2 Candidate Review",
+      "items": [
+        "w01.debugging.001",
+        "w01.debugging.002",
+        "w01.debugging.003",
+        "w01.operators.001",
+        "w01.operators.002",
+        "w01.operators.003",
+        "w01.variables.001",
+        "w01.variables.002",
+        "w01.operators.004",
+        "w01.operators.005",
+        "w01.operators.006",
+        "w01.types.001",
+        "w01.types.002",
+        "w01.types.003",
+        "w01.types.004",
+        "w01.types.005",
+        "w01.types.006",
+        "w01.types.007",
+        "w01.types.008",
+        "w01.types.009",
+        "w01.types.010",
+        "w01.types.011",
+        "w02.console.001",
+        "w02.console.002",
+        "w02.console.003",
+        "w02.console.004",
+        "w02.console.005",
+        "w02.console.006",
+        "w02.console.007",
+        "w02.console.008",
+        "w02.console.009",
+        "w02.console.010",
+        "rcet2265.controlflow.001",
+        "rcet2265.controlflow.002",
+        "rcet2265.controlflow.003",
+        "rcet2265.controlflow.004",
+        "rcet2265.controlflow.005",
+        "rcet2265.controlflow.006",
+        "rcet2265.controlflow.007",
+        "rcet2265.controlflow.008"
+      ],
+      "shuffle_questions": false,
+      "metadata": {
+        "review_only": true,
+        "paper_instructions": "Instructor review copy. Questions are planning-derived candidates and remain unapproved until metadata.reviewed is explicitly changed after review."
+      }
+    },
+    {
+      "id": "source-rcet2265-f26-w01-debugging-review",
+      "title": "Review: RCET 2265 Fall 2026 Weeks 1-2 - W01 Debugging Quiz Bank",
+      "items": [
+        "w01.debugging.001",
+        "w01.debugging.002",
+        "w01.debugging.003"
+      ],
+      "shuffle_questions": false,
+      "metadata": {
+        "review_only": true,
+        "source_path": "F26/QuizBanks/rcet2265-f26-w01-debugging.bank.json"
+      }
+    },
+    {
+      "id": "source-rcet2265-f26-w01-operators-variables-review",
+      "title": "Review: RCET 2265 Fall 2026 Weeks 1-2 - W01 Operators Variables Quiz Bank",
+      "items": [
+        "w01.operators.001",
+        "w01.operators.002",
+        "w01.operators.003",
+        "w01.variables.001",
+        "w01.variables.002",
+        "w01.operators.004",
+        "w01.operators.005",
+        "w01.operators.006"
+      ],
+      "shuffle_questions": false,
+      "metadata": {
+        "review_only": true,
+        "source_path": "F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json"
+      }
+    },
+    {
+      "id": "source-rcet2265-f26-w01-types-review",
+      "title": "Review: RCET 2265 Fall 2026 Weeks 1-2 - W01 Types Quiz Bank",
+      "items": [
+        "w01.types.001",
+        "w01.types.002",
+        "w01.types.003",
+        "w01.types.004",
+        "w01.types.005",
+        "w01.types.006",
+        "w01.types.007",
+        "w01.types.008",
+        "w01.types.009",
+        "w01.types.010",
+        "w01.types.011"
+      ],
+      "shuffle_questions": false,
+      "metadata": {
+        "review_only": true,
+        "source_path": "F26/QuizBanks/rcet2265-f26-w01-types.bank.json"
+      }
+    },
+    {
+      "id": "source-rcet2265-f26-w02-console-review",
+      "title": "Review: RCET 2265 Fall 2026 Weeks 1-2 - W02 Console Quiz Bank",
+      "items": [
+        "w02.console.001",
+        "w02.console.002",
+        "w02.console.003",
+        "w02.console.004",
+        "w02.console.005",
+        "w02.console.006",
+        "w02.console.007",
+        "w02.console.008",
+        "w02.console.009",
+        "w02.console.010"
+      ],
+      "shuffle_questions": false,
+      "metadata": {
+        "review_only": true,
+        "source_path": "F26/QuizBanks/rcet2265-f26-w02-console.bank.json"
+      }
+    },
+    {
+      "id": "source-rcet2265-f26-w02d04-conditionals-review",
+      "title": "Review: RCET2265 Fall 2026 W02D04 Conditionals",
+      "items": [
+        "rcet2265.controlflow.001",
+        "rcet2265.controlflow.002",
+        "rcet2265.controlflow.003",
+        "rcet2265.controlflow.004",
+        "rcet2265.controlflow.005",
+        "rcet2265.controlflow.006",
+        "rcet2265.controlflow.007",
+        "rcet2265.controlflow.008"
+      ],
+      "shuffle_questions": false,
+      "metadata": {
+        "review_only": true,
+        "source_path": "F26/QuizBanks/W02D04-conditionals"
+      }
+    }
+  ],
+  "metadata": {
+    "default_assessment": "f26-w01-w02-all-candidates-review",
+    "all_starter_questions_reviewed": false,
+    "reconciliation": {
+      "source_repo": "rosstimo/RCET2265-planning",
+      "source_ref": "main",
+      "date": "2026-09-15",
+      "question_count": 40,
+      "policy": "Question IDs/content/provenance are preserved where possible; every imported question is forced to reviewed=false pending Tim review.",
+      "sources": [
+        {
+          "path": "F26/QuizBanks/rcet2265-f26-w01-debugging.bank.json",
+          "bank_id": "rcet2265-f26-w01-debugging",
+          "title": "RCET 2265 Fall 2026 Weeks 1-2 - W01 Debugging Quiz Bank",
+          "question_count": 3
+        },
+        {
+          "path": "F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json",
+          "bank_id": "rcet2265-f26-w01-operators-variables",
+          "title": "RCET 2265 Fall 2026 Weeks 1-2 - W01 Operators Variables Quiz Bank",
+          "question_count": 8
+        },
+        {
+          "path": "F26/QuizBanks/rcet2265-f26-w01-types.bank.json",
+          "bank_id": "rcet2265-f26-w01-types",
+          "title": "RCET 2265 Fall 2026 Weeks 1-2 - W01 Types Quiz Bank",
+          "question_count": 11
+        },
+        {
+          "path": "F26/QuizBanks/rcet2265-f26-w02-console.bank.json",
+          "bank_id": "rcet2265-f26-w02-console",
+          "title": "RCET 2265 Fall 2026 Weeks 1-2 - W02 Console Quiz Bank",
+          "question_count": 10
+        },
+        {
+          "path": "F26/QuizBanks/W02D04-conditionals",
+          "bank_id": "rcet2265-f26-w02d04-conditionals",
+          "title": "RCET2265 Fall 2026 W02D04 Conditionals",
+          "question_count": 8,
+          "migration": "qbank.migrate.migrate_legacy-compatible conversion"
+        }
+      ],
+      "source_assessments": [
+        {
+          "path": "F26/QuizBanks/rcet2265-f26-w01-debugging.bank.json",
+          "assessments": [
+            {
+              "id": "balanced-form",
+              "title": "Balanced Form",
+              "pools": [
+                {
+                  "id": "easy",
+                  "pick": 1,
+                  "where": {
+                    "difficulty": [
+                      "easy"
+                    ]
+                  }
+                },
+                {
+                  "id": "medium",
+                  "pick": 1,
+                  "where": {
+                    "difficulty": [
+                      "medium"
+                    ]
+                  }
+                }
+              ],
+              "shuffle_questions": true
+            }
+          ]
+        },
+        {
+          "path": "F26/QuizBanks/rcet2265-f26-w01-operators-variables.bank.json",
+          "assessments": [
+            {
+              "id": "balanced-form",
+              "title": "Balanced Form",
+              "pools": [
+                {
+                  "id": "easy",
+                  "pick": 2,
+                  "where": {
+                    "difficulty": [
+                      "easy"
+                    ]
+                  }
+                },
+                {
+                  "id": "medium",
+                  "pick": 1,
+                  "where": {
+                    "difficulty": [
+                      "medium"
+                    ]
+                  }
+                },
+                {
+                  "id": "hard",
+                  "pick": 1,
+                  "where": {
+                    "difficulty": [
+                      "hard"
+                    ]
+                  }
+                }
+              ],
+              "shuffle_questions": true
+            }
+          ]
+        },
+        {
+          "path": "F26/QuizBanks/rcet2265-f26-w01-types.bank.json",
+          "assessments": [
+            {
+              "id": "balanced-form",
+              "title": "Balanced Form",
+              "pools": [
+                {
+                  "id": "easy",
+                  "pick": 2,
+                  "where": {
+                    "difficulty": [
+                      "easy"
+                    ]
+                  }
+                },
+                {
+                  "id": "medium",
+                  "pick": 2,
+                  "where": {
+                    "difficulty": [
+                      "medium"
+                    ]
+                  }
+                },
+                {
+                  "id": "hard",
+                  "pick": 2,
+                  "where": {
+                    "difficulty": [
+                      "hard"
+                    ]
+                  }
+                }
+              ],
+              "shuffle_questions": true
+            }
+          ]
+        },
+        {
+          "path": "F26/QuizBanks/rcet2265-f26-w02-console.bank.json",
+          "assessments": [
+            {
+              "id": "balanced-form",
+              "title": "Balanced Form",
+              "pools": [
+                {
+                  "id": "easy",
+                  "pick": 2,
+                  "where": {
+                    "difficulty": [
+                      "easy"
+                    ]
+                  }
+                },
+                {
+                  "id": "medium",
+                  "pick": 2,
+                  "where": {
+                    "difficulty": [
+                      "medium"
+                    ]
+                  }
+                },
+                {
+                  "id": "hard",
+                  "pick": 1,
+                  "where": {
+                    "difficulty": [
+                      "hard"
+                    ]
+                  }
+                }
+              ],
+              "shuffle_questions": true
+            }
+          ]
+        }
+      ]
+    },
+    "source_catalog": {
+      "teaching": {
+        "W01D04-summary": "F26/TeachingRecord/Week01/analysis/W01D04/summary.md",
+        "W01D05-summary": "F26/TeachingRecord/Week01/analysis/W01D05/summary.md",
+        "W01D05-accuracy-review": "F26/TeachingRecord/Week01/analysis/W01D05/accuracy-review.md",
+        "W02D01-summary": "F26/TeachingRecord/Week02/analysis/W02D01/summary.md",
+        "W02D01-accuracy-review": "F26/TeachingRecord/Week02/analysis/W02D01/accuracy-review.md"
+      },
+      "official": {
+        "doc6": {
+          "title": "Microsoft Visual Studio documentation, First look at the debugger",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/debugger/debugger-feature-tour?view=visualstudio",
+          "location": "Breakpoints, stepping, and data inspection"
+        },
+        "doc1": {
+          "title": "Microsoft C# reference, Arithmetic operators",
+          "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/arithmetic-operators",
+          "location": "Arithmetic operators"
+        },
+        "doc2": {
+          "title": "Microsoft C# reference, Integral numeric types",
+          "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types",
+          "location": "Integral numeric types"
+        },
+        "doc3": {
+          "title": "Microsoft C# language specification, Variables",
+          "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/variables",
+          "location": "Variables and definite assignment"
+        },
+        "doc4": {
+          "title": "Microsoft C# reference, Floating-point numeric types",
+          "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types",
+          "location": "Floating-point numeric types"
+        },
+        "doc5": {
+          "title": "Microsoft .NET documentation, Character encoding in .NET",
+          "url": "https://learn.microsoft.com/en-us/dotnet/standard/base-types/character-encoding-introduction",
+          "location": "UTF-16 and Char"
+        },
+        "doc9": {
+          "title": "Microsoft C# reference, Built-in numeric conversions",
+          "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/numeric-conversions",
+          "location": "Numeric conversions"
+        },
+        "doc10": {
+          "title": "Microsoft C# reference, checked and unchecked statements",
+          "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/checked-and-unchecked",
+          "location": "checked and unchecked"
+        },
+        "doc7": {
+          "title": "Microsoft .NET API documentation, Console.ReadLine",
+          "url": "https://learn.microsoft.com/en-us/dotnet/api/system.console.readline?view=net-10.0",
+          "location": "Return value and remarks"
+        },
+        "doc8": {
+          "title": "Microsoft .NET API documentation, Console.WriteLine",
+          "url": "https://learn.microsoft.com/en-us/dotnet/api/system.console.writeline?view=net-10.0",
+          "location": "WriteLine behavior"
+        },
+        "doc11": {
+          "title": "Microsoft .NET API documentation, System.Console",
+          "url": "https://learn.microsoft.com/en-us/dotnet/api/system.console?view=net-10.0",
+          "location": "Console members and standard streams"
+        }
+      }
+    }
+  }
 }
