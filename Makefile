@@ -1,10 +1,11 @@
 BANK ?= banks/example.bank.json
 ASSESSMENT ?= quiz-example-001
 FORMAT ?= all
+REFERENCE_DIR ?= build/reference
 
 .DEFAULT_GOAL := help
 
-.PHONY: help validate list build md typst latex qti pdf doctor test clean
+.PHONY: help validate list build review reference md typst latex qti pdf doctor test clean
 
 help:
 	@echo "Quizbank uses its container for every normal command."
@@ -12,6 +13,8 @@ help:
 	@echo "  make validate"
 	@echo "  make list"
 	@echo "  make build ASSESSMENT=quiz-example-001 FORMAT=all"
+	@echo "  make review"
+	@echo "  make reference"
 	@echo "  make pdf ASSESSMENT=quiz-example-001"
 	@echo "  make doctor"
 
@@ -23,6 +26,12 @@ list:
 
 build:
 	./quizbank build $(ASSESSMENT) --bank $(BANK) --format $(FORMAT)
+
+review:
+	./quizbank review --bank $(BANK)
+
+reference:
+	./quizbank reference --bank $(BANK) --output-dir $(REFERENCE_DIR)
 
 md:
 	./quizbank build $(ASSESSMENT) --bank $(BANK) --format markdown
