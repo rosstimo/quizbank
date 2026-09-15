@@ -1,6 +1,6 @@
 # Fall 2026 Quizbank Markdown Reference
 
-> Generated from the course banks on `curriculum/f26-question-banks` using the reference renderer from `agent/json-bank-cli`. The JSON banks remain the source of truth.
+> Generated from the authored JSON banks on `main` using Quizbank's reference renderer. The JSON banks remain the source of truth.
 
 **Banks:** 7  
 **Questions:** 106
@@ -17,4 +17,4 @@
 
 ## Scope
 
-This index includes every Fall 2026 course bank currently stored under `banks/`, except the generic example bank. Legacy-named course banks are included rather than silently omitted.
+This index includes every authored or review-staging bank currently stored under `banks/`, except the generic example bank. A bank appearing here does not mean every question in it is instructor-reviewed or assessment-ready. Check question metadata and [`docs/COURSE_BANK_STATUS.md`](../../docs/COURSE_BANK_STATUS.md).
