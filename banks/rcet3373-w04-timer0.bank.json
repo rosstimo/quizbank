@@ -32,24 +32,12 @@
       "answer": 1,
       "tolerance": 0,
       "unit": "us",
-      "feedback": {
-        "correct": "Correct. With the internal source, Timer0 uses the instruction clock, FOSC/4.",
-        "incorrect": "Recheck the relationship between FOSC and the instruction clock used by Timer0."
-      },
+      "feedback": {"correct": "Correct. With the internal source, Timer0 uses the instruction clock, FOSC/4.", "incorrect": "Recheck the relationship between FOSC and the instruction clock used by Timer0."},
       "solution": "FCY = 4 MHz / 4 = 1 MHz, so one Timer0 increment occurs every 1 us before prescaling.",
       "author": "Tim Rossiter",
       "license": "CC-BY-4.0",
-      "source": {
-        "document": "PIC16F882/883/884/886/887 Data Sheet",
-        "document_id": "DS40001291H",
-        "section": "5.1 Timer0 Operation"
-      },
-      "metadata": {
-        "semester_weeks": ["F26-W04"],
-        "lesson": "W04D01-Timer0",
-        "reviewed": false,
-        "origin": "teaching-record-W04D01"
-      }
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "5.1 Timer0 Operation"},
+      "metadata": {"semester_weeks": ["F26-W04"], "lesson": "W04D01-Timer0", "reviewed": false, "origin": "teaching-record-W04D01"}
     },
     {
       "id": "pic.timer0.w04.002",
@@ -63,24 +51,12 @@
       "answer": 256,
       "tolerance": 0,
       "unit": "us",
-      "feedback": {
-        "correct": "Correct. An 8-bit timer has 256 states from 0x00 through 0xFF.",
-        "incorrect": "Count all 256 Timer0 states. Overflow occurs on the transition from 0xFF to 0x00."
-      },
+      "feedback": {"correct": "Correct. An 8-bit timer has 256 states from 0x00 through 0xFF.", "incorrect": "Count all 256 Timer0 states. Overflow occurs on the transition from 0xFF to 0x00."},
       "solution": "256 counts * 1 us/count = 256 us.",
       "author": "Tim Rossiter",
       "license": "CC-BY-4.0",
-      "source": {
-        "document": "PIC16F882/883/884/886/887 Data Sheet",
-        "document_id": "DS40001291H",
-        "section": "5.1 Timer0 Operation"
-      },
-      "metadata": {
-        "semester_weeks": ["F26-W04"],
-        "lesson": "W04D01-Timer0",
-        "reviewed": false,
-        "origin": "teaching-record-W04D01"
-      }
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "5.1 Timer0 Operation"},
+      "metadata": {"semester_weeks": ["F26-W04"], "lesson": "W04D01-Timer0", "reviewed": false, "origin": "teaching-record-W04D01"}
     },
     {
       "id": "pic.timer0.w04.005",
@@ -93,38 +69,31 @@
       "shuffle_choices": true,
       "stem": "Which statement correctly distinguishes T0IF from T0IE on the PIC16F883?",
       "choices": [
-        {
-          "text": "T0IF records the Timer0 overflow event; T0IE controls whether that request is enabled to cause an interrupt.",
-          "correct": true,
-          "rationale": "The flag and enable have different jobs, matching the interrupt model already used in class."
-        },
-        {
-          "text": "T0IE records the overflow event; T0IF selects the prescaler ratio.",
-          "rationale": "T0IE is the enable bit and prescaler selection is in OPTION_REG."
-        },
-        {
-          "text": "T0IF selects internal or external Timer0 clocking; T0IE clears TMR0.",
-          "rationale": "Clock-source selection uses T0CS, and neither bit clears TMR0."
-        }
+        {"text": "T0IF records the Timer0 overflow event; T0IE controls whether that request is enabled to cause an interrupt.", "correct": true, "rationale": "The flag and enable have different jobs, matching the interrupt model already used in class."},
+        {"text": "T0IE records the overflow event; T0IF selects the prescaler ratio.", "rationale": "T0IE is the enable bit and prescaler selection is in OPTION_REG."},
+        {"text": "T0IF selects internal or external Timer0 clocking; T0IE clears TMR0.", "rationale": "Clock-source selection uses T0CS, and neither bit clears TMR0."}
       ],
-      "feedback": {
-        "correct": "Correct. Timer0 reuses the event flag versus interrupt-enable model from the interrupt lesson.",
-        "incorrect": "Separate the hardware event from the permission gate: T0IF records the request and T0IE controls whether it can cause interrupt service."
-      },
+      "feedback": {"correct": "Correct. Timer0 reuses the event flag versus interrupt-enable model from the interrupt lesson.", "incorrect": "Separate the hardware event from the permission gate: T0IF records the request and T0IE controls whether it can cause interrupt service."},
       "solution": "T0IF is the Timer0 overflow flag. T0IE is the Timer0 interrupt enable.",
       "author": "Tim Rossiter",
       "license": "CC-BY-4.0",
-      "source": {
-        "document": "PIC16F882/883/884/886/887 Data Sheet",
-        "document_id": "DS40001291H",
-        "section": "2.2.2.3 INTCON Register; 5.1 Timer0 Operation"
-      },
-      "metadata": {
-        "semester_weeks": ["F26-W04"],
-        "lesson": "W04D01-Timer0",
-        "reviewed": false,
-        "origin": "teaching-record-W04D01"
-      }
+      "source": {"document": "PIC16F882/883/884/886/887 Data Sheet", "document_id": "DS40001291H", "section": "2.2.2.3 INTCON Register; 5.1 Timer0 Operation"},
+      "metadata": {"semester_weeks": ["F26-W04"], "lesson": "W04D01-Timer0", "reviewed": false, "origin": "teaching-record-W04D01"}
     }
-  ]
+  ],
+  "assessments": [
+    {
+      "id": "rcet3373-w04-timer0-review",
+      "title": "RCET3373 Week 4 Timer0 Taught-Content Review Form",
+      "description": "Instructor review form limited to Timer0 questions supported by W04D01 teaching evidence.",
+      "version": 1,
+      "instructions": "Review wording, technical truth, difficulty, and source references before promoting questions into the durable RCET3373 bank or Canvas practice/assessment pools.",
+      "items": ["pic.timer0.w04.001", "pic.timer0.w04.002", "pic.timer0.w04.005"],
+      "shuffle_questions": false
+    }
+  ],
+  "metadata": {
+    "default_assessment": "rcet3373-w04-timer0-review",
+    "promotion_target": "banks/rcet3373.bank.json"
+  }
 }
