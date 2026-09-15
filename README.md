@@ -1,6 +1,23 @@
 # Quizbank
 
-Keep questions, categories, metadata, and assessment recipes in one JSON bank. Build a printable PDF, editable source, Markdown, or a Canvas QTI package from that bank.
+Quizbank is a generic, shareable tool for creating and managing question banks and building assessments from them. Author questions, categories, metadata, and assessment recipes in JSON, then validate and render them through a consistent toolchain.
+
+The repository contains **tooling and generic examples only**. An instructor's real course banks should live with that instructor/course material and use Quizbank as the schema, validation, rendering, import, and export engine.
+
+## Current capabilities
+
+From a JSON bank, Quizbank currently supports:
+
+- schema validation and linting;
+- fixed-question and seeded pool-based assessment forms;
+- instructor review rendering of every question in a bank;
+- printable PDF output;
+- editable Typst and LaTeX source;
+- Markdown output and answer keys;
+- Canvas-compatible QTI 1.2 export;
+- migration of the repository's legacy YAML question/quiz format into JSON.
+
+The current CLI does **not** advertise Moodle XML or GIFT as first-class export formats. The repository contains older/import-oriented Moodle/GIFT components and samples, and broader import/export coverage is an intended direction rather than a capability this README promises today. See `ROADMAP.md`.
 
 Quizbank runs its Python packages, Pandoc, Typst, and LaTeX inside a container. The host only needs Docker Desktop, Docker Engine with Compose, or Podman Compose.
 
@@ -22,7 +39,7 @@ Windows PowerShell:
 .\quizbank.ps1 build
 ```
 
-The first command builds the local container image. Later commands reuse it. With the included example bank, `build` produces:
+With the included `banks/example.bank.json`, the default build produces the example assessment in all current export formats:
 
 ```text
 build/quiz-example-001/
@@ -39,71 +56,74 @@ Use a narrower export when that is all you need:
 ./quizbank build --format pdf
 ./quizbank build --format qti
 ./quizbank build --format markdown,latex
-./quizbank build quiz-example-random --seed 3375 --format pdf
+./quizbank build quiz-example-random --seed 42 --format pdf
 ./quizbank build --format pdf --no-key
 ./quizbank build --format pdf --no-points
 ```
 
-Paper outputs show point values in question-type section headers by default, such as `Multiple Choice Questions (1 pt each)`. Use `--no-points` to hide those labels. The JSON point values and QTI/Canvas scoring are unchanged.
+Useful inspection commands:
 
-Run `./quizbank doctor` to see the exact tools available inside the container. `make help` provides short aliases for the same commands.
+```bash
+./quizbank list
+./quizbank validate --lint-level error
+./quizbank review --format pdf --format markdown
+./quizbank doctor
+```
+
+`make help` provides short aliases for common development commands.
 
 ## One JSON bank
 
-Files under `banks/` are the authored source of truth. A bank contains five parts:
+A bank contains five main parts:
 
 ```json
 {
   "$schema": "../schemas/bank.schema.json",
   "format_version": 1,
   "bank": {
-    "id": "rcet3375",
-    "title": "Advanced Digital Systems",
-    "authors": ["Tim Rossiter"]
+    "id": "example-course",
+    "title": "Example Course",
+    "language": "en-US"
   },
   "categories": [
-    {"id": "timers", "title": "Timers"},
-    {"id": "timers.timer2", "title": "Timer2", "parent": "timers"}
+    {"id": "fundamentals", "title": "Fundamentals"}
   ],
   "questions": [
     {
-      "id": "timers.timer2.001",
+      "id": "fundamentals.boolean.001",
       "version": 1,
       "type": "mcq_one",
       "points": 1,
-      "category_ids": ["timers.timer2"],
-      "tags": ["prescaler"],
+      "category_ids": ["fundamentals"],
       "difficulty": "easy",
-      "stem": "Which register selects the Timer2 prescaler?",
+      "stem": "Which value is a Boolean value?",
       "choices": [
-        {"text": "T2CON", "correct": true},
-        {"text": "OPTION_REG"}
-      ],
-      "solution": "The prescaler bits are in `T2CON`.",
-      "metadata": {
-        "source_page": 89,
-        "reviewed": true
-      }
+        {"text": "true", "correct": true},
+        {"text": "42"},
+        {"text": "hello"}
+      ]
     }
   ],
   "assessments": [
     {
-      "id": "timer2-check",
-      "title": "Timer2 Check",
-      "items": ["timers.timer2.001"]
+      "id": "fundamentals-check",
+      "title": "Fundamentals Check",
+      "items": ["fundamentals.boolean.001"]
     }
   ],
   "metadata": {
-    "default_assessment": "timer2-check"
+    "default_assessment": "fundamentals-check"
   }
 }
 ```
 
-The `metadata` objects deliberately accept extra fields. Quizbank retains information an exporter does not understand so a richer exporter or future web UI can use it later.
+The `metadata` objects deliberately accept extra fields. Quizbank can preserve information it does not interpret so a downstream course repository or future exporter/UI can use it later.
 
-The current question types are `mcq_one`, `mcq_multi`, `true_false`, `numeric`, `short_answer`, `fill_blank`, `essay`, `code_review`, `matching`, and `ordering`. Markdown is used for question text, feedback, solutions, rubrics, and prompts. Use `$...$` or `$$...$$` for math.
+Current question types are:
 
-JSON Schema files under `schemas/` provide editor completion and validation. Point VS Code, Neovim, or another schema-aware editor at the `$schema` field in a bank.
+`mcq_one`, `mcq_multi`, `true_false`, `numeric`, `short_answer`, `fill_blank`, `essay`, `code_review`, `matching`, and `ordering`.
+
+Markdown is supported in question text, feedback, solutions, rubrics, and prompts. Use `$...$` or `$$...$$` for math. JSON Schema files under `schemas/` provide editor completion and validation.
 
 ## Fixed questions and generated forms
 
@@ -111,27 +131,27 @@ An assessment may list exact question IDs:
 
 ```json
 {
-  "id": "timer2-check",
-  "title": "Timer2 Check",
+  "id": "fundamentals-check",
+  "title": "Fundamentals Check",
   "items": [
-    "timers.timer2.001",
-    {"id": "timers.timer2.007", "points": 3}
+    "fundamentals.boolean.001",
+    {"id": "fundamentals.numeric.001", "points": 3}
   ]
 }
 ```
 
-It may also select seeded pools by category, type, difficulty, tags, or outcomes:
+Or it may select seeded pools by category, type, difficulty, tags, or outcomes:
 
 ```json
 {
-  "id": "timer2-form",
-  "title": "Timer2 Form",
+  "id": "generated-form",
+  "title": "Generated Form",
   "pools": [
     {
       "id": "true-false",
       "pick": 5,
       "where": {
-        "category_ids": ["timers.timer2"],
+        "category_ids": ["fundamentals"],
         "types": ["true_false"]
       }
     },
@@ -139,9 +159,8 @@ It may also select seeded pools by category, type, difficulty, tags, or outcomes
       "id": "multiple-choice",
       "pick": 10,
       "where": {
-        "category_ids": ["timers.timer2"],
-        "types": ["mcq_one"],
-        "tags": ["exam-ready"]
+        "category_ids": ["fundamentals"],
+        "types": ["mcq_one"]
       }
     }
   ],
@@ -149,32 +168,37 @@ It may also select seeded pools by category, type, difficulty, tags, or outcomes
 }
 ```
 
-The seed makes a generated form repeatable. The same bank, assessment, and seed select the same questions.
+The seed makes generated forms repeatable. The same bank, assessment, and seed select the same questions.
 
-## Move the old YAML bank into JSON
+## Create a bank for your own course
 
-The legacy YAML files remain in the repository for comparison. Combine them into a JSON bank with:
+Keep your real bank in your course/project repository rather than adding it to Quizbank itself. Point Quizbank at it explicitly:
+
+```bash
+./quizbank new /path/to/my-course/bank.json \
+  --id my-course \
+  --title "My Course"
+
+./quizbank validate --bank /path/to/my-course/bank.json
+./quizbank build --bank /path/to/my-course/bank.json
+```
+
+When Quizbank is cloned alongside a course repository, relative paths work well too.
+
+## Legacy YAML migration
+
+The older one-question-per-YAML format remains available as migration input:
 
 ```bash
 ./quizbank migrate \
   --items qbank \
   --quizzes quizzes \
-  --id legacy.quizbank \
-  --title "Legacy Quizbank" \
-  --output banks/legacy.bank.json
-
-./quizbank validate --bank banks/legacy.bank.json
+  --id migrated-example \
+  --title "Migrated Example" \
+  --output banks/migrated-example.bank.json
 ```
 
-Migration preserves question content and creates category records from `topic` strings such as `Example > Basics`. It does not overwrite an existing JSON bank unless `--force` is supplied.
-
-Create a clean bank instead:
-
-```bash
-./quizbank new banks/rcet3375.bank.json \
-  --id rcet3375 \
-  --title "Advanced Digital Systems"
-```
+Migration preserves question content and creates category records from topic strings. It does not overwrite an existing JSON bank unless `--force` is supplied.
 
 ## Export behavior
 
@@ -184,12 +208,12 @@ Create a clean bank instead:
 | `typst` | `.typ` | Editable source |
 | `latex` | `.tex` | Editable source |
 | `markdown` | `.md` | Portable source and answer key |
-| `qti` | `-qti12.zip` | Import into Canvas as QTI 1.2 |
-| `all` | all of the above | Default |
+| `qti` | `-qti12.zip` | Canvas-compatible QTI 1.2 package |
+| `all` | all current formats | Default |
 
-Paper formats support every question type. QTI currently exports multiple choice, multiple select, true/false, numeric, short answer, and fill in the blank. It reports manually graded types that it leaves out instead of discarding them silently.
+Paper formats support every current question type. QTI currently exports multiple choice, multiple select, true/false, numeric, short answer, and fill-in-the-blank items. Manually graded types that cannot be represented are reported rather than silently discarded.
 
-## Development without touching the host Python
+## Development
 
 ```bash
 make test
@@ -197,4 +221,4 @@ make test
 
 Tests run in the same containerized environment as normal commands. Generated files go under `build/` and are ignored by Git.
 
-The original one-question-per-YAML tools are still present under `tools/`, `qbank/`, and `quizzes/` as migration inputs. New work should go into a JSON file under `banks/`.
+Generic examples and compatibility fixtures may live in this repository. Live semester/course banks, teaching records, and instructor-specific assessment state should not.
