@@ -17,6 +17,7 @@ from qbank.bank import (
 from qbank.exporters import ALL_FORMATS, build_outputs, dependency_versions
 from qbank.migrate import migrate_legacy, write_json
 from qbank.reference import build_reference
+from qbank.triage import build_triage
 
 
 def _discover_bank() -> Path:
@@ -174,6 +175,18 @@ def build_parser() -> argparse.ArgumentParser:
         default=True,
         help="Show point values in paper section headers (default: on)",
     )
+    review_parser.add_argument(
+        "--no-triage",
+        action="store_true",
+        help="Do not write the companion Markdown triage worksheet",
+    )
+
+    triage_parser = sub.add_parser(
+        "triage",
+        help="Build a Markdown Keep/Cut/Needs-work instructor worksheet",
+    )
+    triage_parser.add_argument("--bank")
+    triage_parser.add_argument("--output-dir", default="build/triage")
 
     reference_parser = sub.add_parser(
         "reference",
@@ -278,6 +291,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             for result in results:
                 detail = f" ({result.detail})" if result.detail else ""
                 print(f"  {result.path}{detail}")
+            if not args.no_triage:
+                triage_path = build_triage(bank, _output_path(args.output_dir))
+                print(f"  {triage_path} (instructor triage)")
+            return 0
+
+        if args.command == "triage":
+            bank = Bank.load(_bank_path(args.bank))
+            path = build_triage(bank, _output_path(args.output_dir))
+            print(f"Built instructor triage from {len(bank.questions)} question(s):")
+            print(f"  {path}")
             return 0
 
         if args.command == "reference":
