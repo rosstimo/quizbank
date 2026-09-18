@@ -209,6 +209,45 @@ def test_markdown_build_uses_json_bank(tmp_path: Path) -> None:
     assert "## Answer Key" in content
 
 
+def test_triage_build_contains_decision_controls_and_key(tmp_path: Path) -> None:
+    result = main(
+        [
+            "triage",
+            "--bank",
+            str(EXAMPLE),
+            "--output-dir",
+            str(tmp_path),
+        ]
+    )
+    assert result == 0
+    output = tmp_path / "example-bank-triage.md"
+    content = output.read_text(encoding="utf-8")
+    assert "# Quizbank Example — Instructor Triage" in content
+    assert "- [ ] **Keep**" in content
+    assert "- [ ] **Cut**" in content
+    assert "- [ ] **Needs work**" in content
+    assert "**Reviewer notes:**" in content
+    assert "### `example.topic.001`" in content
+    assert "**Answer:** B. Boolean" in content
+    assert "**Solution / explanation:**" in content
+
+
+def test_review_writes_companion_triage_by_default(tmp_path: Path) -> None:
+    result = main(
+        [
+            "review",
+            "--bank",
+            str(EXAMPLE),
+            "--format",
+            "markdown",
+            "--output-dir",
+            str(tmp_path),
+        ]
+    )
+    assert result == 0
+    assert (tmp_path / "example-bank-triage.md").is_file()
+
+
 def test_migrate_combines_yaml_items_and_quizzes(tmp_path: Path) -> None:
     items = tmp_path / "items"
     quizzes = tmp_path / "quizzes"
