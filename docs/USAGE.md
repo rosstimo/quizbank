@@ -103,7 +103,17 @@ The `review` command runs every question through the normal paper rendering path
   --output-dir /path/to/my-course/review
 ```
 
-`review` does not emit QTI because it is an instructor-review view rather than an LMS assessment package.
+`review` does not emit QTI because it is an instructor-review view rather than an LMS assessment package. By default it also writes a companion triage Markdown file at the output root with **Keep**, **Cut**, and **Needs work** checkboxes, reviewer notes, the keyed answer, explanation, provenance, and stored metadata for each question. Use `--no-triage` when only the paper-style review outputs are wanted.
+
+For the fastest content-review pass, build only the triage worksheet:
+
+```bash
+/path/to/quizbank/quizbank triage \
+  --bank /path/to/my-course/QuizBanks/course.bank.json \
+  --output-dir /path/to/my-course/review
+```
+
+The triage worksheet is a review surface only. Checking a box does not modify the JSON bank or mark a question approved.
 
 ## Build GitHub-friendly practice/reference Markdown
 
