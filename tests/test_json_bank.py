@@ -227,9 +227,15 @@ def test_triage_build_contains_decision_controls_and_key(tmp_path: Path) -> None
     assert "- [ ] **Cut**" in content
     assert "- [ ] **Needs work**" in content
     assert "**Reviewer notes:**" in content
-    assert "### `example.topic.001`" in content
+    assert "**Question ID:** `example.topic.001`" in content
+    assert "- A. Integer" in content
+    assert "- B. Boolean" in content
     assert "**Answer:** B. Boolean" in content
     assert "**Solution / explanation:**" in content
+    student_view = content.index("In most programming languages")
+    reviewer_metadata = content.index("**Question ID:** `example.topic.001`")
+    triage_controls = content.index("- [ ] **Keep**", reviewer_metadata)
+    assert student_view < reviewer_metadata < triage_controls
 
 
 def test_review_writes_companion_triage_by_default(tmp_path: Path) -> None:
