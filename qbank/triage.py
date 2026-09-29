@@ -9,7 +9,6 @@ from qbank.reference import (
     _answer_for,
     _grouped_questions,
     _question_body,
-    _question_heading,
     _slug,
 )
 
@@ -81,7 +80,7 @@ def render_triage(bank: Bank) -> str:
         f"# {bank.info['title']} — Instructor Triage",
         "",
         "> Review worksheet generated from the JSON bank. The bank remains the source of truth. "
-        "Check exactly one decision for each question and add notes only when useful.",
+        "Each entry shows the student-facing question first, then reviewer metadata, then triage controls.",
         "",
         f"**Source bank:** `{bank.path.name}`  ",
         f"**Questions:** {len(bank.questions)}",
@@ -101,26 +100,29 @@ def render_triage(bank: Bank) -> str:
             lines.extend(
                 [
                     f'<a id="triage-{_slug(qid)}"></a>',
-                    f"### {_question_heading(question)}",
-                    "",
-                    "- [ ] **Keep**",
-                    "- [ ] **Cut**",
-                    "- [ ] **Needs work**",
-                    "",
-                    "**Reviewer notes:**",
-                    "",
-                    "> ",
-                    "",
-                    f"> {_summary_line(question)}",
-                    "",
-                    "#### Question",
+                    "### Question",
                     "",
                 ]
             )
             lines.extend(_question_body(question))
             lines.extend(
                 [
-                    "#### Key / grading information",
+                    "#### Review metadata",
+                    "",
+                    f"**Question ID:** `{qid}`",
+                    "",
+                ]
+            )
+
+            title = str(question.get("title") or "").strip()
+            if title:
+                lines.extend([f"**Title:** {title}", ""])
+
+            lines.extend(
+                [
+                    f"> {_summary_line(question)}",
+                    "",
+                    "##### Key / grading information",
                     "",
                     f"**Answer:** {_answer_for(question)}",
                     "",
@@ -151,7 +153,22 @@ def render_triage(bank: Bank) -> str:
             lines.extend(_choice_rationale_lines(question))
             lines.extend(_source_lines(question))
             lines.extend(_metadata_lines(question))
-            lines.extend(["---", ""])
+            lines.extend(
+                [
+                    "#### Triage",
+                    "",
+                    "- [ ] **Keep**",
+                    "- [ ] **Cut**",
+                    "- [ ] **Needs work**",
+                    "",
+                    "**Reviewer notes:**",
+                    "",
+                    "> ",
+                    "",
+                    "---",
+                    "",
+                ]
+            )
 
     return "\n".join(lines).rstrip() + "\n"
 
